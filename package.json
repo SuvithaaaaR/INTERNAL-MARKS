@@ -1,0 +1,33 @@
+{
+  "name": "internal-marks-calculator",
+  "version": "1.0.0",
+  "description": "Internal Marks Calculation System",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server/index.js",
+    "client": "cd client && npm start",
+    "install-all": "npm install && cd client && npm install",
+    "build": "cd client && npm run build",
+    "init-db": "node server/initDb.js",
+    "check-db": "node server/checkDb.js",
+    "seed-students": "node server/seedStudents.js",
+    "view-students": "node server/viewStudents.js",
+    "reset-db": "node -e \"const fs=require('fs'); const path='database/internal_marks.db'; if(fs.existsSync(path)) fs.unlinkSync(path); console.log('Database deleted')\" && node server/initDb.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "sqlite3": "^5.1.6",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "concurrently": "^8.0.1"
+  }
+}
