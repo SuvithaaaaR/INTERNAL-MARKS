@@ -9,6 +9,7 @@ This system calculates internal marks based on 9 different activity components. 
 ## 📝 How to Add Entries
 
 ### Step 1: Add Student
+
 1. Go to **Students** page
 2. Click **Add New Student**
 3. Fill in details:
@@ -20,6 +21,7 @@ This system calculates internal marks based on 9 different activity components. 
 4. Click **Add Student**
 
 ### Step 2: Add Activities
+
 1. Click on student name to view details
 2. Select the activity tab
 3. Click **Add Entry**
@@ -28,6 +30,7 @@ This system calculates internal marks based on 9 different activity components. 
 6. Submit
 
 ### Step 3: View Marks
+
 - Marks are calculated automatically
 - View breakdown in student details page
 - Check total marks in Reports section
@@ -41,6 +44,7 @@ This system calculates internal marks based on 9 different activity components. 
 **When to use**: Conducting workshops, coding sessions, or training at schools/NGOs/industries
 
 **Required Details**:
+
 - ✅ Organization Name (Full name of school/NGO/industry)
 - ✅ Activity Type (Workshop/Coding Session/Training Program)
 - ✅ Detailed Description (What was taught, topic covered, impact)
@@ -53,10 +57,11 @@ This system calculates internal marks based on 9 different activity components. 
 **Marks**: 40 marks if team size ≤ 3
 
 **Example Entry**:
+
 ```
 Organization: ABC Public School, Chennai
 Activity: Python Programming Workshop
-Description: Conducted 3-day workshop on Python basics for Class 11 students. 
+Description: Conducted 3-day workshop on Python basics for Class 11 students.
               Covered variables, loops, functions. 50 students participated.
 Team Size: 3
 Date: 15-Feb-2026
@@ -71,6 +76,7 @@ Proof: Certificate_ABC_School.pdf
 **When to use**: Filed patent with working prototype through institution's IPM cell
 
 **Required Details**:
+
 - ✅ Patent Title (Exact as in application)
 - ✅ Application Number (From IPM cell)
 - ✅ Filing Date
@@ -83,11 +89,13 @@ Proof: Certificate_ABC_School.pdf
 - ✅ Problem it solves
 - ✅ Proof: Patent application/IPM approval letter
 
-**Marks**: 
+**Marks**:
+
 - 240 if: Prototype + Patent Filed + IPM approval
 - 240 if: Technology Transfer OR Commercialization
 
 **Example Entry**:
+
 ```
 Title: IoT-Based Smart Irrigation System
 Application Number: 202341012345
@@ -108,6 +116,7 @@ Proof: IPM_Approval_Letter.pdf, Patent_Application.pdf
 **When to use**: Published paper in Scopus-indexed conference/journal with students & faculty
 
 **Required Details**:
+
 - ✅ Paper Title (Exact as published)
 - ✅ Publication Type (Conference/Journal)
 - ✅ Conference/Journal Name (Full name)
@@ -121,6 +130,7 @@ Proof: IPM_Approval_Letter.pdf, Patent_Application.pdf
 **Marks**: 240 if published in Scopus-indexed venue with institute co-authors
 
 **Example Entry**:
+
 ```
 Title: Machine Learning Approach for Early Disease Detection in Crops
 Type: Conference Paper
@@ -140,6 +150,7 @@ Proof: IEEE_Published_Paper.pdf
 **When to use**: Participated/Won in project competitions or developed industry project
 
 **Required Details**:
+
 - ✅ Competition Name (Full official name event)
 - ✅ Organizing Institution
 - ✅ NIRF Rank (if applicable, verify from NIRF website)
@@ -151,11 +162,13 @@ Proof: IEEE_Published_Paper.pdf
 - ✅ Proof: Certificate/Letter
 
 **Marks**:
+
 - 40: Participation at Top 300 NIRF institutions
 - 80: Winning any competition
 - 100: Industry project development (Level 3-5)
 
 **Example Entry**:
+
 ```
 Competition: National Project Expo 2026
 Institution: IIT Madras (NIRF Rank: 1)
@@ -173,6 +186,7 @@ Proof: Winner_Certificate_IIT.pdf
 **When to use**: Participated/Won in hackathons
 
 **Required Details**:
+
 - ✅ Hackathon Name
 - ✅ Organizer (College/Institution/Company/Government)
 - ✅ Organization Type (Select correctly)
@@ -185,12 +199,14 @@ Proof: Winner_Certificate_IIT.pdf
 - ✅ Proof: Certificate/Email confirmation
 
 **Marks**:
+
 - 20: Inter/Intra college participation
 - 80: Participation at Top 200 NIRF
 - 160: Winning any hackathon
 - 240: Winning Industry/Government hackathon
 
 **Example Entry**:
+
 ```
 Hackathon: Smart India Hackathon 2026
 Organizer: Government of India (Ministry of Education)
@@ -210,6 +226,7 @@ Proof: SIH_Winner_Certificate.pdf
 **When to use**: Attended workshops/seminars as participant (not organizer)
 
 **Required Details**:
+
 - ✅ Workshop/Seminar Name
 - ✅ Organizing Institution (Full name)
 - ✅ NIRF Rank (Must be Top 200)
@@ -222,6 +239,7 @@ Proof: SIH_Winner_Certificate.pdf
 **Marks**: 20 if organized by Top 200 NIRF institution
 
 **Example Entry**:
+
 ```
 Event: National Workshop on Artificial Intelligence and Ethics
 Institution: IIT Bombay (NIRF Rank: 3)
@@ -239,6 +257,7 @@ Proof: IIT_Bombay_Workshop_Certificate.pdf
 **When to use**: Completed online certification courses
 
 **Required Details**:
+
 - ✅ Course Name (Exact title)
 - ✅ Platform (MOOC: Coursera/Udemy/edX OR NPTEL)
 - ✅ Duration (Weeks)
@@ -250,11 +269,13 @@ Proof: IIT_Bombay_Workshop_Certificate.pdf
 - ✅ Proof: Certificate (screenshot/PDF)
 
 **Marks**:
+
 - 20: MOOC courses (Coursera, Udemy, etc.)
 - 40: NPTEL 4-week course
 - 80: NPTEL 8-week or longer course
 
 **Example Entry**:
+
 ```
 Course: Machine Learning Specialization
 Platform: Coursera
@@ -274,6 +295,7 @@ Proof: Coursera_ML_Certificate.pdf
 **When to use**: Started/registered a startup
 
 **Required Details**:
+
 - ✅ Startup Name (Registered name)
 - ✅ Registration Type (Udyam/DPIIT/Both)
 - ✅ Udyam Number (if applicable)
@@ -289,11 +311,13 @@ Proof: Coursera_ML_Certificate.pdf
 - ✅ Proof: Registration certificate
 
 **Marks**: 240 for any of:
+
 - Udyam Registration
 - DPIIT Recognition
 - Secured Funding/Incubation
 
 **Example Entry**:
+
 ```
 Startup: TechEd Solutions Pvt. Ltd.
 Registration: Udyam + DPIIT
@@ -318,6 +342,7 @@ Proof: Udyam_Certificate.pdf, DPIIT_Certificate.pdf
 **IMPORTANT**: Marks depend on YOUR CURRENT SEMESTER and score achieved
 
 **Required Details**:
+
 - ✅ Platform (HackerRank/CodeChef/LeetCode)
 - ✅ Current Score/Rating/Problems Solved
 - ✅ Profile Username
@@ -326,9 +351,11 @@ Proof: Udyam_Certificate.pdf, DPIIT_Certificate.pdf
 - ✅ Proof: Screenshot showing score + username + date
 
 #### HackerRank (HackOS Score)
+
 **You must enter the HackOS number from your profile**
 
 **Semester-wise targets**:
+
 - Sem 2: 200(20m), 300(40m), 400(60m)
 - Sem 3: 500(20m), 1000(40m), 1500(60m), 2000(80m)
 - Sem 4: 2500(20m), 3000(40m), 3500(60m), 4000(80m), 5000(120m)
@@ -337,9 +364,11 @@ Proof: Udyam_Certificate.pdf, DPIIT_Certificate.pdf
 - Sem 7: 12500(20m)
 
 #### CodeChef (Rating)
+
 **You must enter your current rating**
 
 **Semester-wise targets**:
+
 - Sem 2: NA
 - Sem 3: 200(20m), 250(40m), 300(60m), 400(80m)
 - Sem 4: 500(20m), 540(40m), 580(60m), 600(80m)
@@ -348,9 +377,11 @@ Proof: Udyam_Certificate.pdf, DPIIT_Certificate.pdf
 - Sem 7: 2500(20m), 2600(40m)
 
 #### LeetCode (Problems Solved)
+
 **You must enter total problems solved (not attempted)**
 
 **Semester-wise targets**:
+
 - Sem 2: NA
 - Sem 3: 2(20m), 4(40m) OR 5 attempted with 50% acceptance(20m), 15 attempted(40m)
 - Sem 4: 5(20m), 8(40m), 10(60m), 12(80m)
@@ -359,6 +390,7 @@ Proof: Udyam_Certificate.pdf, DPIIT_Certificate.pdf
 - Sem 7: 160(20m), 180(40m), 200(60m), 225(80m), 250(120m)
 
 **Example Entry**:
+
 ```
 Platform: LeetCode
 Semester: 5
@@ -375,6 +407,7 @@ Proof: LeetCode_Profile_Screenshot.png (must show username, problem count, date)
 **When to use**: Completed a unique project addressing industry/NGO/community problem
 
 **Required Details**:
+
 - ✅ Project Title (Clear, descriptive)
 - ✅ Problem Statement (What problem does it solve?)
 - ✅ Project Type (Industry/NGO/Community)
@@ -393,6 +426,7 @@ Proof: LeetCode_Profile_Screenshot.png (must show username, problem count, date)
 **Marks**: Base 20 marks for uniqueness, can go up to 160 based on evaluation
 
 **Example Entry**:
+
 ```
 Title: Smart Garbage Collection System for Chennai Corporation
 Problem: Inefficient garbage collection leading to overflowing bins
@@ -416,6 +450,7 @@ Proof: Corporation_Approval_Letter.pdf, Project_Report.pdf, Demo_Video.mp4
 ## ✅ Proof Document Guidelines
 
 ### Acceptable Proof:
+
 ✅ Official certificates with seal/signature
 ✅ Letters on organization letterhead
 ✅ Email confirmations from official IDs
@@ -425,6 +460,7 @@ Proof: Corporation_Approval_Letter.pdf, Project_Report.pdf, Demo_Video.mp4
 ✅ Registration certificates
 
 ### NOT Acceptable:
+
 ❌ Self-made certificates
 ❌ Unverified documents
 ❌ Edited screenshots
@@ -449,7 +485,9 @@ Proof: Corporation_Approval_Letter.pdf, Project_Report.pdf, Demo_Video.mp4
 ## 📊 Understanding Marks Calculation
 
 ### Capped Components:
+
 Your total in these categories cannot exceed the cap:
+
 - Community Service: Max 40
 - Workshops: Max 20
 - Online Courses: Max 80
@@ -457,13 +495,16 @@ Your total in these categories cannot exceed the cap:
 - Minor Projects: Max 160
 
 ### Full FA Components (240 marks):
+
 Only **ONE** of these counts (the highest):
+
 - Patent with Prototype
 - Scopus Paper
 - Winning Government/Industry Hackathon
 - Entrepreneurship (Udyam/DPIIT/Funding)
 
 ### Example Calculation:
+
 ```
 Community Service: 40 (achieved 40, capped at 40)
 Patent: 240 (achieved 240) ← Full FA
@@ -501,6 +542,7 @@ A: Workshops require Top 200 NIRF. Rank 250 doesn't qualify.
 ## 📞 Support
 
 For issues:
+
 1. Check this guide first
 2. Verify your entry matches rubrics exactly
 3. Ensure proof documents are uploaded

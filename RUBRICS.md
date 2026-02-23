@@ -1,6 +1,7 @@
 # Internal Marks Calculation - Complete Rubrics Guide
 
 ## Overview
+
 This document provides the complete rubrics for calculating internal marks across all 9 activity components.
 
 ---
@@ -10,11 +11,13 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 40
 
 ### Rubrics:
-| Activity | Team Size | Marks |
-|----------|-----------|-------|
-| School/NGO/Industry Engagement - Conducting Workshops, Coding Sessions, or Similar Activities | Maximum 3 Members | 40 |
+
+| Activity                                                                                      | Team Size         | Marks |
+| --------------------------------------------------------------------------------------------- | ----------------- | ----- |
+| School/NGO/Industry Engagement - Conducting Workshops, Coding Sessions, or Similar Activities | Maximum 3 Members | 40    |
 
 ### Details Required:
+
 - Organization Name (School/NGO/Industry)
 - Activity Type (Workshop/Coding Session/Training)
 - Description of Activity
@@ -29,12 +32,14 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 240 (Full FA marks for all courses in current semester)
 
 ### Rubrics:
-| Activity | Marks |
-|----------|-------|
-| Development of Working Prototype + Filing Patent Application + Publication through Institution's IPM Cell | 240 |
-| Technology Transfer or Commercialization | 240 (Full FA) |
+
+| Activity                                                                                                  | Marks         |
+| --------------------------------------------------------------------------------------------------------- | ------------- |
+| Development of Working Prototype + Filing Patent Application + Publication through Institution's IPM Cell | 240           |
+| Technology Transfer or Commercialization                                                                  | 240 (Full FA) |
 
 ### Details Required:
+
 - Patent Title
 - Application Number
 - Filing Date
@@ -51,11 +56,13 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 240 (Full FA marks for all courses in current semester)
 
 ### Rubrics:
-| Publication Type | Co-authors | Marks |
-|-----------------|------------|-------|
+
+| Publication Type                                | Co-authors                                | Marks         |
+| ----------------------------------------------- | ----------------------------------------- | ------------- |
 | Publishing in Scopus-Indexed Conference/Journal | Along with Institute Students and Faculty | 240 (Full FA) |
 
 ### Details Required:
+
 - Paper Title
 - Publication Type (Conference/Journal)
 - Journal/Conference Name
@@ -72,13 +79,15 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 100
 
 ### Rubrics:
-| Activity | Criteria | Marks |
-|----------|----------|-------|
-| Participation in Project Presentation/Competition | Top 300 NIRF-Ranked Institutions | 40 |
-| Winning in Project Presentation/Competition | Any Competition | 80 |
-| Project Development and Implementation with Industry | Level 3-5 | 100 |
+
+| Activity                                             | Criteria                         | Marks |
+| ---------------------------------------------------- | -------------------------------- | ----- |
+| Participation in Project Presentation/Competition    | Top 300 NIRF-Ranked Institutions | 40    |
+| Winning in Project Presentation/Competition          | Any Competition                  | 80    |
+| Project Development and Implementation with Industry | Level 3-5                        | 100   |
 
 ### Details Required:
+
 - Competition Name
 - Institution Name
 - NIRF Rank (if applicable)
@@ -94,14 +103,16 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 240 (Full FA marks for all courses in current semester)
 
 ### Rubrics:
-| Activity | Criteria | Marks |
-|----------|----------|-------|
-| Participation | Inter/Intra-College Hackathons and Contests | 20 |
-| Participation | Top 200 NIRF-Ranked Institutions | 80 |
-| Winning | Any Hackathons and Contests | 160 |
-| Winning | Organized by Industry/Government | 240 (Full FA) |
+
+| Activity      | Criteria                                    | Marks         |
+| ------------- | ------------------------------------------- | ------------- |
+| Participation | Inter/Intra-College Hackathons and Contests | 20            |
+| Participation | Top 200 NIRF-Ranked Institutions            | 80            |
+| Winning       | Any Hackathons and Contests                 | 160           |
+| Winning       | Organized by Industry/Government            | 240 (Full FA) |
 
 ### Details Required:
+
 - Hackathon/Contest Name
 - Organizer Name
 - Organization Type (College/NIRF Institution/Industry/Government)
@@ -117,11 +128,13 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 20
 
 ### Rubrics:
-| Activity | Criteria | Marks |
-|----------|----------|-------|
-| Attending Workshops/Seminars | Top 200 NIRF-Ranked Institutions | 20 |
+
+| Activity                     | Criteria                         | Marks |
+| ---------------------------- | -------------------------------- | ----- |
+| Attending Workshops/Seminars | Top 200 NIRF-Ranked Institutions | 20    |
 
 ### Details Required:
+
 - Workshop/Seminar Name
 - Organizing Institution
 - NIRF Rank (max 200)
@@ -136,13 +149,15 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 80
 
 ### Rubrics:
-| Platform | Course Duration | Marks |
-|----------|----------------|-------|
-| MOOC (Coursera, Udemy, etc.) | Any | 20 |
-| NPTEL | 4-week Course | 40 |
-| NPTEL | 8-week or longer Course | 80 |
+
+| Platform                     | Course Duration         | Marks |
+| ---------------------------- | ----------------------- | ----- |
+| MOOC (Coursera, Udemy, etc.) | Any                     | 20    |
+| NPTEL                        | 4-week Course           | 40    |
+| NPTEL                        | 8-week or longer Course | 80    |
 
 ### Details Required:
+
 - Course Name
 - Platform (MOOC/NPTEL)
 - Duration (Weeks)
@@ -157,13 +172,15 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 240 (Full FA marks for all courses in current semester)
 
 ### Rubrics:
-| Activity | Criteria | Marks |
-|----------|----------|-------|
-| Start-up with Udyam Registration | Valid Registration | 240 (Full FA) |
-| Start-up with DPIIT Recognition | Valid Recognition | 240 (Full FA) |
-| Securing Funding/Incubation | Any amount/institution | 240 (Full FA) |
+
+| Activity                         | Criteria               | Marks         |
+| -------------------------------- | ---------------------- | ------------- |
+| Start-up with Udyam Registration | Valid Registration     | 240 (Full FA) |
+| Start-up with DPIIT Recognition  | Valid Recognition      | 240 (Full FA) |
+| Securing Funding/Incubation      | Any amount/institution | 240 (Full FA) |
 
 ### Details Required:
+
 - Startup Name
 - Registration Type (Udyam/DPIIT/Both)
 - Registration Number
@@ -182,144 +199,163 @@ This document provides the complete rubrics for calculating internal marks acros
 ### HackerRank (HackOS Scores)
 
 #### Semester II
+
 | HackOS Score | Marks |
-|--------------|-------|
-| > 200 | 20 |
-| > 300 | 40 |
-| > 400 | 60 |
+| ------------ | ----- |
+| > 200        | 20    |
+| > 300        | 40    |
+| > 400        | 60    |
 
 #### Semester III
+
 | HackOS Score | Marks |
-|--------------|-------|
-| > 500 | 20 |
-| > 1000 | 40 |
-| > 1500 | 60 |
-| > 2000 | 80 |
+| ------------ | ----- |
+| > 500        | 20    |
+| > 1000       | 40    |
+| > 1500       | 60    |
+| > 2000       | 80    |
 
 #### Semester IV
+
 | HackOS Score | Marks |
-|--------------|-------|
-| > 2,500 | 20 |
-| > 3,000 | 40 |
-| > 3,500 | 60 |
-| > 4,000 | 80 |
-| > 5,000 | 120 |
+| ------------ | ----- |
+| > 2,500      | 20    |
+| > 3,000      | 40    |
+| > 3,500      | 60    |
+| > 4,000      | 80    |
+| > 5,000      | 120   |
 
 #### Semester V
+
 | HackOS Score | Marks |
-|--------------|-------|
-| > 6,000 | 20 |
-| > 8,000 | 40 |
-| > 10,000 | 60 |
+| ------------ | ----- |
+| > 6,000      | 20    |
+| > 8,000      | 40    |
+| > 10,000     | 60    |
 
 #### Semester VI
+
 | HackOS Score | Marks |
-|--------------|-------|
-| > 11,000 | 20 |
-| > 12,000 | 40 |
+| ------------ | ----- |
+| > 11,000     | 20    |
+| > 12,000     | 40    |
 
 #### Semester VII
+
 | HackOS Score | Marks |
-|--------------|-------|
-| > 12,500 | 20 |
+| ------------ | ----- |
+| > 12,500     | 20    |
 
 ---
 
 ### CodeChef (Rating)
 
 #### Semester II
+
 - NA
 
 #### Semester III
+
 | Rating | Marks |
-|--------|-------|
-| > 200 | 20 |
-| > 250 | 40 |
-| > 300 | 60 |
-| > 400 | 80 |
+| ------ | ----- |
+| > 200  | 20    |
+| > 250  | 40    |
+| > 300  | 60    |
+| > 400  | 80    |
 
 #### Semester IV
+
 | Rating | Marks |
-|--------|-------|
-| > 500 | 20 |
-| > 540 | 40 |
-| > 580 | 60 |
-| > 600 | 80 |
+| ------ | ----- |
+| > 500  | 20    |
+| > 540  | 40    |
+| > 580  | 60    |
+| > 600  | 80    |
 
 #### Semester V
+
 | Rating | Marks |
-|--------|-------|
-| > 800 | 20 |
-| > 1200 | 40 |
-| > 1400 | 60 |
-| > 1600 | 80 |
-| > 1800 | 120 |
+| ------ | ----- |
+| > 800  | 20    |
+| > 1200 | 40    |
+| > 1400 | 60    |
+| > 1600 | 80    |
+| > 1800 | 120   |
 
 #### Semester VI
+
 | Rating | Marks |
-|--------|-------|
-| > 2000 | 20 |
-| > 2100 | 40 |
-| > 2200 | 60 |
-| > 2300 | 80 |
+| ------ | ----- |
+| > 2000 | 20    |
+| > 2100 | 40    |
+| > 2200 | 60    |
+| > 2300 | 80    |
 
 #### Semester VII
+
 | Rating | Marks |
-|--------|-------|
-| > 2500 | 20 |
-| > 2600 | 40 |
+| ------ | ----- |
+| > 2500 | 20    |
+| > 2600 | 40    |
 
 ---
 
 ### LeetCode (Problems Solved)
 
 #### Semester II
+
 - NA
 
 #### Semester III
-| Criteria | Marks |
-|----------|-------|
-| 5 problems attended with 50% acceptance | 20 |
-| 15 problems attended with 50% acceptance | 40 |
-| **OR** |  |
-| 2 problems solved | 20 |
-| 4 problems solved | 40 |
+
+| Criteria                                 | Marks |
+| ---------------------------------------- | ----- |
+| 5 problems attended with 50% acceptance  | 20    |
+| 15 problems attended with 50% acceptance | 40    |
+| **OR**                                   |       |
+| 2 problems solved                        | 20    |
+| 4 problems solved                        | 40    |
 
 #### Semester IV
+
 | Problems Solved | Marks |
-|----------------|-------|
-| > 5 | 20 |
-| > 8 | 40 |
-| > 10 | 60 |
-| > 12 | 80 |
+| --------------- | ----- |
+| > 5             | 20    |
+| > 8             | 40    |
+| > 10            | 60    |
+| > 12            | 80    |
 
 #### Semester V
+
 | Problems Solved | Marks |
-|----------------|-------|
-| > 30 | 20 |
-| > 40 | 40 |
-| > 60 | 60 |
-| > 80 | 80 |
+| --------------- | ----- |
+| > 30            | 20    |
+| > 40            | 40    |
+| > 60            | 60    |
+| > 80            | 80    |
 
 #### Semester VI
+
 | Problems Solved | Marks |
-|----------------|-------|
-| > 90 | 20 |
-| > 100 | 40 |
-| > 110 | 60 |
-| > 120 | 80 |
-| > 140 | 120 |
+| --------------- | ----- |
+| > 90            | 20    |
+| > 100           | 40    |
+| > 110           | 60    |
+| > 120           | 80    |
+| > 140           | 120   |
 
 #### Semester VII
+
 | Problems Solved | Marks |
-|----------------|-------|
-| > 160 | 20 |
-| > 180 | 40 |
-| > 200 | 60 |
-| > 225 | 80 |
-| > 250 | 120 |
+| --------------- | ----- |
+| > 160           | 20    |
+| > 180           | 40    |
+| > 200           | 60    |
+| > 225           | 80    |
+| > 250           | 120   |
 
 ### Details Required for Coding Platforms:
+
 - Platform (HackerRank/CodeChef/LeetCode)
 - Score/Rating/Problems Solved
 - Current Semester
@@ -334,12 +370,14 @@ This document provides the complete rubrics for calculating internal marks acros
 **Maximum Marks**: 160
 
 ### Rubrics:
-| Criteria | Marks |
-|----------|-------|
-| Uniqueness of Problem Statement (Industry/NGO/Community) | 20 |
-| Additional evaluation criteria | Up to 160 total |
+
+| Criteria                                                 | Marks           |
+| -------------------------------------------------------- | --------------- |
+| Uniqueness of Problem Statement (Industry/NGO/Community) | 20              |
+| Additional evaluation criteria                           | Up to 160 total |
 
 ### Details Required:
+
 - Project Title
 - Problem Statement
 - Project Type (Industry/NGO/Community)
@@ -355,6 +393,7 @@ This document provides the complete rubrics for calculating internal marks acros
 ## 📊 Marks Calculation Summary
 
 ### Components with Caps:
+
 - **Community Service**: Maximum 40 marks
 - **Workshops & Seminars**: Maximum 20 marks
 - **Online Courses**: Maximum 80 marks
@@ -362,7 +401,9 @@ This document provides the complete rubrics for calculating internal marks acros
 - **Minor Projects**: Maximum 160 marks
 
 ### Components with Full FA Marks (240):
+
 Only the **highest scoring** from these applies:
+
 - Patent Filing with Prototype + IPM Publication: 240
 - Technology Transfer/Commercialization: 240
 - Scopus Paper Publication: 240
@@ -370,6 +411,7 @@ Only the **highest scoring** from these applies:
 - Entrepreneurship (Udyam/DPIIT/Funding): 240
 
 ### Formula:
+
 ```
 Total Marks = Community Service (max 40)
             + Full FA Component (max 240 - highest among eligible)
@@ -387,6 +429,7 @@ Total Marks = Community Service (max 40)
 ## 🔍 Proof Document Requirements
 
 All entries must include supporting proof documents:
+
 - Certificates
 - Letters of Appreciation
 - Publication Links
@@ -407,4 +450,4 @@ All entries must include supporting proof documents:
 
 ---
 
-*Last Updated: February 23, 2026*
+_Last Updated: February 23, 2026_
