@@ -24,9 +24,12 @@ const addColumns = (tableName) => {
         `ALTER TABLE ${tableName} ADD COLUMN staff_evaluated INTEGER DEFAULT 0`,
         (err) => {
           if (err && !err.message.includes("duplicate column")) {
-            console.error(`Error adding staff_evaluated to ${tableName}:`, err.message);
+            console.error(
+              `Error adding staff_evaluated to ${tableName}:`,
+              err.message,
+            );
           }
-        }
+        },
       );
 
       // Add staff_comments column
@@ -34,9 +37,12 @@ const addColumns = (tableName) => {
         `ALTER TABLE ${tableName} ADD COLUMN staff_comments TEXT`,
         (err) => {
           if (err && !err.message.includes("duplicate column")) {
-            console.error(`Error adding staff_comments to ${tableName}:`, err.message);
+            console.error(
+              `Error adding staff_comments to ${tableName}:`,
+              err.message,
+            );
           }
-        }
+        },
       );
 
       // Add staff_evaluated_by column
@@ -44,9 +50,12 @@ const addColumns = (tableName) => {
         `ALTER TABLE ${tableName} ADD COLUMN staff_evaluated_by TEXT`,
         (err) => {
           if (err && !err.message.includes("duplicate column")) {
-            console.error(`Error adding staff_evaluated_by to ${tableName}:`, err.message);
+            console.error(
+              `Error adding staff_evaluated_by to ${tableName}:`,
+              err.message,
+            );
           }
-        }
+        },
       );
 
       // Add staff_evaluated_at column
@@ -54,12 +63,15 @@ const addColumns = (tableName) => {
         `ALTER TABLE ${tableName} ADD COLUMN staff_evaluated_at DATETIME`,
         (err) => {
           if (err && !err.message.includes("duplicate column")) {
-            console.error(`Error adding staff_evaluated_at to ${tableName}:`, err.message);
+            console.error(
+              `Error adding staff_evaluated_at to ${tableName}:`,
+              err.message,
+            );
           } else {
             console.log(`✅ Added staff evaluation columns to ${tableName}`);
           }
           resolve();
-        }
+        },
       );
     });
   });

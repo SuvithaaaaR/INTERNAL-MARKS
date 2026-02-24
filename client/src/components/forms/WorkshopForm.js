@@ -106,8 +106,8 @@ const WorkshopForm = ({ studentId, onSuccess }) => {
           }}
         >
           <strong>Marks Allocation:</strong>
-          <br />
-          • Attended Workshop/Seminar at Top 200 NIRF Institution: 20 marks
+          <br />• Attended Workshop/Seminar at Top 200 NIRF Institution: 20
+          marks
         </div>
 
         {showForm && (
@@ -211,67 +211,82 @@ const WorkshopForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
               No entries yet. Add your first entry above.
             </p>
           ) : (
-          entries.map((entry) => (
-            <div key={entry.id} className="entry-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "start",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <h4 style={{ margin: 0 }}>{entry.event_name}</h4>
-                    <div style={{ 
-                      background: "#28a745", 
-                      color: "white", 
-                      padding: "8px 16px", 
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                      fontSize: "16px"
-                    }}>
-                      ✅ {entry.marks_awarded} Marks Awarded
-                    </div>
-                  </div>
-                  <div className="entry-details">
-                    <div>
-                      <strong>Type:</strong> {entry.event_type}
-                    </div>
-                    <div>
-                      <strong>Institution:</strong> {entry.institution_name}
-                    </div>
-                    {entry.nirf_rank && (
-                      <div>
-                        <strong>NIRF Rank:</strong> {entry.nirf_rank}
-                      </div>
-                    )}
-                    <div>
-                      <strong>Duration:</strong> {entry.duration_days} day(s)
-                    </div>
-                    <div>
-                      <strong>Date:</strong> {entry.date_attended}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(entry.id)}
-                  style={{ marginLeft: "15px" }}
+            entries.map((entry) => (
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
                 >
-                  Delete
-                </button>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <h4 style={{ margin: 0 }}>{entry.event_name}</h4>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
+                    </div>
+                    <div className="entry-details">
+                      <div>
+                        <strong>Type:</strong> {entry.event_type}
+                      </div>
+                      <div>
+                        <strong>Institution:</strong> {entry.institution_name}
+                      </div>
+                      {entry.nirf_rank && (
+                        <div>
+                          <strong>NIRF Rank:</strong> {entry.nirf_rank}
+                        </div>
+                      )}
+                      <div>
+                        <strong>Duration:</strong> {entry.duration_days} day(s)
+                      </div>
+                      <div>
+                        <strong>Date:</strong> {entry.date_attended}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
         </div>
       </div>
     </div>

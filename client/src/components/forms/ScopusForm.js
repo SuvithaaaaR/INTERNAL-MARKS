@@ -110,8 +110,7 @@ const ScopusForm = ({ studentId, onSuccess }) => {
           <strong>Marks Allocation (240 marks - Full FA):</strong>
           <br />
           • Scopus-Indexed Conference/Journal Publication: 240 marks (Full FA)
-          <br />
-          • Must be indexed in Scopus database
+          <br />• Must be indexed in Scopus database
         </div>
 
         {showForm && (
@@ -215,78 +214,93 @@ const ScopusForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
               No entries yet. Add your first entry above.
             </p>
           ) : (
-          entries.map((entry) => (
-            <div key={entry.id} className="entry-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "start",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <h4 style={{ margin: 0 }}>{entry.paper_title}</h4>
-                    <div style={{ 
-                      background: "#28a745", 
-                      color: "white", 
-                      padding: "8px 16px", 
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                      fontSize: "16px"
-                    }}>
-                      ✅ {entry.marks_awarded} Marks Awarded
-                    </div>
-                  </div>
-                  <div className="entry-details">
-                    <div>
-                      <strong>Type:</strong> {entry.publication_type}
-                    </div>
-                    <div>
-                      <strong>Venue:</strong> {entry.journal_conference_name}
-                    </div>
-                    <div>
-                      <strong>Date:</strong> {entry.publication_date}
-                    </div>
-                  </div>
-                  {entry.co_authors && (
-                    <p
+            entries.map((entry) => (
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <div
                       style={{
-                        marginTop: "10px",
-                        fontSize: "14px",
-                        color: "#666",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
                       }}
                     >
-                      <strong>Co-authors:</strong> {entry.co_authors}
-                    </p>
-                  )}
-                  {entry.scopus_indexed && (
-                    <span
-                      className="badge badge-primary"
-                      style={{ marginTop: "8px" }}
-                    >
-                      Scopus Indexed
-                    </span>
-                  )}
+                      <h4 style={{ margin: 0 }}>{entry.paper_title}</h4>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
+                    </div>
+                    <div className="entry-details">
+                      <div>
+                        <strong>Type:</strong> {entry.publication_type}
+                      </div>
+                      <div>
+                        <strong>Venue:</strong> {entry.journal_conference_name}
+                      </div>
+                      <div>
+                        <strong>Date:</strong> {entry.publication_date}
+                      </div>
+                    </div>
+                    {entry.co_authors && (
+                      <p
+                        style={{
+                          marginTop: "10px",
+                          fontSize: "14px",
+                          color: "#666",
+                        }}
+                      >
+                        <strong>Co-authors:</strong> {entry.co_authors}
+                      </p>
+                    )}
+                    {entry.scopus_indexed && (
+                      <span
+                        className="badge badge-primary"
+                        style={{ marginTop: "8px" }}
+                      >
+                        Scopus Indexed
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Delete
+                  </button>
                 </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(entry.id)}
-                  style={{ marginLeft: "15px" }}
-                >
-                  Delete
-                </button>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
         </div>
       </div>
     </div>

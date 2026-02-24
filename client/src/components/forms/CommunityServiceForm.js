@@ -93,7 +93,7 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
             {showForm ? "Cancel" : "+ Add Entry"}
           </button>
         </div>
-        
+
         <div
           style={{
             background: "#e3f2fd",
@@ -105,11 +105,11 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
         >
           <strong>Marks Allocation:</strong>
           <br />
-          • Conducted Workshop/Coding Session at School/NGO/Industry: 40 marks per entry
+          • Conducted Workshop/Coding Session at School/NGO/Industry: 40 marks
+          per entry
           <br />
           • Requirement: Team of maximum 3 members
-          <br />
-          • Must provide certificate/letter from organization
+          <br />• Must provide certificate/letter from organization
         </div>
 
         {showForm && (
@@ -204,7 +204,13 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
@@ -221,16 +227,25 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
                   }}
                 >
                   <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
                       <h4 style={{ margin: 0 }}>{entry.organization_name}</h4>
-                      <div style={{ 
-                        background: "#28a745", 
-                        color: "white", 
-                        padding: "8px 16px", 
-                        borderRadius: "6px",
-                        fontWeight: "bold",
-                        fontSize: "16px"
-                      }}>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
                         ✅ {entry.marks_awarded} Marks Awarded
                       </div>
                     </div>
@@ -245,7 +260,8 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
                         <strong>Date Conducted:</strong> {entry.date_conducted}
                       </div>
                       <div>
-                        <strong>Description:</strong> {entry.activity_description}
+                        <strong>Description:</strong>{" "}
+                        {entry.activity_description}
                       </div>
                     </div>
                   </div>

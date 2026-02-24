@@ -95,7 +95,7 @@ const PatentForm = ({ studentId, onSuccess }) => {
             {showForm ? "Cancel" : "+ Add Entry"}
           </button>
         </div>
-        
+
         <div
           style={{
             background: "#e3f2fd",
@@ -107,11 +107,11 @@ const PatentForm = ({ studentId, onSuccess }) => {
         >
           <strong>Marks Allocation (240 marks - Full FA):</strong>
           <br />
-          • Requirements: Prototype Development + Patent Filing + IPM Cell Publication
+          • Requirements: Prototype Development + Patent Filing + IPM Cell
+          Publication
           <br />
           • OR Technology Transfer/Commercialization
-          <br />
-          • All requirements met: 240 marks (Full FA)
+          <br />• All requirements met: 240 marks (Full FA)
         </div>
 
         {showForm && (
@@ -234,78 +234,93 @@ const PatentForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
               No entries yet. Add your first entry above.
             </p>
           ) : (
-          entries.map((entry) => (
-            <div key={entry.id} className="entry-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "start",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <h4 style={{ margin: 0 }}>{entry.patent_title}</h4>
-                    <div style={{ 
-                      background: "#28a745", 
-                      color: "white", 
-                      padding: "8px 16px", 
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                      fontSize: "16px"
-                    }}>
-                      ✅ {entry.marks_awarded} Marks Awarded
-                    </div>
-                  </div>
-                  <div className="entry-details">
-                    <div>
-                      <strong>Type:</strong> {entry.patent_type}
-                    </div>
-                    <div>
-                      <strong>Application:</strong>{" "}
-                      {entry.application_number || "N/A"}
-                    </div>
-                    <div>
-                      <strong>Filing Date:</strong> {entry.filing_date}
-                    </div>
-                    <div>
-                      <strong>Status:</strong> {entry.status}
-                    </div>
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    {entry.prototype_developed && (
-                      <span
-                        className="badge badge-primary"
-                        style={{ marginRight: "8px" }}
-                      >
-                        Prototype Developed
-                      </span>
-                    )}
-                    {entry.technology_transfer && (
-                      <span className="badge badge-primary">
-                        Technology Transfer
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(entry.id)}
-                  style={{ marginLeft: "15px" }}
+            entries.map((entry) => (
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
                 >
-                  Delete
-                </button>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <h4 style={{ margin: 0 }}>{entry.patent_title}</h4>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
+                    </div>
+                    <div className="entry-details">
+                      <div>
+                        <strong>Type:</strong> {entry.patent_type}
+                      </div>
+                      <div>
+                        <strong>Application:</strong>{" "}
+                        {entry.application_number || "N/A"}
+                      </div>
+                      <div>
+                        <strong>Filing Date:</strong> {entry.filing_date}
+                      </div>
+                      <div>
+                        <strong>Status:</strong> {entry.status}
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                      {entry.prototype_developed && (
+                        <span
+                          className="badge badge-primary"
+                          style={{ marginRight: "8px" }}
+                        >
+                          Prototype Developed
+                        </span>
+                      )}
+                      {entry.technology_transfer && (
+                        <span className="badge badge-primary">
+                          Technology Transfer
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
         </div>
       </div>
     </div>

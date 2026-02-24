@@ -109,15 +109,17 @@ const CodingPlatformForm = ({ studentId, onSuccess }) => {
           <br />
           <strong>HackerRank:</strong>
           <br />
-          • Sem 2: 200-400 HackOS → 20-40 marks | Sem 3: 500-2000 HackOS → 40-80 marks | Sem 4: 2500-5000 HackOS → 80-120 marks
+          • Sem 2: 200-400 HackOS → 20-40 marks | Sem 3: 500-2000 HackOS → 40-80
+          marks | Sem 4: 2500-5000 HackOS → 80-120 marks
           <br />
           <strong>CodeChef (Sem 3+):</strong>
           <br />
-          • Rating 200-800 → 20 marks | 800-1400 → 40 marks | 1400-2000 → 80 marks | 2000-2600 → 120 marks
+          • Rating 200-800 → 20 marks | 800-1400 → 40 marks | 1400-2000 → 80
+          marks | 2000-2600 → 120 marks
           <br />
           <strong>LeetCode (Sem 3+):</strong>
-          <br />
-          • 2-50 problems → 20 marks | 50-100 → 40 marks | 100-150 → 80 marks | 150-250 → 120 marks
+          <br />• 2-50 problems → 20 marks | 50-100 → 40 marks | 100-150 → 80
+          marks | 150-250 → 120 marks
         </div>
 
         {showForm && (
@@ -240,83 +242,100 @@ const CodingPlatformForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
               No entries yet. Add your first entry above.
             </p>
           ) : (
-          entries.map((entry) => (
-            <div key={entry.id} className="entry-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "start",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <h4 style={{ margin: 0 }}>{entry.platform.toUpperCase()}</h4>
-                    <div style={{ 
-                      background: "#28a745", 
-                      color: "white", 
-                      padding: "8px 16px", 
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                      fontSize: "16px"
-                    }}>
-                      ✅ {entry.marks_awarded} Marks Awarded
-                    </div>
-                  </div>
-                  <div className="entry-details">
-                    {entry.platform === "leetcode" ? (
-                      <>
-                        <div>
-                          <strong>Problems Solved:</strong>{" "}
-                          {entry.problems_solved}
-                        </div>
-                        {entry.acceptance_rate && (
-                          <div>
-                            <strong>Acceptance Rate:</strong>{" "}
-                            {entry.acceptance_rate}%
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div>
-                        <strong>Score/Rating:</strong> {entry.score_rating}
-                      </div>
-                    )}
-                    <div>
-                      <strong>Date:</strong> {entry.date_achieved}
-                    </div>
-                    {entry.profile_link && (
-                      <div>
-                        <strong>Profile:</strong>{" "}
-                        <a
-                          href={entry.profile_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(entry.id)}
-                  style={{ marginLeft: "15px" }}
+            entries.map((entry) => (
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
                 >
-                  Delete
-                </button>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <h4 style={{ margin: 0 }}>
+                        {entry.platform.toUpperCase()}
+                      </h4>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
+                    </div>
+                    <div className="entry-details">
+                      {entry.platform === "leetcode" ? (
+                        <>
+                          <div>
+                            <strong>Problems Solved:</strong>{" "}
+                            {entry.problems_solved}
+                          </div>
+                          {entry.acceptance_rate && (
+                            <div>
+                              <strong>Acceptance Rate:</strong>{" "}
+                              {entry.acceptance_rate}%
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div>
+                          <strong>Score/Rating:</strong> {entry.score_rating}
+                        </div>
+                      )}
+                      <div>
+                        <strong>Date:</strong> {entry.date_achieved}
+                      </div>
+                      {entry.profile_link && (
+                        <div>
+                          <strong>Profile:</strong>{" "}
+                          <a
+                            href={entry.profile_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
         </div>
       </div>
     </div>

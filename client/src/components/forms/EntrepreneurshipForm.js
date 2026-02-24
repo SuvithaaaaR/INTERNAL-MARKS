@@ -114,8 +114,7 @@ const EntrepreneurshipForm = ({ studentId, onSuccess }) => {
           • Udyam Registration: 240 marks
           <br />
           • DPIIT Recognition: 240 marks
-          <br />
-          • Secured Funding/Incubation: 240 marks
+          <br />• Secured Funding/Incubation: 240 marks
         </div>
 
         {showForm && (
@@ -236,77 +235,93 @@ const EntrepreneurshipForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
               No entries yet. Add your first entry above.
             </p>
           ) : (
-          entries.map((entry) => (
-            <div key={entry.id} className="entry-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "start",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <h4 style={{ margin: 0 }}>{entry.startup_name}</h4>
-                    <div style={{ 
-                      background: "#28a745", 
-                      color: "white", 
-                      padding: "8px 16px", 
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                      fontSize: "16px"
-                    }}>
-                      ✅ {entry.marks_awarded} Marks Awarded
-                    </div>
-                  </div>
-                  <div className="entry-details">
-                    <div>
-                      <strong>Type:</strong> {entry.registration_type}
-                    </div>
-                    <div>
-                      <strong>Registration:</strong> {entry.registration_number}
-                    </div>
-                    <div>
-                      <strong>Date:</strong> {entry.registration_date}
-                    </div>
-                    {entry.funding_secured && entry.funding_amount && (
-                      <div>
-                        <strong>Funding:</strong> ₹{entry.funding_amount}
-                      </div>
-                    )}
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    {entry.funding_secured && (
-                      <span
-                        className="badge badge-primary"
-                        style={{ marginRight: "8px" }}
-                      >
-                        Funding Secured
-                      </span>
-                    )}
-                    {entry.incubation_status && (
-                      <span className="badge badge-primary">Incubated</span>
-                    )}
-                  </div>
-                </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(entry.id)}
-                  style={{ marginLeft: "15px" }}
+            entries.map((entry) => (
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
                 >
-                  Delete
-                </button>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <h4 style={{ margin: 0 }}>{entry.startup_name}</h4>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
+                    </div>
+                    <div className="entry-details">
+                      <div>
+                        <strong>Type:</strong> {entry.registration_type}
+                      </div>
+                      <div>
+                        <strong>Registration:</strong>{" "}
+                        {entry.registration_number}
+                      </div>
+                      <div>
+                        <strong>Date:</strong> {entry.registration_date}
+                      </div>
+                      {entry.funding_secured && entry.funding_amount && (
+                        <div>
+                          <strong>Funding:</strong> ₹{entry.funding_amount}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                      {entry.funding_secured && (
+                        <span
+                          className="badge badge-primary"
+                          style={{ marginRight: "8px" }}
+                        >
+                          Funding Secured
+                        </span>
+                      )}
+                      {entry.incubation_status && (
+                        <span className="badge badge-primary">Incubated</span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ const db = require("../database");
 router.get("/pending/:activityType", (req, res) => {
   const { activityType } = req.params;
   const query = `SELECT * FROM ${activityType} WHERE staff_evaluated = 0 ORDER BY created_at DESC`;
-  
+
   db.all(query, [], (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
@@ -19,7 +19,7 @@ router.get("/pending/:activityType", (req, res) => {
 router.get("/all/:activityType", (req, res) => {
   const { activityType } = req.params;
   const query = `SELECT * FROM ${activityType} ORDER BY created_at DESC`;
-  
+
   db.all(query, [], (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
@@ -52,7 +52,7 @@ router.get("/student/:studentId", (req, res) => {
         (err, rows) => {
           if (err) reject(err);
           else resolve(rows);
-        }
+        },
       );
     });
   });
@@ -94,7 +94,7 @@ router.put("/evaluate/:activityType/:entryId", (req, res) => {
         marks_awarded,
         changes: this.changes,
       });
-    }
+    },
   );
 });
 
@@ -125,7 +125,7 @@ router.put("/bulk-evaluate", (req, res) => {
         function (err) {
           if (err) reject(err);
           else resolve({ entryId: evaluation.entryId, changes: this.changes });
-        }
+        },
       );
     });
   });
@@ -169,18 +169,21 @@ router.get("/stats", (req, res) => {
         (err, row) => {
           if (err) reject(err);
           else resolve({ table, ...row });
-        }
+        },
       );
     });
   });
 
   Promise.all(promises)
     .then((results) => {
-      const totals = results.reduce((acc, curr) => ({
-        total: acc.total + curr.total,
-        evaluated: acc.evaluated + curr.evaluated,
-        pending: acc.pending + curr.pending,
-      }), { total: 0, evaluated: 0, pending: 0 });
+      const totals = results.reduce(
+        (acc, curr) => ({
+          total: acc.total + curr.total,
+          evaluated: acc.evaluated + curr.evaluated,
+          pending: acc.pending + curr.pending,
+        }),
+        { total: 0, evaluated: 0, pending: 0 },
+      );
 
       res.json({
         overall: totals,

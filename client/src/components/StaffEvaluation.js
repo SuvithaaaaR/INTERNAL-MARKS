@@ -99,7 +99,7 @@ const StaffEvaluation = () => {
     try {
       await axios.put(
         `${API_URL}/staff-evaluation/evaluate/${activityType}/${selectedEntry.id}`,
-        evaluationData
+        evaluationData,
       );
       toast.success("Evaluation submitted successfully!");
       setSelectedEntry(null);
@@ -180,9 +180,7 @@ const StaffEvaluation = () => {
               <h3 style={{ margin: 0, fontSize: "32px", color: "#28a745" }}>
                 {stats.overall.evaluated}
               </h3>
-              <p style={{ margin: "5px 0 0 0", color: "#666" }}>
-                Evaluated
-              </p>
+              <p style={{ margin: "5px 0 0 0", color: "#666" }}>Evaluated</p>
             </div>
           </div>
         )}
@@ -243,7 +241,11 @@ const StaffEvaluation = () => {
             </p>
           ) : (
             entries.map((entry) => (
-              <div key={entry.id} className="entry-card" style={{ marginBottom: "15px" }}>
+              <div
+                key={entry.id}
+                className="entry-card"
+                style={{ marginBottom: "15px" }}
+              >
                 <div
                   style={{
                     display: "flex",
@@ -252,7 +254,14 @@ const StaffEvaluation = () => {
                   }}
                 >
                   <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        marginBottom: "10px",
+                      }}
+                    >
                       <h4 style={{ margin: 0 }}>
                         {entry.hackathon_name ||
                           entry.course_name ||
@@ -295,7 +304,8 @@ const StaffEvaluation = () => {
 
                     <div className="entry-details">
                       <div>
-                        <strong>Student:</strong> {getStudentName(entry.student_id)} (
+                        <strong>Student:</strong>{" "}
+                        {getStudentName(entry.student_id)} (
                         {getStudentRollNumber(entry.student_id)})
                       </div>
                       <div>
@@ -317,13 +327,16 @@ const StaffEvaluation = () => {
                         <>
                           {entry.staff_evaluated_by && (
                             <div>
-                              <strong>Evaluated By:</strong> {entry.staff_evaluated_by}
+                              <strong>Evaluated By:</strong>{" "}
+                              {entry.staff_evaluated_by}
                             </div>
                           )}
                           {entry.staff_evaluated_at && (
                             <div>
                               <strong>Evaluated On:</strong>{" "}
-                              {new Date(entry.staff_evaluated_at).toLocaleDateString()}
+                              {new Date(
+                                entry.staff_evaluated_at,
+                              ).toLocaleDateString()}
                             </div>
                           )}
                           {entry.staff_comments && (
@@ -380,7 +393,8 @@ const StaffEvaluation = () => {
             <h3>Evaluate Entry</h3>
             <div style={{ marginBottom: "20px" }}>
               <p>
-                <strong>Student:</strong> {getStudentName(selectedEntry.student_id)} (
+                <strong>Student:</strong>{" "}
+                {getStudentName(selectedEntry.student_id)} (
                 {getStudentRollNumber(selectedEntry.student_id)})
               </p>
               <p>
@@ -448,7 +462,13 @@ const StaffEvaluation = () => {
                 />
               </div>
 
-              <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  justifyContent: "flex-end",
+                }}
+              >
                 <button
                   type="button"
                   className="btn"

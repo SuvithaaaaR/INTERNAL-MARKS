@@ -112,8 +112,8 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
           • Base Marks (Uniqueness of Problem Statement): 20 marks
           <br />
           • Industry/NGO/Community Related Problem: Eligible for base marks
-          <br />
-          • Additional marks awarded for: Innovation, Implementation Quality, and Impact (up to 160 marks total)
+          <br />• Additional marks awarded for: Innovation, Implementation
+          Quality, and Impact (up to 160 marks total)
         </div>
 
         {showForm && (
@@ -231,96 +231,111 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
               No entries yet. Add your first entry above.
             </p>
           ) : (
-          entries.map((entry) => (
-            <div key={entry.id} className="entry-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "start",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <h4 style={{ margin: 0 }}>{entry.project_title}</h4>
-                    <div style={{ 
-                      background: "#28a745", 
-                      color: "white", 
-                      padding: "8px 16px", 
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                      fontSize: "16px"
-                    }}>
-                      ✅ {entry.marks_awarded} Marks Awarded
+            entries.map((entry) => (
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <h4 style={{ margin: 0 }}>{entry.project_title}</h4>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
                     </div>
-                  </div>
-                  <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-                    <strong>Problem Statement:</strong>
-                    <p style={{ color: "#666", marginTop: "4px" }}>
-                      {entry.problem_statement}
+                    <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                      <strong>Problem Statement:</strong>
+                      <p style={{ color: "#666", marginTop: "4px" }}>
+                        {entry.problem_statement}
+                      </p>
+                    </div>
+                    <div className="entry-details">
+                      <div>
+                        <strong>Context:</strong> {entry.industry_ngo_community}
+                      </div>
+                      <div>
+                        <strong>Uniqueness Score:</strong>{" "}
+                        {entry.uniqueness_score}
+                      </div>
+                      {entry.github_link && (
+                        <div>
+                          <strong>GitHub:</strong>{" "}
+                          <a
+                            href={entry.github_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View Code
+                          </a>
+                        </div>
+                      )}
+                      {entry.demo_link && (
+                        <div>
+                          <strong>Demo:</strong>{" "}
+                          <a
+                            href={entry.demo_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View Live
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                    <p
+                      style={{
+                        marginTop: "10px",
+                        color: "#666",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {entry.project_description}
                     </p>
                   </div>
-                  <div className="entry-details">
-                    <div>
-                      <strong>Context:</strong> {entry.industry_ngo_community}
-                    </div>
-                    <div>
-                      <strong>Uniqueness Score:</strong>{" "}
-                      {entry.uniqueness_score}
-                    </div>
-                    {entry.github_link && (
-                      <div>
-                        <strong>GitHub:</strong>{" "}
-                        <a
-                          href={entry.github_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View Code
-                        </a>
-                      </div>
-                    )}
-                    {entry.demo_link && (
-                      <div>
-                        <strong>Demo:</strong>{" "}
-                        <a
-                          href={entry.demo_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View Live
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                  <p
-                    style={{
-                      marginTop: "10px",
-                      color: "#666",
-                      fontSize: "14px",
-                    }}
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
                   >
-                    {entry.project_description}
-                  </p>
+                    Delete
+                  </button>
                 </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(entry.id)}
-                  style={{ marginLeft: "15px" }}
-                >
-                  Delete
-                </button>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
         </div>
       </div>
     </div>

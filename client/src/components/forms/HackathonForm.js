@@ -116,8 +116,7 @@ const HackathonForm = ({ studentId, onSuccess }) => {
           • Participated (Top 200 NIRF Institution): 80 marks
           <br />
           • Won/Awarded: 160 marks
-          <br />
-          • Won (Industry/Government Organized): 240 marks (Full FA)
+          <br />• Won (Industry/Government Organized): 240 marks (Full FA)
         </div>
 
         {showForm && (
@@ -245,75 +244,90 @@ const HackathonForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+        <div
+          style={{
+            borderTop: "2px solid #e0e0e0",
+            paddingTop: "20px",
+            marginTop: "20px",
+          }}
+        >
           <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
             <p style={{ color: "#666", fontStyle: "italic" }}>
               No entries yet. Add your first entry above.
             </p>
           ) : (
-          entries.map((entry) => (
-            <div key={entry.id} className="entry-card">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "start",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                    <h4 style={{ margin: 0 }}>{entry.hackathon_name}</h4>
-                    <div style={{ 
-                      background: "#28a745", 
-                      color: "white", 
-                      padding: "8px 16px", 
-                      borderRadius: "6px",
-                      fontWeight: "bold",
-                      fontSize: "16px"
-                    }}>
-                      ✅ {entry.marks_awarded} Marks Awarded
-                    </div>
-                  </div>
-                  <div className="entry-details">
-                    <div>
-                      <strong>Organizer:</strong> {entry.organizer}
-                    </div>
-                    <div>
-                      <strong>Type:</strong> {entry.hackathon_type}
-                    </div>
-                    {entry.nirf_rank && (
-                      <div>
-                        <strong>NIRF Rank:</strong> {entry.nirf_rank}
-                      </div>
-                    )}
-                    <div>
-                      <strong>Result:</strong> {entry.result}
-                    </div>
-                    <div>
-                      <strong>Date:</strong> {entry.date_participated}
-                    </div>
-                  </div>
-                  {entry.organized_by_industry && (
-                    <span
-                      className="badge badge-primary"
-                      style={{ marginTop: "8px" }}
-                    >
-                      Industry/Government Organized
-                    </span>
-                  )}
-                </div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(entry.id)}
-                  style={{ marginLeft: "15px" }}
+            entries.map((entry) => (
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
                 >
-                  Delete
-                </button>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <h4 style={{ margin: 0 }}>{entry.hackathon_name}</h4>
+                      <div
+                        style={{
+                          background: "#28a745",
+                          color: "white",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        }}
+                      >
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
+                    </div>
+                    <div className="entry-details">
+                      <div>
+                        <strong>Organizer:</strong> {entry.organizer}
+                      </div>
+                      <div>
+                        <strong>Type:</strong> {entry.hackathon_type}
+                      </div>
+                      {entry.nirf_rank && (
+                        <div>
+                          <strong>NIRF Rank:</strong> {entry.nirf_rank}
+                        </div>
+                      )}
+                      <div>
+                        <strong>Result:</strong> {entry.result}
+                      </div>
+                      <div>
+                        <strong>Date:</strong> {entry.date_participated}
+                      </div>
+                    </div>
+                    {entry.organized_by_industry && (
+                      <span
+                        className="badge badge-primary"
+                        style={{ marginTop: "8px" }}
+                      >
+                        Industry/Government Organized
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
         </div>
       </div>
     </div>
