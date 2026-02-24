@@ -8,6 +8,7 @@ import Dashboard from "./components/Dashboard";
 import Students from "./components/Students";
 import StudentDetails from "./components/StudentDetails";
 import Reports from "./components/Reports";
+import StaffEvaluation from "./components/StaffEvaluation";
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
                 <Link to="/students">Students</Link>
               </li>
               <li>
+                <Link to="/staff-evaluation">Staff Evaluation</Link>
+              </li>
+              <li>
                 <Link to="/reports">Reports</Link>
               </li>
             </ul>
@@ -38,6 +42,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />
             <Route path="/students/:id" element={<StudentDetails />} />
+            <Route path="/staff-evaluation" element={<StaffEvaluation />} />
             <Route path="/reports" element={<Reports />} />
           </Routes>
         </main>

@@ -84,25 +84,34 @@ const PatentForm = ({ studentId, onSuccess }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "15px",
+            marginBottom: "20px",
           }}
         >
-          <div>
-            <h3 style={{ margin: 0, marginBottom: "5px" }}>Patent Filing & Prototyping</h3>
-            <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
-              Development of Prototype + Patent Filing + IPM Cell Publication | Max: 240 marks (Full FA)
-            </p>
-          </div>
+          <h3>Patent Filing & Prototyping (Max: 240 marks - Full FA)</h3>
           <button
             className="btn btn-primary"
             onClick={() => setShowForm(!showForm)}
           >
-            {showForm ? "✕ Cancel" : "+ Add Entry"}
+            {showForm ? "Cancel" : "+ Add Entry"}
           </button>
         </div>
         
-        <div style={{ background: "#fff3cd", padding: "12px", borderRadius: "6px", marginBottom: "20px", fontSize: "13px", borderLeft: "4px solid #ffc107" }}>
-          <strong>⚠️ Requirements for 240 Marks:</strong> Must have working prototype + filed patent application + published through institution's IPM Cell. OR Technology Transfer/Commercialization.
+        <div
+          style={{
+            background: "#e3f2fd",
+            padding: "12px",
+            borderRadius: "4px",
+            marginBottom: "20px",
+            fontSize: "14px",
+          }}
+        >
+          <strong>Marks Allocation (240 marks - Full FA):</strong>
+          <br />
+          • Requirements: Prototype Development + Patent Filing + IPM Cell Publication
+          <br />
+          • OR Technology Transfer/Commercialization
+          <br />
+          • All requirements met: 240 marks (Full FA)
         </div>
 
         {showForm && (
@@ -225,12 +234,13 @@ const PatentForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <h4>Entries ({entries.length})</h4>
-        {entries.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No entries yet. Add your first entry above.
-          </p>
-        ) : (
+        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
+          {entries.length === 0 ? (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
+          ) : (
           entries.map((entry) => (
             <div key={entry.id} className="entry-card">
               <div
@@ -240,8 +250,20 @@ const PatentForm = ({ studentId, onSuccess }) => {
                   alignItems: "start",
                 }}
               >
-                <div>
-                  <h4>{entry.patent_title}</h4>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <h4 style={{ margin: 0 }}>{entry.patent_title}</h4>
+                    <div style={{ 
+                      background: "#28a745", 
+                      color: "white", 
+                      padding: "8px 16px", 
+                      borderRadius: "6px",
+                      fontWeight: "bold",
+                      fontSize: "16px"
+                    }}>
+                      ✅ {entry.marks_awarded} Marks Awarded
+                    </div>
+                  </div>
                   <div className="entry-details">
                     <div>
                       <strong>Type:</strong> {entry.patent_type}
@@ -255,12 +277,6 @@ const PatentForm = ({ studentId, onSuccess }) => {
                     </div>
                     <div>
                       <strong>Status:</strong> {entry.status}
-                    </div>
-                    <div>
-                      <strong>Marks:</strong>{" "}
-                      <span className="badge badge-success">
-                        {entry.marks_awarded}
-                      </span>
                     </div>
                   </div>
                   <div style={{ marginTop: "10px" }}>
@@ -282,6 +298,7 @@ const PatentForm = ({ studentId, onSuccess }) => {
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(entry.id)}
+                  style={{ marginLeft: "15px" }}
                 >
                   Delete
                 </button>
@@ -289,6 +306,7 @@ const PatentForm = ({ studentId, onSuccess }) => {
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );

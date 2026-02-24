@@ -82,25 +82,34 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "15px",
+            marginBottom: "20px",
           }}
         >
-          <div>
-            <h3 style={{ margin: 0, marginBottom: "5px" }}>Community Service Related to Course</h3>
-            <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
-              School/NGO/Industry Engagement - Workshops, Coding Sessions (Team of max 3 members) | Max: 40 marks
-            </p>
-          </div>
+          <h3>Community Service Related to Course (Max: 40 marks)</h3>
           <button
             className="btn btn-primary"
             onClick={() => setShowForm(!showForm)}
           >
-            {showForm ? "✕ Cancel" : "+ Add Entry"}
+            {showForm ? "Cancel" : "+ Add Entry"}
           </button>
         </div>
         
-        <div style={{ background: "#f0f7ff", padding: "12px", borderRadius: "6px", marginBottom: "20px", fontSize: "13px" }}>
-          <strong>📝 Instructions:</strong> Add details of workshops, coding sessions, or training programs conducted at schools, NGOs, or industries. Maximum team size is 3 members. Each valid entry awards 40 marks.
+        <div
+          style={{
+            background: "#e3f2fd",
+            padding: "12px",
+            borderRadius: "4px",
+            marginBottom: "20px",
+            fontSize: "14px",
+          }}
+        >
+          <strong>Marks Allocation:</strong>
+          <br />
+          • Conducted Workshop/Coding Session at School/NGO/Industry: 40 marks per entry
+          <br />
+          • Requirement: Team of maximum 3 members
+          <br />
+          • Must provide certificate/letter from organization
         </div>
 
         {showForm && (
@@ -127,7 +136,6 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
                   <option value="awareness_program">Awareness Program</option>
                   <option value="skill_development">Skill Development</option>
                 </select>
-                <small style={{ color: "#666", fontSize: "12px" }}>Type of activity conducted</small>
               </div>
               <div className="form-group">
                 <label>Organization Name *</label>
@@ -139,7 +147,6 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
                   placeholder="e.g., ABC Public School, Chennai"
                   required
                 />
-                <small style={{ color: "#666", fontSize: "12px" }}>Full name of School/NGO/Industry</small>
               </div>
             </div>
 
@@ -153,12 +160,11 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
                 rows="4"
                 required
               />
-              <small style={{ color: "#666", fontSize: "12px" }}>Describe what was taught/conducted and its impact</small>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label>Team Size * <span style={{ color: "#e74c3c", fontSize: "12px" }}>(Max 3 for 40 marks)</span></label>
+                <label>Team Size * (Max 3)</label>
                 <input
                   type="number"
                   name="team_size"
@@ -168,7 +174,6 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
                   max="10"
                   required
                 />
-                <small style={{ color: "#666", fontSize: "12px" }}>Number of team members (1-3 eligible for full marks)</small>
               </div>
               <div className="form-group">
                 <label>Date Conducted *</label>
@@ -177,81 +182,81 @@ const CommunityServiceForm = ({ studentId, onSuccess }) => {
                   name="date_conducted"
                   value={formData.date_conducted}
                   onChange={handleChange}
-                  max={new Date().toISOString().split('T')[0]}
                   required
                 />
-                <small style={{ color: "#666", fontSize: "12px" }}>Date when activity was conducted</small>
               </div>
             </div>
 
             <div className="form-group">
-              <label>Proof Document (URL/Path) *</label>
+              <label>Proof Document</label>
               <input
                 type="text"
                 name="proof_document"
                 value={formData.proof_document}
                 onChange={handleChange}
-                placeholder="https://drive.google.com/... or certificate number"
-                required
+                placeholder="Certificate URL or file link"
               />
-              <small style={{ color: "#666", fontSize: "12px" }}>Certificate/Letter from organization (Google Drive link recommended)</small>
             </div>
 
-            <button type="submit" className="btn btn-success" style={{ width: "100%", padding: "12px", fontSize: "16px", fontWeight: "600" }}>
-              ✓ Submit Entry
+            <button type="submit" className="btn btn-success">
+              Submit Entry
             </button>
           </form>
         )}
 
         <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
-          <h4 style={{ marginBottom: "15px" }}>📋 Submitted Entries ({entries.length})</h4>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
           {entries.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "30px", background: "#f9f9f9", borderRadius: "8px" }}>
-              <p style={{ color: "#999", margin: 0 }}>No entries yet. Click "Add Entry" to submit your first activity.</p>
-            </div>
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
           ) : (
             entries.map((entry) => (
-              <div key={entry.id} className="entry-card" style={{ position: "relative" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-                  <h4 style={{ margin: 0, color: "#333" }}>{entry.organization_name}</h4>
-                  <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                    <span className="marks-badge" style={{ background: entry.marks_awarded > 0 ? "#d4edda" : "#f8d7da", color: entry.marks_awarded > 0 ? "#155724" : "#721c24" }}>
-                      {entry.marks_awarded} marks
-                    </span>
-                    <button
-                      onClick={() => handleDelete(entry.id)}
-                      className="btn btn-danger btn-sm"
-                      style={{ padding: "4px 12px", fontSize: "12px" }}
-                    >
-                      🗑️ Delete
-                    </button>
+              <div key={entry.id} className="entry-card">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                      <h4 style={{ margin: 0 }}>{entry.organization_name}</h4>
+                      <div style={{ 
+                        background: "#28a745", 
+                        color: "white", 
+                        padding: "8px 16px", 
+                        borderRadius: "6px",
+                        fontWeight: "bold",
+                        fontSize: "16px"
+                      }}>
+                        ✅ {entry.marks_awarded} Marks Awarded
+                      </div>
+                    </div>
+                    <div className="entry-details">
+                      <div>
+                        <strong>Activity Type:</strong> {entry.activity_type}
+                      </div>
+                      <div>
+                        <strong>Team Size:</strong> {entry.team_size} members
+                      </div>
+                      <div>
+                        <strong>Date Conducted:</strong> {entry.date_conducted}
+                      </div>
+                      <div>
+                        <strong>Description:</strong> {entry.activity_description}
+                      </div>
+                    </div>
                   </div>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(entry.id)}
+                    style={{ marginLeft: "15px" }}
+                  >
+                    Delete
+                  </button>
                 </div>
-                <div className="entry-details" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
-                  <div>
-                    <strong style={{ color: "#666", fontSize: "12px" }}>Activity Type:</strong>
-                    <div style={{ color: "#333" }}>{entry.activity_type}</div>
-                  </div>
-                  <div>
-                    <strong style={{ color: "#666", fontSize: "12px" }}>Team Size:</strong>
-                    <div style={{ color: "#333" }}>{entry.team_size} members</div>
-                  </div>
-                  <div>
-                    <strong style={{ color: "#666", fontSize: "12px" }}>Date Conducted:</strong>
-                    <div style={{ color: "#333" }}>{new Date(entry.date_conducted).toLocaleDateString()}</div>
-                  </div>
-                </div>
-                <div style={{ marginTop: "12px" }}>
-                  <strong style={{ color: "#666", fontSize: "12px" }}>Description:</strong>
-                  <p style={{ margin: "5px 0", color: "#555", fontSize: "14px" }}>
-                    {entry.activity_description}
-                  </p>
-                </div>
-                {entry.proof_document && (
-                  <div style={{ marginTop: "8px", fontSize: "12px", color: "#888" }}>
-                    <strong style={{ color: "#666" }}>Proof:</strong> <a href={entry.proof_document} target="_blank" rel="noopener noreferrer" style={{ color: "#007bff" }}>{entry.proof_document}</a>
-                  </div>
-                )}
               </div>
             ))
           )}

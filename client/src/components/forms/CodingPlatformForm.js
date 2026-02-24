@@ -102,17 +102,22 @@ const CodingPlatformForm = ({ studentId, onSuccess }) => {
             padding: "12px",
             borderRadius: "4px",
             marginBottom: "20px",
-            fontSize: "12px",
+            fontSize: "14px",
           }}
         >
-          <strong>Semester-wise Marks:</strong>
+          <strong>Marks Allocation (Semester-wise):</strong>
           <br />
-          <strong>HackerRank:</strong> Sem 2: 200-400 HackOS | Sem 3: 500-2000
-          HackOS | Sem 4: 2500-5000 HackOS
+          <strong>HackerRank:</strong>
           <br />
-          <strong>CodeChef:</strong> Sem 3+: Rating-based (200-2600)
+          • Sem 2: 200-400 HackOS → 20-40 marks | Sem 3: 500-2000 HackOS → 40-80 marks | Sem 4: 2500-5000 HackOS → 80-120 marks
           <br />
-          <strong>LeetCode:</strong> Sem 3+: Problems solved (2-250)
+          <strong>CodeChef (Sem 3+):</strong>
+          <br />
+          • Rating 200-800 → 20 marks | 800-1400 → 40 marks | 1400-2000 → 80 marks | 2000-2600 → 120 marks
+          <br />
+          <strong>LeetCode (Sem 3+):</strong>
+          <br />
+          • 2-50 problems → 20 marks | 50-100 → 40 marks | 100-150 → 80 marks | 150-250 → 120 marks
         </div>
 
         {showForm && (
@@ -235,12 +240,13 @@ const CodingPlatformForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <h4>Entries ({entries.length})</h4>
-        {entries.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No entries yet. Add your first entry above.
-          </p>
-        ) : (
+        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
+          {entries.length === 0 ? (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
+          ) : (
           entries.map((entry) => (
             <div key={entry.id} className="entry-card">
               <div
@@ -250,8 +256,20 @@ const CodingPlatformForm = ({ studentId, onSuccess }) => {
                   alignItems: "start",
                 }}
               >
-                <div>
-                  <h4>{entry.platform.toUpperCase()}</h4>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <h4 style={{ margin: 0 }}>{entry.platform.toUpperCase()}</h4>
+                    <div style={{ 
+                      background: "#28a745", 
+                      color: "white", 
+                      padding: "8px 16px", 
+                      borderRadius: "6px",
+                      fontWeight: "bold",
+                      fontSize: "16px"
+                    }}>
+                      ✅ {entry.marks_awarded} Marks Awarded
+                    </div>
+                  </div>
                   <div className="entry-details">
                     {entry.platform === "leetcode" ? (
                       <>
@@ -286,17 +304,12 @@ const CodingPlatformForm = ({ studentId, onSuccess }) => {
                         </a>
                       </div>
                     )}
-                    <div>
-                      <strong>Marks:</strong>{" "}
-                      <span className="badge badge-success">
-                        {entry.marks_awarded}
-                      </span>
-                    </div>
                   </div>
                 </div>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(entry.id)}
+                  style={{ marginLeft: "15px" }}
                 >
                   Delete
                 </button>
@@ -304,6 +317,7 @@ const CodingPlatformForm = ({ studentId, onSuccess }) => {
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );

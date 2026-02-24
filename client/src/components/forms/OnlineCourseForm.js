@@ -105,7 +105,13 @@ const OnlineCourseForm = ({ studentId, onSuccess }) => {
             fontSize: "14px",
           }}
         >
-          <strong>Marks:</strong> MOOC: 20 | NPTEL 4-week: 40 | NPTEL 8-week: 80
+          <strong>Marks Allocation:</strong>
+          <br />
+          • MOOC (Coursera, Udemy, etc.): 20 marks
+          <br />
+          • NPTEL 4-week Course: 40 marks
+          <br />
+          • NPTEL 8-week or longer Course: 80 marks
         </div>
 
         {showForm && (
@@ -214,12 +220,13 @@ const OnlineCourseForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <h4>Entries ({entries.length})</h4>
-        {entries.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No entries yet. Add your first entry above.
-          </p>
-        ) : (
+        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
+          {entries.length === 0 ? (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
+          ) : (
           entries.map((entry) => (
             <div key={entry.id} className="entry-card">
               <div
@@ -229,8 +236,20 @@ const OnlineCourseForm = ({ studentId, onSuccess }) => {
                   alignItems: "start",
                 }}
               >
-                <div>
-                  <h4>{entry.course_name}</h4>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <h4 style={{ margin: 0 }}>{entry.course_name}</h4>
+                    <div style={{ 
+                      background: "#28a745", 
+                      color: "white", 
+                      padding: "8px 16px", 
+                      borderRadius: "6px",
+                      fontWeight: "bold",
+                      fontSize: "16px"
+                    }}>
+                      ✅ {entry.marks_awarded} Marks Awarded
+                    </div>
+                  </div>
                   <div className="entry-details">
                     <div>
                       <strong>Platform:</strong> {entry.platform}
@@ -249,17 +268,12 @@ const OnlineCourseForm = ({ studentId, onSuccess }) => {
                         <strong>Certificate:</strong> {entry.certificate_number}
                       </div>
                     )}
-                    <div>
-                      <strong>Marks:</strong>{" "}
-                      <span className="badge badge-success">
-                        {entry.marks_awarded}
-                      </span>
-                    </div>
                   </div>
                 </div>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(entry.id)}
+                  style={{ marginLeft: "15px" }}
                 >
                   Delete
                 </button>
@@ -267,6 +281,7 @@ const OnlineCourseForm = ({ studentId, onSuccess }) => {
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );

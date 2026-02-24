@@ -107,8 +107,13 @@ const ProjectCompetitionForm = ({ studentId, onSuccess }) => {
             fontSize: "14px",
           }}
         >
-          <strong>Marks:</strong> Participation (Top 300 NIRF): 40 | Won: 80 |
-          Industry Project (Level 3-5): 160
+          <strong>Marks Allocation:</strong>
+          <br />
+          • Participated (Top 300 NIRF Institution): 40 marks
+          <br />
+          • Won/Awarded: 80 marks
+          <br />
+          • Industry Project (Level 3-5): 160 marks
         </div>
 
         {showForm && (
@@ -228,12 +233,13 @@ const ProjectCompetitionForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <h4>Entries ({entries.length})</h4>
-        {entries.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No entries yet. Add your first entry above.
-          </p>
-        ) : (
+        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
+          {entries.length === 0 ? (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
+          ) : (
           entries.map((entry) => (
             <div key={entry.id} className="entry-card">
               <div
@@ -243,8 +249,20 @@ const ProjectCompetitionForm = ({ studentId, onSuccess }) => {
                   alignItems: "start",
                 }}
               >
-                <div>
-                  <h4>{entry.competition_name}</h4>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <h4 style={{ margin: 0 }}>{entry.competition_name}</h4>
+                    <div style={{ 
+                      background: "#28a745", 
+                      color: "white", 
+                      padding: "8px 16px", 
+                      borderRadius: "6px",
+                      fontWeight: "bold",
+                      fontSize: "16px"
+                    }}>
+                      ✅ {entry.marks_awarded} Marks Awarded
+                    </div>
+                  </div>
                   <div className="entry-details">
                     <div>
                       <strong>Type:</strong> {entry.competition_type}
@@ -267,17 +285,12 @@ const ProjectCompetitionForm = ({ studentId, onSuccess }) => {
                     <div>
                       <strong>Date:</strong> {entry.date_participated}
                     </div>
-                    <div>
-                      <strong>Marks:</strong>{" "}
-                      <span className="badge badge-success">
-                        {entry.marks_awarded}
-                      </span>
-                    </div>
                   </div>
                 </div>
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(entry.id)}
+                  style={{ marginLeft: "15px" }}
                 >
                   Delete
                 </button>
@@ -285,6 +298,7 @@ const ProjectCompetitionForm = ({ studentId, onSuccess }) => {
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );

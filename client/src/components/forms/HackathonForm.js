@@ -109,8 +109,15 @@ const HackathonForm = ({ studentId, onSuccess }) => {
             fontSize: "14px",
           }}
         >
-          <strong>Marks:</strong> Inter/Intra College: 20 | Top 200 NIRF: 80 |
-          Won: 160 | Won Industry/Govt: 240
+          <strong>Marks Allocation:</strong>
+          <br />
+          • Participated (Inter/Intra College): 20 marks
+          <br />
+          • Participated (Top 200 NIRF Institution): 80 marks
+          <br />
+          • Won/Awarded: 160 marks
+          <br />
+          • Won (Industry/Government Organized): 240 marks (Full FA)
         </div>
 
         {showForm && (
@@ -238,12 +245,13 @@ const HackathonForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <h4>Entries ({entries.length})</h4>
-        {entries.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No entries yet. Add your first entry above.
-          </p>
-        ) : (
+        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
+          {entries.length === 0 ? (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
+          ) : (
           entries.map((entry) => (
             <div key={entry.id} className="entry-card">
               <div
@@ -253,8 +261,20 @@ const HackathonForm = ({ studentId, onSuccess }) => {
                   alignItems: "start",
                 }}
               >
-                <div>
-                  <h4>{entry.hackathon_name}</h4>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <h4 style={{ margin: 0 }}>{entry.hackathon_name}</h4>
+                    <div style={{ 
+                      background: "#28a745", 
+                      color: "white", 
+                      padding: "8px 16px", 
+                      borderRadius: "6px",
+                      fontWeight: "bold",
+                      fontSize: "16px"
+                    }}>
+                      ✅ {entry.marks_awarded} Marks Awarded
+                    </div>
+                  </div>
                   <div className="entry-details">
                     <div>
                       <strong>Organizer:</strong> {entry.organizer}
@@ -273,12 +293,6 @@ const HackathonForm = ({ studentId, onSuccess }) => {
                     <div>
                       <strong>Date:</strong> {entry.date_participated}
                     </div>
-                    <div>
-                      <strong>Marks:</strong>{" "}
-                      <span className="badge badge-success">
-                        {entry.marks_awarded}
-                      </span>
-                    </div>
                   </div>
                   {entry.organized_by_industry && (
                     <span
@@ -292,6 +306,7 @@ const HackathonForm = ({ studentId, onSuccess }) => {
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(entry.id)}
+                  style={{ marginLeft: "15px" }}
                 >
                   Delete
                 </button>
@@ -299,6 +314,7 @@ const HackathonForm = ({ studentId, onSuccess }) => {
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );

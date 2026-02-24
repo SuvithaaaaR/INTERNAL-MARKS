@@ -78,41 +78,58 @@ router.put("/:id", (req, res) => {
     proof_document,
   } = req.body;
 
-  // Recalculate marks
-  let marks_awarded = 0;
-  if (scopus_indexed) {
-    marks_awarded = 240;
-  }
-
-  const query = `
-    UPDATE scopus_papers 
-    SET paper_title = ?, publication_type = ?, journal_conference_name = ?,
-        publication_date = ?, scopus_indexed = ?, co_authors = ?, 
-        proof_document = ?, marks_awarded = ?
-    WHERE id = ?
-  `;
-
-  db.run(
-    query,
-    [
-      paper_title,
-      publication_type,
-      journal_conference_name,
-      publication_date,
-      scopus_indexed,
-      co_authors,
-      proof_document,
-      marks_awarded,
-      req.params.id,
-    ],
-    function (err) {
+  // Check if staff has evaluated
+  db.get(
+    "SELECT staff_evaluated, marks_awarded FROM scopus_papers WHERE id = ?",
+    [req.params.id],
+    (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.json({
-        marks_awarded,
-        message: "Scopus paper entry updated successfully",
-      });
+
+      let marks_awarded;
+
+      // If staff evaluated, preserve marks. Otherwise recalculate.
+      if (row && row.staff_evaluated === 1) {
+        marks_awarded = row.marks_awarded;
+      } else {
+        marks_awarded = 0;
+        if (scopus_indexed) {
+          marks_awarded = 240;
+        }
+      }
+
+      const query = `
+        UPDATE scopus_papers 
+        SET paper_title = ?, publication_type = ?, journal_conference_name = ?,
+            publication_date = ?, scopus_indexed = ?, co_authors = ?, 
+            proof_document = ?, marks_awarded = ?
+        WHERE id = ?
+      `;
+
+      db.run(
+        query,
+        [
+          paper_title,
+          publication_type,
+          journal_conference_name,
+          publication_date,
+          scopus_indexed,
+          co_authors,
+          proof_document,
+          marks_awarded,
+          req.params.id,
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({
+            marks_awarded,
+            message: "Scopus paper entry updated successfully",
+          });
+        },
+      );
     },
   );
 });

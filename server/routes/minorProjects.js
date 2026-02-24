@@ -80,39 +80,56 @@ router.put("/:id", (req, res) => {
     proof_document,
   } = req.body;
 
-  // Recalculate marks
-  let marks_awarded = uniqueness_score || 20;
-
-  const query = `
-    UPDATE minor_projects 
-    SET project_title = ?, problem_statement = ?, industry_ngo_community = ?,
-        uniqueness_score = ?, project_description = ?, github_link = ?,
-        demo_link = ?, proof_document = ?, marks_awarded = ?
-    WHERE id = ?
-  `;
-
-  db.run(
-    query,
-    [
-      project_title,
-      problem_statement,
-      industry_ngo_community,
-      uniqueness_score,
-      project_description,
-      github_link,
-      demo_link,
-      proof_document,
-      marks_awarded,
-      req.params.id,
-    ],
-    function (err) {
+  // Check if staff has evaluated
+  db.get(
+    "SELECT staff_evaluated, marks_awarded FROM minor_projects WHERE id = ?",
+    [req.params.id],
+    (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.json({
-        marks_awarded,
-        message: "Minor project entry updated successfully",
-      });
+
+      let marks_awarded;
+
+      // If staff evaluated, preserve marks. Otherwise recalculate.
+      if (row && row.staff_evaluated === 1) {
+        marks_awarded = row.marks_awarded;
+      } else {
+        marks_awarded = uniqueness_score || 20;
+      }
+
+      const query = `
+        UPDATE minor_projects 
+        SET project_title = ?, problem_statement = ?, industry_ngo_community = ?,
+            uniqueness_score = ?, project_description = ?, github_link = ?,
+            demo_link = ?, proof_document = ?, marks_awarded = ?
+        WHERE id = ?
+      `;
+
+      db.run(
+        query,
+        [
+          project_title,
+          problem_statement,
+          industry_ngo_community,
+          uniqueness_score,
+          project_description,
+          github_link,
+          demo_link,
+          proof_document,
+          marks_awarded,
+          req.params.id,
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({
+            marks_awarded,
+            message: "Minor project entry updated successfully",
+          });
+        },
+      );
     },
   );
 });

@@ -202,9 +202,9 @@ router.put("/:id", (req, res) => {
     screenshot,
   } = req.body;
 
-  // Get student_id to fetch semester
+  // First check if staff has evaluated this entry
   db.get(
-    "SELECT student_id FROM coding_platforms WHERE id = ?",
+    "SELECT student_id, staff_evaluated, marks_awarded FROM coding_platforms WHERE id = ?",
     [req.params.id],
     (err, entry) => {
       if (err) {
@@ -214,52 +214,93 @@ router.put("/:id", (req, res) => {
         return res.status(404).json({ error: "Entry not found" });
       }
 
-      db.get(
-        "SELECT semester FROM students WHERE id = ?",
-        [entry.student_id],
-        (err, student) => {
-          if (err) {
-            return res.status(500).json({ error: err.message });
-          }
+      // If staff evaluated, preserve marks. Otherwise recalculate.
+      if (entry.staff_evaluated === 1) {
+        // Keep staff-evaluated marks
+        const query = `
+          UPDATE coding_platforms 
+          SET platform = ?, score_rating = ?, problems_solved = ?,
+              acceptance_rate = ?, date_achieved = ?, profile_link = ?,
+              screenshot = ?, marks_awarded = ?
+          WHERE id = ?
+        `;
 
-          const semester = student.semester;
-          const score =
-            platform === "leetcode" ? problems_solved : score_rating;
-          const marks_awarded = calculateCodingMarks(platform, semester, score);
+        db.run(
+          query,
+          [
+            platform,
+            score_rating,
+            problems_solved,
+            acceptance_rate,
+            date_achieved,
+            profile_link,
+            screenshot,
+            entry.marks_awarded, // Keep existing marks
+            req.params.id,
+          ],
+          function (err) {
+            if (err) {
+              return res.status(500).json({ error: err.message });
+            }
+            res.json({
+              marks_awarded: entry.marks_awarded,
+              message: "Coding platform entry updated successfully",
+            });
+          },
+        );
+      } else {
+        // Recalculate marks
+        db.get(
+          "SELECT semester FROM students WHERE id = ?",
+          [entry.student_id],
+          (err, student) => {
+            if (err) {
+              return res.status(500).json({ error: err.message });
+            }
 
-          const query = `
-        UPDATE coding_platforms 
-        SET platform = ?, score_rating = ?, problems_solved = ?,
-            acceptance_rate = ?, date_achieved = ?, profile_link = ?,
-            screenshot = ?, marks_awarded = ?
-        WHERE id = ?
-      `;
-
-          db.run(
-            query,
-            [
+            const semester = student.semester;
+            const score =
+              platform === "leetcode" ? problems_solved : score_rating;
+            const marks_awarded = calculateCodingMarks(
               platform,
-              score_rating,
-              problems_solved,
-              acceptance_rate,
-              date_achieved,
-              profile_link,
-              screenshot,
-              marks_awarded,
-              req.params.id,
-            ],
-            function (err) {
-              if (err) {
-                return res.status(500).json({ error: err.message });
-              }
-              res.json({
+              semester,
+              score,
+            );
+
+            const query = `
+          UPDATE coding_platforms 
+          SET platform = ?, score_rating = ?, problems_solved = ?,
+              acceptance_rate = ?, date_achieved = ?, profile_link = ?,
+              screenshot = ?, marks_awarded = ?
+          WHERE id = ?
+        `;
+
+            db.run(
+              query,
+              [
+                platform,
+                score_rating,
+                problems_solved,
+                acceptance_rate,
+                date_achieved,
+                profile_link,
+                screenshot,
                 marks_awarded,
-                message: "Coding platform entry updated successfully",
-              });
-            },
-          );
-        },
-      );
+                req.params.id,
+              ],
+              function (err) {
+                if (err) {
+                  return res.status(500).json({ error: err.message });
+                }
+                res.json({
+                  marks_awarded,
+                  message: "Coding platform entry updated successfully",
+                });
+              },
+            );
+          },
+        );
+      }
     },
   );
 });

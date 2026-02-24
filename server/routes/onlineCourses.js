@@ -83,46 +83,62 @@ router.put("/:id", (req, res) => {
     proof_document,
   } = req.body;
 
-  // Recalculate marks
-  let marks_awarded = 0;
-
-  if (course_type === "mooc") {
-    marks_awarded = 20;
-  } else if (course_type === "nptel_4week") {
-    marks_awarded = 40;
-  } else if (course_type === "nptel_8week" || duration_weeks >= 8) {
-    marks_awarded = 80;
-  }
-
-  const query = `
-    UPDATE online_courses 
-    SET course_type = ?, course_name = ?, platform = ?,
-        duration_weeks = ?, completion_date = ?, certificate_number = ?,
-        proof_document = ?, marks_awarded = ?
-    WHERE id = ?
-  `;
-
-  db.run(
-    query,
-    [
-      course_type,
-      course_name,
-      platform,
-      duration_weeks,
-      completion_date,
-      certificate_number,
-      proof_document,
-      marks_awarded,
-      req.params.id,
-    ],
-    function (err) {
+  // Check if staff has evaluated
+  db.get(
+    "SELECT staff_evaluated, marks_awarded FROM online_courses WHERE id = ?",
+    [req.params.id],
+    (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.json({
-        marks_awarded,
-        message: "Online course entry updated successfully",
-      });
+
+      let marks_awarded;
+
+      // If staff evaluated, preserve marks. Otherwise recalculate.
+      if (row && row.staff_evaluated === 1) {
+        marks_awarded = row.marks_awarded;
+      } else {
+        marks_awarded = 0;
+        if (course_type === "mooc") {
+          marks_awarded = 20;
+        } else if (course_type === "nptel_4week") {
+          marks_awarded = 40;
+        } else if (course_type === "nptel_8week" || duration_weeks >= 8) {
+          marks_awarded = 80;
+        }
+      }
+
+      const query = `
+        UPDATE online_courses 
+        SET course_type = ?, course_name = ?, platform = ?,
+            duration_weeks = ?, completion_date = ?, certificate_number = ?,
+            proof_document = ?, marks_awarded = ?
+        WHERE id = ?
+      `;
+
+      db.run(
+        query,
+        [
+          course_type,
+          course_name,
+          platform,
+          duration_weeks,
+          completion_date,
+          certificate_number,
+          proof_document,
+          marks_awarded,
+          req.params.id,
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({
+            marks_awarded,
+            message: "Online course entry updated successfully",
+          });
+        },
+      );
     },
   );
 });

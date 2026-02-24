@@ -98,6 +98,22 @@ const ScopusForm = ({ studentId, onSuccess }) => {
           </button>
         </div>
 
+        <div
+          style={{
+            background: "#e3f2fd",
+            padding: "12px",
+            borderRadius: "4px",
+            marginBottom: "20px",
+            fontSize: "14px",
+          }}
+        >
+          <strong>Marks Allocation (240 marks - Full FA):</strong>
+          <br />
+          • Scopus-Indexed Conference/Journal Publication: 240 marks (Full FA)
+          <br />
+          • Must be indexed in Scopus database
+        </div>
+
         {showForm && (
           <form
             onSubmit={handleSubmit}
@@ -199,12 +215,13 @@ const ScopusForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <h4>Entries ({entries.length})</h4>
-        {entries.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No entries yet. Add your first entry above.
-          </p>
-        ) : (
+        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
+          {entries.length === 0 ? (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
+          ) : (
           entries.map((entry) => (
             <div key={entry.id} className="entry-card">
               <div
@@ -214,8 +231,20 @@ const ScopusForm = ({ studentId, onSuccess }) => {
                   alignItems: "start",
                 }}
               >
-                <div>
-                  <h4>{entry.paper_title}</h4>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <h4 style={{ margin: 0 }}>{entry.paper_title}</h4>
+                    <div style={{ 
+                      background: "#28a745", 
+                      color: "white", 
+                      padding: "8px 16px", 
+                      borderRadius: "6px",
+                      fontWeight: "bold",
+                      fontSize: "16px"
+                    }}>
+                      ✅ {entry.marks_awarded} Marks Awarded
+                    </div>
+                  </div>
                   <div className="entry-details">
                     <div>
                       <strong>Type:</strong> {entry.publication_type}
@@ -225,12 +254,6 @@ const ScopusForm = ({ studentId, onSuccess }) => {
                     </div>
                     <div>
                       <strong>Date:</strong> {entry.publication_date}
-                    </div>
-                    <div>
-                      <strong>Marks:</strong>{" "}
-                      <span className="badge badge-success">
-                        {entry.marks_awarded}
-                      </span>
                     </div>
                   </div>
                   {entry.co_authors && (
@@ -256,6 +279,7 @@ const ScopusForm = ({ studentId, onSuccess }) => {
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(entry.id)}
+                  style={{ marginLeft: "15px" }}
                 >
                   Delete
                 </button>
@@ -263,6 +287,7 @@ const ScopusForm = ({ studentId, onSuccess }) => {
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );

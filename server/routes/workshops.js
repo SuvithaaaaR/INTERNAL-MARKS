@@ -79,42 +79,58 @@ router.put("/:id", (req, res) => {
     proof_document,
   } = req.body;
 
-  // Recalculate marks
-  let marks_awarded = 0;
-
-  if (nirf_rank <= 200) {
-    marks_awarded = 20;
-  }
-
-  const query = `
-    UPDATE workshops_seminars 
-    SET event_type = ?, event_name = ?, institution_name = ?,
-        nirf_rank = ?, date_attended = ?, duration_days = ?,
-        proof_document = ?, marks_awarded = ?
-    WHERE id = ?
-  `;
-
-  db.run(
-    query,
-    [
-      event_type,
-      event_name,
-      institution_name,
-      nirf_rank,
-      date_attended,
-      duration_days,
-      proof_document,
-      marks_awarded,
-      req.params.id,
-    ],
-    function (err) {
+  // Check if staff has evaluated
+  db.get(
+    "SELECT staff_evaluated, marks_awarded FROM workshops_seminars WHERE id = ?",
+    [req.params.id],
+    (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.json({
-        marks_awarded,
-        message: "Workshop/seminar entry updated successfully",
-      });
+
+      let marks_awarded;
+
+      // If staff evaluated, preserve marks. Otherwise recalculate.
+      if (row && row.staff_evaluated === 1) {
+        marks_awarded = row.marks_awarded;
+      } else {
+        marks_awarded = 0;
+        if (nirf_rank <= 200) {
+          marks_awarded = 20;
+        }
+      }
+
+      const query = `
+        UPDATE workshops_seminars 
+        SET event_type = ?, event_name = ?, institution_name = ?,
+            nirf_rank = ?, date_attended = ?, duration_days = ?,
+            proof_document = ?, marks_awarded = ?
+        WHERE id = ?
+      `;
+
+      db.run(
+        query,
+        [
+          event_type,
+          event_name,
+          institution_name,
+          nirf_rank,
+          date_attended,
+          duration_days,
+          proof_document,
+          marks_awarded,
+          req.params.id,
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({
+            marks_awarded,
+            message: "Workshop/seminar entry updated successfully",
+          });
+        },
+      );
     },
   );
 });

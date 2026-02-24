@@ -75,39 +75,56 @@ router.put("/:id", (req, res) => {
     proof_document,
   } = req.body;
 
-  // Recalculate marks
-  let marks_awarded = 0;
-  if (activity_type === "workshop" && team_size <= 3) {
-    marks_awarded = 40;
-  }
-
-  const query = `
-    UPDATE community_service 
-    SET activity_type = ?, organization_name = ?, activity_description = ?,
-        team_size = ?, date_conducted = ?, proof_document = ?, marks_awarded = ?
-    WHERE id = ?
-  `;
-
-  db.run(
-    query,
-    [
-      activity_type,
-      organization_name,
-      activity_description,
-      team_size,
-      date_conducted,
-      proof_document,
-      marks_awarded,
-      req.params.id,
-    ],
-    function (err) {
+  // Check if staff has evaluated
+  db.get(
+    "SELECT staff_evaluated, marks_awarded FROM community_service WHERE id = ?",
+    [req.params.id],
+    (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.json({
-        marks_awarded,
-        message: "Community service entry updated successfully",
-      });
+
+      let marks_awarded;
+
+      // If staff evaluated, preserve marks. Otherwise recalculate.
+      if (row && row.staff_evaluated === 1) {
+        marks_awarded = row.marks_awarded;
+      } else {
+        marks_awarded = 0;
+        if (activity_type === "workshop" && team_size <= 3) {
+          marks_awarded = 40;
+        }
+      }
+
+      const query = `
+        UPDATE community_service 
+        SET activity_type = ?, organization_name = ?, activity_description = ?,
+            team_size = ?, date_conducted = ?, proof_document = ?, marks_awarded = ?
+        WHERE id = ?
+      `;
+
+      db.run(
+        query,
+        [
+          activity_type,
+          organization_name,
+          activity_description,
+          team_size,
+          date_conducted,
+          proof_document,
+          marks_awarded,
+          req.params.id,
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({
+            marks_awarded,
+            message: "Community service entry updated successfully",
+          });
+        },
+      );
     },
   );
 });

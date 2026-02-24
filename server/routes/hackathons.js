@@ -88,49 +88,66 @@ router.put("/:id", (req, res) => {
     proof_document,
   } = req.body;
 
-  // Recalculate marks
-  let marks_awarded = 0;
-
-  if (hackathon_type === "inter_intra_college") {
-    marks_awarded = 20;
-  } else if (nirf_rank <= 200) {
-    marks_awarded = 80;
-  } else if (result === "won" && !organized_by_industry) {
-    marks_awarded = 160;
-  } else if (result === "won" && organized_by_industry) {
-    marks_awarded = 240;
-  }
-
-  const query = `
-    UPDATE hackathons 
-    SET hackathon_name = ?, organizer = ?, hackathon_type = ?,
-        nirf_rank = ?, result = ?, organized_by_industry = ?, date_participated = ?,
-        proof_document = ?, marks_awarded = ?
-    WHERE id = ?
-  `;
-
-  db.run(
-    query,
-    [
-      hackathon_name,
-      organizer,
-      hackathon_type,
-      nirf_rank,
-      result,
-      organized_by_industry,
-      date_participated,
-      proof_document,
-      marks_awarded,
-      req.params.id,
-    ],
-    function (err) {
+  // First, check if this entry has been staff evaluated
+  db.get(
+    "SELECT staff_evaluated, marks_awarded FROM hackathons WHERE id = ?",
+    [req.params.id],
+    (err, row) => {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
-      res.json({
-        marks_awarded,
-        message: "Hackathon entry updated successfully",
-      });
+
+      let marks_awarded;
+
+      // If staff has evaluated, preserve their marks. Otherwise, recalculate.
+      if (row && row.staff_evaluated === 1) {
+        marks_awarded = row.marks_awarded; // Keep staff-evaluated marks
+      } else {
+        // Recalculate marks based on rubrics
+        marks_awarded = 0;
+        if (hackathon_type === "inter_intra_college") {
+          marks_awarded = 20;
+        } else if (nirf_rank <= 200) {
+          marks_awarded = 80;
+        } else if (result === "won" && !organized_by_industry) {
+          marks_awarded = 160;
+        } else if (result === "won" && organized_by_industry) {
+          marks_awarded = 240;
+        }
+      }
+
+      const query = `
+        UPDATE hackathons 
+        SET hackathon_name = ?, organizer = ?, hackathon_type = ?,
+            nirf_rank = ?, result = ?, organized_by_industry = ?, date_participated = ?,
+            proof_document = ?, marks_awarded = ?
+        WHERE id = ?
+      `;
+
+      db.run(
+        query,
+        [
+          hackathon_name,
+          organizer,
+          hackathon_type,
+          nirf_rank,
+          result,
+          organized_by_industry,
+          date_participated,
+          proof_document,
+          marks_awarded,
+          req.params.id,
+        ],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({
+            marks_awarded,
+            message: "Hackathon entry updated successfully",
+          });
+        },
+      );
     },
   );
 });

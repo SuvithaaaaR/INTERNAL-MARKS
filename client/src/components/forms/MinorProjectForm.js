@@ -107,11 +107,13 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
             fontSize: "14px",
           }}
         >
-          <strong>Rubric:</strong> Uniqueness of Problem Statement
-          (Industry/NGO/Community): 20 marks
+          <strong>Marks Allocation:</strong>
           <br />
-          Additional marks can be awarded for innovation, implementation
-          quality, and impact.
+          • Base Marks (Uniqueness of Problem Statement): 20 marks
+          <br />
+          • Industry/NGO/Community Related Problem: Eligible for base marks
+          <br />
+          • Additional marks awarded for: Innovation, Implementation Quality, and Impact (up to 160 marks total)
         </div>
 
         {showForm && (
@@ -229,12 +231,13 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
           </form>
         )}
 
-        <h4>Entries ({entries.length})</h4>
-        {entries.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No entries yet. Add your first entry above.
-          </p>
-        ) : (
+        <div style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
+          {entries.length === 0 ? (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No entries yet. Add your first entry above.
+            </p>
+          ) : (
           entries.map((entry) => (
             <div key={entry.id} className="entry-card">
               <div
@@ -245,7 +248,19 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
                 }}
               >
                 <div style={{ flex: 1 }}>
-                  <h4>{entry.project_title}</h4>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                    <h4 style={{ margin: 0 }}>{entry.project_title}</h4>
+                    <div style={{ 
+                      background: "#28a745", 
+                      color: "white", 
+                      padding: "8px 16px", 
+                      borderRadius: "6px",
+                      fontWeight: "bold",
+                      fontSize: "16px"
+                    }}>
+                      ✅ {entry.marks_awarded} Marks Awarded
+                    </div>
+                  </div>
                   <div style={{ marginTop: "10px", marginBottom: "10px" }}>
                     <strong>Problem Statement:</strong>
                     <p style={{ color: "#666", marginTop: "4px" }}>
@@ -284,12 +299,6 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
                         </a>
                       </div>
                     )}
-                    <div>
-                      <strong>Marks:</strong>{" "}
-                      <span className="badge badge-success">
-                        {entry.marks_awarded}
-                      </span>
-                    </div>
                   </div>
                   <p
                     style={{
@@ -304,6 +313,7 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
                 <button
                   className="btn btn-danger"
                   onClick={() => handleDelete(entry.id)}
+                  style={{ marginLeft: "15px" }}
                 >
                   Delete
                 </button>
@@ -311,6 +321,7 @@ const MinorProjectForm = ({ studentId, onSuccess }) => {
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );
