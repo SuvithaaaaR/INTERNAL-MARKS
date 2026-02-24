@@ -1,25 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Container,
+  Title,
+  Text,
+  Button,
+  Table,
+  Modal,
+  TextInput,
+  Select,
+  Group,
+  Stack,
+  Loader,
+  Center,
+  Paper,
+  ActionIcon,
+  Badge,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
+import { IconPlus, IconTrash, IconEye, IconSearch } from "@tabler/icons-react";
 import { getStudents, createStudent, deleteStudent } from "../services/api";
-import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 const Students = () => {
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
     student_name: "",
     roll_number: "",
-    semester: 2,
+    semester: "2",
     email: "",
     department: "",
   });
 
   const navigate = useNavigate();
+  const { user, isFaculty } = useAuth();
 
   useEffect(() => {
+    // Redirect students directly to their own detail page
+    if (!isFaculty() && user?.student_id) {
+      navigate(`/students/${user.student_id}`, { replace: true });
+      return;
+    }
     fetchStudents();
   }, []);
 
@@ -44,12 +70,23 @@ const Students = () => {
   const fetchStudents = async () => {
     try {
       const response = await getStudents();
-      setStudents(response.data);
-      setFilteredStudents(response.data);
+      let studentData = response.data;
+      
+      // If logged in as student, only show their own record
+      if (!isFaculty() && user?.student_id) {
+        studentData = studentData.filter(s => s.id === user.student_id);
+      }
+      
+      setStudents(studentData);
+      setFilteredStudents(studentData);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching students:", error);
-      toast.error("Failed to load students");
+      notifications.show({
+        title: "Error",
+        message: "Failed to load students",
+        color: "red",
+      });
       setLoading(false);
     }
   };
@@ -58,19 +95,27 @@ const Students = () => {
     e.preventDefault();
     try {
       await createStudent(formData);
-      toast.success("Student added successfully!");
-      setShowModal(false);
+      notifications.show({
+        title: "Success",
+        message: "Student added successfully!",
+        color: "green",
+      });
+      close();
       setFormData({
         student_name: "",
         roll_number: "",
-        semester: 2,
+        semester: "2",
         email: "",
         department: "",
       });
       fetchStudents();
     } catch (error) {
       console.error("Error creating student:", error);
-      toast.error(error.response?.data?.error || "Failed to add student");
+      notifications.show({
+        title: "Error",
+        message: error.response?.data?.error || "Failed to add student",
+        color: "red",
+      });
     }
   };
 
@@ -82,197 +127,195 @@ const Students = () => {
     ) {
       try {
         await deleteStudent(id);
-        toast.success("Student deleted successfully!");
+        notifications.show({
+          title: "Success",
+          message: "Student deleted successfully!",
+          color: "green",
+        });
         fetchStudents();
       } catch (error) {
         console.error("Error deleting student:", error);
-        toast.error("Failed to delete student");
+        notifications.show({
+          title: "Error",
+          message: "Failed to delete student",
+          color: "red",
+        });
       }
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (name, value) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
   if (loading) {
     return (
-      <div className="container">
-        <div className="loading">Loading...</div>
-      </div>
+      <Center h={400}>
+        <Loader size="xl" />
+      </Center>
     );
   }
 
   return (
-    <div className="container">
-      <div className="page-header">
-        <h2>Students Management</h2>
-        <p>Manage student records and entries</p>
-      </div>
+    <Container size="xl" py="xl">
+      <Stack gap="lg">
+        {/* Header */}
+        <div>
+          <Title order={1} mb="xs">
+            Students Management
+          </Title>
+          <Text c="dimmed" size="lg">
+            Manage student records and entries
+          </Text>
+        </div>
 
-      <div className="action-bar">
-        <div className="search-box">
-          <input
-            type="text"
+        {/* Action Bar */}
+        <Group justify="space-between">
+          <TextInput
             placeholder="Search students..."
+            leftSection={<IconSearch size={16} />}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ flexGrow: 1, maxWidth: 400 }}
           />
-        </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          + Add Student
-        </button>
-      </div>
+          {isFaculty() && (
+            <Button leftSection={<IconPlus size={16} />} onClick={open}>
+              Add Student
+            </Button>
+          )}
+        </Group>
 
-      {filteredStudents.length === 0 ? (
-        <div className="empty-state">
-          <h3>No students found</h3>
-          <p>Add your first student to get started</p>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowModal(true)}
-          >
-            + Add Student
-          </button>
-        </div>
-      ) : (
-        <div className="card">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Roll Number</th>
-                <th>Semester</th>
-                <th>Email</th>
-                <th>Department</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredStudents.map((student) => (
-                <tr key={student.id}>
-                  <td>{student.student_name}</td>
-                  <td>{student.roll_number}</td>
-                  <td>{student.semester}</td>
-                  <td>{student.email || "-"}</td>
-                  <td>{student.department || "-"}</td>
-                  <td>
-                    <button
-                      className="btn btn-primary"
-                      style={{ marginRight: "8px" }}
-                      onClick={() => navigate(`/students/${student.id}`)}
-                    >
-                      View Details
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(student.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Add New Student</h2>
-              <button className="close-btn" onClick={() => setShowModal(false)}>
-                &times;
-              </button>
-            </div>
-            <form onSubmit={handleSubmit}>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Student Name *</label>
-                  <input
-                    type="text"
-                    name="student_name"
-                    value={formData.student_name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Roll Number *</label>
-                  <input
-                    type="text"
-                    name="roll_number"
-                    value={formData.roll_number}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Semester *</label>
-                  <select
-                    name="semester"
-                    value={formData.semester}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="2">Semester 2</option>
-                    <option value="3">Semester 3</option>
-                    <option value="4">Semester 4</option>
-                    <option value="5">Semester 5</option>
-                    <option value="6">Semester 6</option>
-                    <option value="7">Semester 7</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Department</label>
-                <input
-                  type="text"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "10px",
-                  marginTop: "20px",
-                }}
-              >
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
+        {/* Students Table */}
+        {filteredStudents.length === 0 ? (
+          <Paper p="xl" withBorder>
+            <Center>
+              <Stack align="center" gap="md">
+                <Text size="xl" fw={600}>
+                  No students found
+                </Text>
+                <Text c="dimmed">Add your first student to get started</Text>
+                <Button leftSection={<IconPlus size={16} />} onClick={open}>
                   Add Student
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
+                </Button>
+              </Stack>
+            </Center>
+          </Paper>
+        ) : (
+          <Paper withBorder>
+            <Table striped highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Name</Table.Th>
+                  <Table.Th>Roll Number</Table.Th>
+                  <Table.Th>Semester</Table.Th>
+                  <Table.Th>Email</Table.Th>
+                  <Table.Th>Department</Table.Th>
+                  <Table.Th>Actions</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {filteredStudents.map((student) => (
+                  <Table.Tr key={student.id}>
+                    <Table.Td>{student.student_name}</Table.Td>
+                    <Table.Td>
+                      <Badge variant="light">{student.roll_number}</Badge>
+                    </Table.Td>
+                    <Table.Td>{student.semester}</Table.Td>
+                    <Table.Td>{student.email || "-"}</Table.Td>
+                    <Table.Td>{student.department || "-"}</Table.Td>
+                    <Table.Td>
+                      <Group gap="xs">
+                        <Button
+                          size="xs"
+                          leftSection={<IconEye size={14} />}
+                          onClick={() => navigate(`/students/${student.id}`)}
+                        >
+                          View
+                        </Button>
+                        {isFaculty() && (
+                          <ActionIcon
+                            color="red"
+                            variant="light"
+                            onClick={() => handleDelete(student.id)}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        )}
+                      </Group>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Paper>
+        )}
+      </Stack>
+
+      {/* Add Student Modal */}
+      <Modal opened={opened} onClose={close} title="Add New Student" size="lg">
+        <form onSubmit={handleSubmit}>
+          <Stack gap="md">
+            <Group grow>
+              <TextInput
+                label="Student Name"
+                placeholder="Enter name"
+                required
+                value={formData.student_name}
+                onChange={(e) => handleChange("student_name", e.target.value)}
+              />
+              <TextInput
+                label="Roll Number"
+                placeholder="Enter roll number"
+                required
+                value={formData.roll_number}
+                onChange={(e) => handleChange("roll_number", e.target.value)}
+              />
+            </Group>
+
+            <Group grow>
+              <Select
+                label="Semester"
+                required
+                value={formData.semester}
+                onChange={(value) => handleChange("semester", value)}
+                data={[
+                  { value: "2", label: "Semester 2" },
+                  { value: "3", label: "Semester 3" },
+                  { value: "4", label: "Semester 4" },
+                  { value: "5", label: "Semester 5" },
+                  { value: "6", label: "Semester 6" },
+                  { value: "7", label: "Semester 7" },
+                ]}
+              />
+              <TextInput
+                label="Email"
+                type="email"
+                placeholder="Enter email"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+              />
+            </Group>
+
+            <TextInput
+              label="Department"
+              placeholder="Enter department"
+              value={formData.department}
+              onChange={(e) => handleChange("department", e.target.value)}
+            />
+
+            <Group justify="flex-end" mt="md">
+              <Button variant="default" onClick={close}>
+                Cancel
+              </Button>
+              <Button type="submit">Add Student</Button>
+            </Group>
+          </Stack>
+        </form>
+      </Modal>
+    </Container>
   );
 };
 

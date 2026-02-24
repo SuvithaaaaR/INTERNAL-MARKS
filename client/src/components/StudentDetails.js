@@ -1,7 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Group,
+  Stack,
+  Badge,
+  Tabs,
+  Loader,
+  Center,
+  Grid,
+  Paper,
+  ThemeIcon,
+  Alert,
+} from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import {
+  IconUser,
+  IconMail,
+  IconSchool,
+  IconBuilding,
+  IconChartBar,
+  IconInfoCircle,
+} from "@tabler/icons-react";
 import { getStudent, getCalculations } from "../services/api";
-import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 // Import all component forms
 import CommunityServiceForm from "./forms/CommunityServiceForm";
@@ -21,6 +46,8 @@ const StudentDetails = () => {
   const [calculations, setCalculations] = useState(null);
   const [activeTab, setActiveTab] = useState("summary");
   const [loading, setLoading] = useState(true);
+  const { isFaculty } = useAuth();
+  const canDelete = isFaculty();
 
   useEffect(() => {
     fetchStudentData();
@@ -37,7 +64,11 @@ const StudentDetails = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching student data:", error);
-      toast.error("Failed to load student data");
+      notifications.show({
+        title: "Error",
+        message: "Failed to load student data",
+        color: "red",
+      });
       setLoading(false);
     }
   };
@@ -48,223 +79,314 @@ const StudentDetails = () => {
 
   if (loading) {
     return (
-      <div className="container">
-        <div className="loading">Loading...</div>
-      </div>
+      <Center h={400}>
+        <Loader size="xl" />
+      </Center>
     );
   }
 
   if (!student) {
     return (
-      <div className="container">
-        <div className="alert alert-danger">Student not found</div>
-      </div>
+      <Container size="xl" py="xl">
+        <Alert icon={<IconInfoCircle />} title="Not Found" color="red">
+          Student not found
+        </Alert>
+      </Container>
     );
   }
 
-  const components = [
-    { id: "summary", name: "Summary", component: null },
-    {
-      id: "community",
-      name: "Community Service",
-      component: CommunityServiceForm,
-    },
-    { id: "patent", name: "Patent Filing", component: PatentForm },
-    { id: "scopus", name: "Scopus Papers", component: ScopusForm },
-    {
-      id: "project",
-      name: "Project Competition",
-      component: ProjectCompetitionForm,
-    },
-    { id: "hackathon", name: "Hackathons", component: HackathonForm },
-    { id: "workshop", name: "Workshops", component: WorkshopForm },
-    { id: "course", name: "Online Courses", component: OnlineCourseForm },
-    {
-      id: "entrepreneurship",
-      name: "Entrepreneurship",
-      component: EntrepreneurshipForm,
-    },
-    { id: "coding", name: "Coding Platforms", component: CodingPlatformForm },
-    { id: "minor", name: "Minor Projects", component: MinorProjectForm },
-  ];
-
   return (
-    <div className="container">
-      <div className="card">
-        <h2>{student.student_name}</h2>
-        <div className="grid-2" style={{ marginTop: "20px" }}>
-          <div className="info-item">
-            <label>Roll Number</label>
-            <span>{student.roll_number}</span>
-          </div>
-          <div className="info-item">
-            <label>Semester</label>
-            <span>{student.semester}</span>
-          </div>
-          <div className="info-item">
-            <label>Email</label>
-            <span>{student.email || "-"}</span>
-          </div>
-          <div className="info-item">
-            <label>Department</label>
-            <span>{student.department || "-"}</span>
-          </div>
-        </div>
-      </div>
+    <Container size="xl" py="xl">
+      <Stack gap="lg">
+        {/* Student Info Card */}
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Title order={2} mb="md">
+            {student.student_name}
+          </Title>
+          <Grid>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <Group gap="xs">
+                <ThemeIcon variant="light" size="lg">
+                  <IconUser size={18} />
+                </ThemeIcon>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    Roll Number
+                  </Text>
+                  <Text fw={500}>{student.roll_number}</Text>
+                </div>
+              </Group>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <Group gap="xs">
+                <ThemeIcon variant="light" size="lg" color="cyan">
+                  <IconSchool size={18} />
+                </ThemeIcon>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    Semester
+                  </Text>
+                  <Text fw={500}>{student.semester}</Text>
+                </div>
+              </Group>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <Group gap="xs">
+                <ThemeIcon variant="light" size="lg" color="green">
+                  <IconMail size={18} />
+                </ThemeIcon>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    Email
+                  </Text>
+                  <Text fw={500}>{student.email || "-"}</Text>
+                </div>
+              </Group>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <Group gap="xs">
+                <ThemeIcon variant="light" size="lg" color="orange">
+                  <IconBuilding size={18} />
+                </ThemeIcon>
+                <div>
+                  <Text size="xs" c="dimmed">
+                    Department
+                  </Text>
+                  <Text fw={500}>{student.department || "-"}</Text>
+                </div>
+              </Group>
+            </Grid.Col>
+          </Grid>
+        </Card>
 
-      <div className="tabs">
-        {components.map((comp) => (
-          <button
-            key={comp.id}
-            className={`tab ${activeTab === comp.id ? "active" : ""}`}
-            onClick={() => setActiveTab(comp.id)}
-          >
-            {comp.name}
-          </button>
-        ))}
-      </div>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs.List>
+            <Tabs.Tab value="summary">Summary</Tabs.Tab>
+            <Tabs.Tab value="community">Community Service</Tabs.Tab>
+            <Tabs.Tab value="patent">Patent Filing</Tabs.Tab>
+            <Tabs.Tab value="scopus">Scopus Papers</Tabs.Tab>
+            <Tabs.Tab value="project">Project Competition</Tabs.Tab>
+            <Tabs.Tab value="hackathon">Hackathons</Tabs.Tab>
+            <Tabs.Tab value="workshop">Workshops</Tabs.Tab>
+            <Tabs.Tab value="course">Online Courses</Tabs.Tab>
+            <Tabs.Tab value="entrepreneurship">Entrepreneurship</Tabs.Tab>
+            <Tabs.Tab value="coding">Coding Platforms</Tabs.Tab>
+            <Tabs.Tab value="minor">Minor Projects</Tabs.Tab>
+          </Tabs.List>
 
-      {activeTab === "summary" && calculations && (
-        <div>
-          <div className="summary-card">
-            <h3>
-              Total Marks:{" "}
-              <span className="marks-badge">{calculations.totalMarks}</span>
-            </h3>
+          <Tabs.Panel value="summary" pt="md">
+            {calculations && (
+              <Stack gap="lg">
+                {/* Total Marks */}
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Group justify="space-between" align="center">
+                    <Group>
+                      <ThemeIcon size="xl" variant="light" color="blue">
+                        <IconChartBar size={24} />
+                      </ThemeIcon>
+                      <div>
+                        <Text size="sm" c="dimmed">
+                          Total Marks
+                        </Text>
+                        <Title order={2}>{calculations.totalMarks}</Title>
+                      </div>
+                    </Group>
+                  </Group>
+                </Card>
 
-            <div style={{ marginTop: "20px" }}>
-              <div className="summary-item">
-                <span>1. Community Service</span>
-                <span className="marks-badge">
-                  {calculations.breakdown.communityService.capped} /{" "}
-                  {calculations.breakdown.communityService.cap}
-                </span>
-              </div>
+                {/* Marks Breakdown */}
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Title order={3} mb="md">
+                    Marks Breakdown
+                  </Title>
+                  <Stack gap="sm">
+                    <Paper p="sm" withBorder>
+                      <Group justify="space-between">
+                        <Text>1. Community Service</Text>
+                        <Badge size="lg" variant="filled">
+                          {calculations.breakdown.communityService.capped} /{" "}
+                          {calculations.breakdown.communityService.cap}
+                        </Badge>
+                      </Group>
+                    </Paper>
 
-              <div className="summary-item">
-                <span>
-                  2-4, 7. Full FA Marks (Best of
-                  Patent/Scopus/Competition/Hackathon/Entrepreneurship)
-                </span>
-                <span className="marks-badge">
-                  {calculations.breakdown.fullFAMarks.total} / 240
-                </span>
-              </div>
+                    <Paper p="sm" withBorder>
+                      <Group justify="space-between">
+                        <Text>
+                          2-4, 7. Full FA Marks (Best of
+                          Patent/Scopus/Competition/Hackathon/Entrepreneurship)
+                        </Text>
+                        <Badge size="lg" variant="filled" color="orange">
+                          {calculations.breakdown.fullFAMarks.total} / 240
+                        </Badge>
+                      </Group>
+                    </Paper>
 
-              <div className="summary-item">
-                <span>5. Workshops & Seminars</span>
-                <span className="marks-badge">
-                  {calculations.breakdown.workshops.capped} /{" "}
-                  {calculations.breakdown.workshops.cap}
-                </span>
-              </div>
+                    <Paper p="sm" withBorder>
+                      <Group justify="space-between">
+                        <Text>5. Workshops & Seminars</Text>
+                        <Badge size="lg" variant="filled" color="cyan">
+                          {calculations.breakdown.workshops.capped} /{" "}
+                          {calculations.breakdown.workshops.cap}
+                        </Badge>
+                      </Group>
+                    </Paper>
 
-              <div className="summary-item">
-                <span>6. Online Courses</span>
-                <span className="marks-badge">
-                  {calculations.breakdown.onlineCourses.capped} /{" "}
-                  {calculations.breakdown.onlineCourses.cap}
-                </span>
-              </div>
+                    <Paper p="sm" withBorder>
+                      <Group justify="space-between">
+                        <Text>6. Online Courses</Text>
+                        <Badge size="lg" variant="filled" color="green">
+                          {calculations.breakdown.onlineCourses.capped} /{" "}
+                          {calculations.breakdown.onlineCourses.cap}
+                        </Badge>
+                      </Group>
+                    </Paper>
 
-              <div className="summary-item">
-                <span>8. Coding Platforms</span>
-                <span className="marks-badge">
-                  {calculations.breakdown.codingPlatforms.capped} /{" "}
-                  {calculations.breakdown.codingPlatforms.cap}
-                </span>
-              </div>
+                    <Paper p="sm" withBorder>
+                      <Group justify="space-between">
+                        <Text>8. Coding Platforms</Text>
+                        <Badge size="lg" variant="filled" color="red">
+                          {calculations.breakdown.codingPlatforms.capped} /{" "}
+                          {calculations.breakdown.codingPlatforms.cap}
+                        </Badge>
+                      </Group>
+                    </Paper>
 
-              <div className="summary-item">
-                <span>9. Minor Projects</span>
-                <span className="marks-badge">
-                  {calculations.breakdown.minorProjects.capped} /{" "}
-                  {calculations.breakdown.minorProjects.cap}
-                </span>
-              </div>
+                    <Paper p="sm" withBorder>
+                      <Group justify="space-between">
+                        <Text>9. Minor Projects</Text>
+                        <Badge size="lg" variant="filled" color="violet">
+                          {calculations.breakdown.minorProjects.capped} /{" "}
+                          {calculations.breakdown.minorProjects.cap}
+                        </Badge>
+                      </Group>
+                    </Paper>
 
-              <div className="summary-item total">
-                <span>TOTAL MARKS</span>
-                <span>{calculations.totalMarks}</span>
-              </div>
-            </div>
-          </div>
+                    <Paper p="md" withBorder bg="blue.0">
+                      <Group justify="space-between">
+                        <Text fw={700} size="lg">
+                          TOTAL MARKS
+                        </Text>
+                        <Badge size="xl" variant="filled">
+                          {calculations.totalMarks}
+                        </Badge>
+                      </Group>
+                    </Paper>
+                  </Stack>
+                </Card>
 
-          <div style={{ marginTop: "20px" }} className="card">
-            <h3>Detailed Breakdown</h3>
+                {/* Detailed Breakdown */}
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Title order={3} mb="md">
+                    Detailed Breakdown
+                  </Title>
+                  <Stack gap="xs">
+                    <div>
+                      <Text fw={600} c="dimmed">
+                        Patent Filing:{" "}
+                        {calculations.breakdown.patentFiling.total} marks
+                      </Text>
+                      <Text size="sm" c="dimmed">
+                        {calculations.breakdown.patentFiling.entries.length}{" "}
+                        entries
+                      </Text>
+                    </div>
 
-            <h4 style={{ marginTop: "20px", color: "#666" }}>
-              Patent Filing: {calculations.breakdown.patentFiling.total} marks
-            </h4>
-            <p style={{ fontSize: "14px", color: "#888" }}>
-              {calculations.breakdown.patentFiling.entries.length} entries
-            </p>
+                    <div>
+                      <Text fw={600} c="dimmed">
+                        Scopus Papers:{" "}
+                        {calculations.breakdown.scopusPapers.total} marks
+                      </Text>
+                      <Text size="sm" c="dimmed">
+                        {calculations.breakdown.scopusPapers.entries.length}{" "}
+                        entries
+                      </Text>
+                    </div>
 
-            <h4 style={{ marginTop: "15px", color: "#666" }}>
-              Scopus Papers: {calculations.breakdown.scopusPapers.total} marks
-            </h4>
-            <p style={{ fontSize: "14px", color: "#888" }}>
-              {calculations.breakdown.scopusPapers.entries.length} entries
-            </p>
+                    <div>
+                      <Text fw={600} c="dimmed">
+                        Project Competitions:{" "}
+                        {calculations.breakdown.projectCompetitions.total} marks
+                      </Text>
+                      <Text size="sm" c="dimmed">
+                        {
+                          calculations.breakdown.projectCompetitions.entries
+                            .length
+                        }{" "}
+                        entries
+                      </Text>
+                    </div>
 
-            <h4 style={{ marginTop: "15px", color: "#666" }}>
-              Project Competitions:{" "}
-              {calculations.breakdown.projectCompetitions.total} marks
-            </h4>
-            <p style={{ fontSize: "14px", color: "#888" }}>
-              {calculations.breakdown.projectCompetitions.entries.length}{" "}
-              entries
-            </p>
+                    <div>
+                      <Text fw={600} c="dimmed">
+                        Hackathons: {calculations.breakdown.hackathons.total}{" "}
+                        marks
+                      </Text>
+                      <Text size="sm" c="dimmed">
+                        {calculations.breakdown.hackathons.entries.length}{" "}
+                        entries
+                      </Text>
+                    </div>
 
-            <h4 style={{ marginTop: "15px", color: "#666" }}>
-              Hackathons: {calculations.breakdown.hackathons.total} marks
-            </h4>
-            <p style={{ fontSize: "14px", color: "#888" }}>
-              {calculations.breakdown.hackathons.entries.length} entries
-            </p>
+                    <div>
+                      <Text fw={600} c="dimmed">
+                        Entrepreneurship:{" "}
+                        {calculations.breakdown.entrepreneurship.total} marks
+                      </Text>
+                      <Text size="sm" c="dimmed">
+                        {calculations.breakdown.entrepreneurship.entries.length}{" "}
+                        entries
+                      </Text>
+                    </div>
+                  </Stack>
+                </Card>
+              </Stack>
+            )}
+          </Tabs.Panel>
 
-            <h4 style={{ marginTop: "15px", color: "#666" }}>
-              Entrepreneurship: {calculations.breakdown.entrepreneurship.total}{" "}
-              marks
-            </h4>
-            <p style={{ fontSize: "14px", color: "#888" }}>
-              {calculations.breakdown.entrepreneurship.entries.length} entries
-            </p>
-          </div>
-        </div>
-      )}
+          <Tabs.Panel value="community" pt="md">
+            <CommunityServiceForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
 
-      {activeTab === "community" && (
-        <CommunityServiceForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "patent" && (
-        <PatentForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "scopus" && (
-        <ScopusForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "project" && (
-        <ProjectCompetitionForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "hackathon" && (
-        <HackathonForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "workshop" && (
-        <WorkshopForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "course" && (
-        <OnlineCourseForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "entrepreneurship" && (
-        <EntrepreneurshipForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "coding" && (
-        <CodingPlatformForm studentId={id} onSuccess={refreshData} />
-      )}
-      {activeTab === "minor" && (
-        <MinorProjectForm studentId={id} onSuccess={refreshData} />
-      )}
-    </div>
+          <Tabs.Panel value="patent" pt="md">
+            <PatentForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="scopus" pt="md">
+            <ScopusForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="project" pt="md">
+            <ProjectCompetitionForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="hackathon" pt="md">
+            <HackathonForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="workshop" pt="md">
+            <WorkshopForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="course" pt="md">
+            <OnlineCourseForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="entrepreneurship" pt="md">
+            <EntrepreneurshipForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="coding" pt="md">
+            <CodingPlatformForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="minor" pt="md">
+            <MinorProjectForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+          </Tabs.Panel>
+        </Tabs>
+      </Stack>
+    </Container>
   );
 };
 

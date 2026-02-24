@@ -1,7 +1,27 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  AppShell,
+  Burger,
+  Group,
+  NavLink,
+  Title,
+  Container,
+  Text,
+  Button,
+  Menu,
+  Avatar,
+  Badge,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import {
+  IconDashboard,
+  IconUsers,
+  IconClipboardCheck,
+  IconReportAnalytics,
+  IconLogout,
+  IconUser,
+} from "@tabler/icons-react";
 import "./App.css";
 
 import Dashboard from "./components/Dashboard";
@@ -9,50 +29,147 @@ import Students from "./components/Students";
 import StudentDetails from "./components/StudentDetails";
 import Reports from "./components/Reports";
 import StaffEvaluation from "./components/StaffEvaluation";
+import Login from "./components/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
+  const [opened, { toggle }] = useDisclosure();
+  const { user, logout, isFaculty } = useAuth();
+
+  // Different navigation items based on role
+  const facultyNavItems = [
+    { label: "Dashboard", path: "/", icon: IconDashboard },
+    { label: "Students", path: "/students", icon: IconUsers },
+    {
+      label: "Staff Evaluation",
+      path: "/staff-evaluation",
+      icon: IconClipboardCheck,
+    },
+    { label: "Reports", path: "/reports", icon: IconReportAnalytics },
+  ];
+
+  const studentNavItems = [
+    { label: "My Dashboard", path: "/", icon: IconDashboard },
+    { label: "My Profile", path: "/students", icon: IconUsers },
+    { label: "My Reports", path: "/reports", icon: IconReportAnalytics },
+  ];
+
+  // Use appropriate navigation based on role
+  const navItems = isFaculty() ? facultyNavItems : studentNavItems;
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = "/login";
+  };
+
   return (
     <Router>
-      <div className="App">
-        <nav className="navbar">
-          <div className="container">
-            <div className="nav-brand">
-              <h1>Internal Marks Calculator</h1>
-            </div>
-            <ul className="nav-menu">
-              <li>
-                <Link to="/">Dashboard</Link>
-              </li>
-              <li>
-                <Link to="/students">Students</Link>
-              </li>
-              <li>
-                <Link to="/staff-evaluation">Staff Evaluation</Link>
-              </li>
-              <li>
-                <Link to="/reports">Reports</Link>
-              </li>
-            </ul>
-          </div>
-        </nav>
+      <Routes>
+        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+        <Route
+          path="*"
+          element={
+            <ProtectedRoute>
+              <AppShell
+                header={{ height: 70 }}
+                navbar={{
+                  width: 280,
+                  breakpoint: "sm",
+                  collapsed: { mobile: !opened },
+                }}
+                padding="md"
+              >
+                <AppShell.Header>
+                  <Group h="100%" px="md" justify="space-between">
+                    <Group>
+                      <Burger
+                        opened={opened}
+                        onClick={toggle}
+                        hiddenFrom="sm"
+                        size="sm"
+                      />
+                      {isFaculty() ? (
+                        <Title order={3} c="blue">
+                          📊 Internal Marks Calculator
+                        </Title>
+                      ) : (
+                        <div>
+                          <Title order={3} c="blue" style={{ marginBottom: 0 }}>
+                            Welcome, {user?.full_name || user?.username}
+                          </Title>
+                          <Text size="xs" c="dimmed">
+                            Student Portal
+                          </Text>
+                        </div>
+                      )}
+                    </Group>
+                    <Group>
+                      <Badge color={user?.role === "faculty" ? "blue" : "green"} variant="light">
+                        {user?.role === "faculty" ? "Faculty" : "Student"}
+                      </Badge>
+                      <Menu shadow="md" width={200}>
+                        <Menu.Target>
+                          <Button
+                            variant="subtle"
+                            leftSection={<IconUser size={18} />}
+                          >
+                            {user?.full_name || user?.username}
+                          </Button>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                          <Menu.Label>Account</Menu.Label>
+                          <Menu.Item
+                            leftSection={<IconLogout size={16} />}
+                            color="red"
+                            onClick={handleLogout}
+                          >
+                            Logout
+                          </Menu.Item>
+                        </Menu.Dropdown>
+                      </Menu>
+                    </Group>
+                  </Group>
+                </AppShell.Header>
 
-        <main className="main-content">
-          <ToastContainer position="top-right" autoClose={3000} />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/students" element={<Students />} />
-            <Route path="/students/:id" element={<StudentDetails />} />
-            <Route path="/staff-evaluation" element={<StaffEvaluation />} />
-            <Route path="/reports" element={<Reports />} />
-          </Routes>
-        </main>
+                <AppShell.Navbar p="md">
+                  <Text size="xs" fw={700} c="dimmed" mb="md" tt="uppercase">
+                    Navigation
+                  </Text>
+                  {navItems.map((item) => (
+                    <NavLink
+                      key={item.path}
+                      label={item.label}
+                      leftSection={<item.icon size={20} stroke={1.5} />}
+                      component="a"
+                      href={item.path}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = item.path;
+                        toggle();
+                      }}
+                      mb="xs"
+                    />
+                  ))}
+                </AppShell.Navbar>
 
-        <footer className="footer">
-          <div className="container">
-            <p>&copy; 2026 Internal Marks Calculator System</p>
-          </div>
-        </footer>
-      </div>
+                <AppShell.Main>
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/students" element={<Students />} />
+                    <Route path="/students/:id" element={<StudentDetails />} />
+                    <Route 
+                      path="/staff-evaluation" 
+                      element={isFaculty() ? <StaffEvaluation /> : <Navigate to="/" replace />} 
+                    />
+                    <Route path="/reports" element={<Reports />} />
+                  </Routes>
+                </AppShell.Main>
+              </AppShell>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

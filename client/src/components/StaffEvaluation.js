@@ -127,7 +127,9 @@ const StaffEvaluation = () => {
   return (
     <div className="container">
       <div className="card">
-        <h2>Staff Evaluation Dashboard</h2>
+        <h2 style={{ marginTop: 0, marginBottom: "20px" }}>
+          Staff Evaluation Dashboard
+        </h2>
 
         {/* Statistics */}
         {stats && (
@@ -188,20 +190,26 @@ const StaffEvaluation = () => {
         {/* Filters */}
         <div
           style={{
-            display: "flex",
+            display: "grid",
+            gridTemplateColumns: "2fr 1fr",
             gap: "15px",
-            marginBottom: "20px",
-            flexWrap: "wrap",
+            marginBottom: "25px",
           }}
         >
-          <div style={{ flex: "1", minWidth: "250px" }}>
-            <label>
+          <div>
+            <label style={{ display: "block", marginBottom: "8px" }}>
               <strong>Activity Type:</strong>
             </label>
             <select
               value={activityType}
               onChange={(e) => setActivityType(e.target.value)}
-              style={{ width: "100%", marginTop: "5px" }}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                fontSize: "14px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+              }}
             >
               {activityTypes.map((type) => (
                 <option key={type.value} value={type.value}>
@@ -211,14 +219,20 @@ const StaffEvaluation = () => {
             </select>
           </div>
 
-          <div style={{ flex: "0 0 200px" }}>
-            <label>
+          <div>
+            <label style={{ display: "block", marginBottom: "8px" }}>
               <strong>Filter:</strong>
             </label>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              style={{ width: "100%", marginTop: "5px" }}
+              style={{
+                width: "100%",
+                padding: "8px 12px",
+                fontSize: "14px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+              }}
             >
               <option value="pending">Pending Only</option>
               <option value="all">All Entries</option>
@@ -228,7 +242,16 @@ const StaffEvaluation = () => {
 
         {/* Entries List */}
         <div>
-          <h3>
+          <h3
+            style={{
+              marginTop: 0,
+              marginBottom: "20px",
+              color: "#333",
+              fontSize: "20px",
+              borderBottom: "2px solid #e9ecef",
+              paddingBottom: "10px",
+            }}
+          >
             {activityTypes.find((t) => t.value === activityType)?.label} (
             {entries.length})
           </h3>
@@ -244,25 +267,39 @@ const StaffEvaluation = () => {
               <div
                 key={entry.id}
                 className="entry-card"
-                style={{ marginBottom: "15px" }}
+                style={{
+                  marginBottom: "15px",
+                  padding: "20px",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  background: "#fff",
+                }}
               >
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    alignItems: "start",
+                    alignItems: "flex-start",
+                    gap: "20px",
                   }}
                 >
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div
                       style={{
                         display: "flex",
                         alignItems: "center",
                         gap: "10px",
-                        marginBottom: "10px",
+                        marginBottom: "15px",
+                        flexWrap: "wrap",
                       }}
                     >
-                      <h4 style={{ margin: 0 }}>
+                      <h4
+                        style={{
+                          margin: 0,
+                          fontSize: "18px",
+                          color: "#333",
+                        }}
+                      >
                         {entry.hackathon_name ||
                           entry.course_name ||
                           entry.project_title ||
@@ -280,9 +317,11 @@ const StaffEvaluation = () => {
                           style={{
                             background: "#28a745",
                             color: "white",
-                            padding: "4px 12px",
+                            padding: "5px 12px",
                             borderRadius: "4px",
                             fontSize: "12px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
                           }}
                         >
                           ✓ Evaluated
@@ -292,9 +331,11 @@ const StaffEvaluation = () => {
                           style={{
                             background: "#ffc107",
                             color: "#000",
-                            padding: "4px 12px",
+                            padding: "5px 12px",
                             borderRadius: "4px",
                             fontSize: "12px",
+                            fontWeight: "600",
+                            whiteSpace: "nowrap",
                           }}
                         >
                           ⏳ Pending
@@ -302,7 +343,20 @@ const StaffEvaluation = () => {
                       )}
                     </div>
 
-                    <div className="entry-details">
+                    {/* Basic Info */}
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns:
+                          "repeat(auto-fit, minmax(250px, 1fr))",
+                        gap: "10px",
+                        fontSize: "14px",
+                        color: "#555",
+                        marginBottom: "15px",
+                        paddingBottom: "15px",
+                        borderBottom: "2px solid #e0e0e0",
+                      }}
+                    >
                       <div>
                         <strong>Student:</strong>{" "}
                         {getStudentName(entry.student_id)} (
@@ -339,20 +393,386 @@ const StaffEvaluation = () => {
                               ).toLocaleDateString()}
                             </div>
                           )}
-                          {entry.staff_comments && (
-                            <div>
-                              <strong>Comments:</strong> {entry.staff_comments}
-                            </div>
-                          )}
                         </>
                       )}
                     </div>
+
+                    {/* Detailed Activity Information */}
+                    <div
+                      style={{
+                        background: "#f8f9fa",
+                        padding: "15px",
+                        borderRadius: "6px",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <h5 style={{ marginTop: 0, marginBottom: "12px", color: "#1976d2" }}>
+                        📋 Entry Details
+                      </h5>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                          gap: "12px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {/* Hackathons */}
+                        {activityType === "hackathons" && (
+                          <>
+                            {entry.organizer && (
+                              <div>
+                                <strong>Organizer:</strong> {entry.organizer}
+                              </div>
+                            )}
+                            {entry.hackathon_type && (
+                              <div>
+                                <strong>Type:</strong> {entry.hackathon_type.replace(/_/g, ' ').toUpperCase()}
+                              </div>
+                            )}
+                            {entry.nirf_rank && (
+                              <div>
+                                <strong>NIRF Rank:</strong> {entry.nirf_rank}
+                              </div>
+                            )}
+                            {entry.result && (
+                              <div>
+                                <strong>Result:</strong> <span style={{ color: entry.result === 'won' ? '#28a745' : '#666' }}>{entry.result.toUpperCase()}</span>
+                              </div>
+                            )}
+                            {entry.organized_by_industry !== undefined && (
+                              <div>
+                                <strong>Industry Organized:</strong> {entry.organized_by_industry ? 'Yes' : 'No'}
+                              </div>
+                            )}
+                            {entry.date_participated && (
+                              <div>
+                                <strong>Date:</strong> {new Date(entry.date_participated).toLocaleDateString()}
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Online Courses */}
+                        {activityType === "online-courses" && (
+                          <>
+                            {entry.platform && (
+                              <div>
+                                <strong>Platform:</strong> {entry.platform}
+                              </div>
+                            )}
+                            {entry.course_duration && (
+                              <div>
+                                <strong>Duration:</strong> {entry.course_duration} weeks
+                              </div>
+                            )}
+                            {entry.completion_date && (
+                              <div>
+                                <strong>Completed:</strong> {new Date(entry.completion_date).toLocaleDateString()}
+                              </div>
+                            )}
+                            {entry.certificate_number && (
+                              <div>
+                                <strong>Certificate #:</strong> {entry.certificate_number}
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Minor Projects */}
+                        {activityType === "minor-projects" && (
+                          <>
+                            {entry.problem_statement && (
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <strong>Problem Statement:</strong>
+                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                  {entry.problem_statement}
+                                </p>
+                              </div>
+                            )}
+                            {entry.technologies_used && (
+                              <div>
+                                <strong>Technologies:</strong> {entry.technologies_used}
+                              </div>
+                            )}
+                            {entry.project_duration && (
+                              <div>
+                                <strong>Duration:</strong> {entry.project_duration} months
+                              </div>
+                            )}
+                            {entry.team_size && (
+                              <div>
+                                <strong>Team Size:</strong> {entry.team_size}
+                              </div>
+                            )}
+                            {entry.project_description && (
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <strong>Description:</strong>
+                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                  {entry.project_description}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Project Competitions */}
+                        {activityType === "project-competitions" && (
+                          <>
+                            {entry.organizer && (
+                              <div>
+                                <strong>Organizer:</strong> {entry.organizer}
+                              </div>
+                            )}
+                            {entry.project_theme && (
+                              <div>
+                                <strong>Theme:</strong> {entry.project_theme}
+                              </div>
+                            )}
+                            {entry.prize_won && (
+                              <div>
+                                <strong>Prize:</strong> <span style={{ color: '#28a745' }}>{entry.prize_won}</span>
+                              </div>
+                            )}
+                            {entry.team_size && (
+                              <div>
+                                <strong>Team Size:</strong> {entry.team_size}
+                              </div>
+                            )}
+                            {entry.date_participated && (
+                              <div>
+                                <strong>Date:</strong> {new Date(entry.date_participated).toLocaleDateString()}
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Workshops */}
+                        {activityType === "workshops" && (
+                          <>
+                            {entry.organizer && (
+                              <div>
+                                <strong>Organizer:</strong> {entry.organizer}
+                              </div>
+                            )}
+                            {entry.workshop_type && (
+                              <div>
+                                <strong>Type:</strong> {entry.workshop_type.replace(/_/g, ' ').toUpperCase()}
+                              </div>
+                            )}
+                            {entry.duration_days && (
+                              <div>
+                                <strong>Duration:</strong> {entry.duration_days} days
+                              </div>
+                            )}
+                            {entry.date_attended && (
+                              <div>
+                                <strong>Date:</strong> {new Date(entry.date_attended).toLocaleDateString()}
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Community Service */}
+                        {activityType === "community-service" && (
+                          <>
+                            {entry.activity_type && (
+                              <div>
+                                <strong>Activity Type:</strong> {entry.activity_type}
+                              </div>
+                            )}
+                            {entry.team_size && (
+                              <div>
+                                <strong>Team Size:</strong> {entry.team_size}
+                              </div>
+                            )}
+                            {entry.date_conducted && (
+                              <div>
+                                <strong>Date:</strong> {new Date(entry.date_conducted).toLocaleDateString()}
+                              </div>
+                            )}
+                            {entry.activity_description && (
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <strong>Description:</strong>
+                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                  {entry.activity_description}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Patents */}
+                        {activityType === "patents" && (
+                          <>
+                            {entry.patent_type && (
+                              <div>
+                                <strong>Type:</strong> {entry.patent_type.replace(/_/g, ' ').toUpperCase()}
+                              </div>
+                            )}
+                            {entry.application_number && (
+                              <div>
+                                <strong>Application #:</strong> {entry.application_number}
+                              </div>
+                            )}
+                            {entry.application_status && (
+                              <div>
+                                <strong>Status:</strong> {entry.application_status.replace(/_/g, ' ').toUpperCase()}
+                              </div>
+                            )}
+                            {entry.filing_date && (
+                              <div>
+                                <strong>Filed:</strong> {new Date(entry.filing_date).toLocaleDateString()}
+                              </div>
+                            )}
+                            {entry.technology_transfer && (
+                              <div>
+                                <strong>Tech Transfer:</strong> {entry.technology_transfer ? 'Yes' : 'No'}
+                              </div>
+                            )}
+                            {entry.technology_description && (
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <strong>Description:</strong>
+                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                  {entry.technology_description}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Scopus Papers */}
+                        {activityType === "scopus" && (
+                          <>
+                            {entry.journal_name && (
+                              <div>
+                                <strong>Journal:</strong> {entry.journal_name}
+                              </div>
+                            )}
+                            {entry.publication_date && (
+                              <div>
+                                <strong>Published:</strong> {new Date(entry.publication_date).toLocaleDateString()}
+                              </div>
+                            )}
+                            {entry.scopus_indexed !== undefined && (
+                              <div>
+                                <strong>Scopus Indexed:</strong>{" "}
+                                <span style={{ color: entry.scopus_indexed ? '#28a745' : '#666' }}>
+                                  {entry.scopus_indexed ? 'Yes ✓' : 'No'}
+                                </span>
+                              </div>
+                            )}
+                            {entry.doi_link && (
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <strong>DOI:</strong>{" "}
+                                <a href={entry.doi_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                                  {entry.doi_link}
+                                </a>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Entrepreneurship */}
+                        {activityType === "entrepreneurship" && (
+                          <>
+                            {entry.registration_type && (
+                              <div>
+                                <strong>Registration:</strong> {entry.registration_type.replace(/_/g, ' ').toUpperCase()}
+                              </div>
+                            )}
+                            {entry.registration_number && (
+                              <div>
+                                <strong>Registration #:</strong> {entry.registration_number}
+                              </div>
+                            )}
+                            {entry.registration_date && (
+                              <div>
+                                <strong>Registered:</strong> {new Date(entry.registration_date).toLocaleDateString()}
+                              </div>
+                            )}
+                            {entry.incubation_status && (
+                              <div>
+                                <strong>Incubated:</strong> <span style={{ color: '#28a745' }}>Yes ✓</span>
+                              </div>
+                            )}
+                            {entry.business_description && (
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <strong>Description:</strong>
+                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                  {entry.business_description}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Coding Platforms */}
+                        {activityType === "coding-platforms" && (
+                          <>
+                            {entry.contest_name && (
+                              <div>
+                                <strong>Contest:</strong> {entry.contest_name}
+                              </div>
+                            )}
+                            {entry.rank_achieved && (
+                              <div>
+                                <strong>Rank:</strong> <span style={{ color: '#1976d2', fontWeight: 'bold' }}>{entry.rank_achieved}</span>
+                              </div>
+                            )}
+                            {entry.score && (
+                              <div>
+                                <strong>Score:</strong> {entry.score}
+                              </div>
+                            )}
+                            {entry.contest_date && (
+                              <div>
+                                <strong>Date:</strong> {new Date(entry.contest_date).toLocaleDateString()}
+                              </div>
+                            )}
+                            {entry.profile_link && (
+                              <div style={{ gridColumn: "1 / -1" }}>
+                                <strong>Profile:</strong>{" "}
+                                <a href={entry.profile_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                                  {entry.profile_link}
+                                </a>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Proof Document */}
+                        {entry.proof_document && (
+                          <div style={{ gridColumn: "1 / -1", marginTop: "8px", paddingTop: "8px", borderTop: "1px solid #ddd" }}>
+                            <strong>📎 Proof Document:</strong>{" "}
+                            <a href={entry.proof_document} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2", textDecoration: "underline" }}>
+                              View Document
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Staff Evaluation Comments */}
+                    {entry.staff_evaluated && entry.staff_comments && (
+                      <div style={{ background: "#e8f5e9", padding: "12px", borderRadius: "6px", marginTop: "10px" }}>
+                        <strong style={{ color: "#2e7d32" }}>✓ Staff Comments:</strong>
+                        <p style={{ margin: "5px 0 0 0", color: "#1b5e20" }}>
+                          {entry.staff_comments}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <button
                     className="btn btn-primary"
                     onClick={() => handleEvaluate(entry)}
-                    style={{ marginLeft: "15px" }}
+                    style={{
+                      marginLeft: "15px",
+                      whiteSpace: "nowrap",
+                      alignSelf: "flex-start",
+                      flexShrink: 0,
+                    }}
                   >
                     {entry.staff_evaluated ? "Re-evaluate" : "Evaluate"}
                   </button>
@@ -377,6 +797,7 @@ const StaffEvaluation = () => {
             alignItems: "center",
             justifyContent: "center",
             zIndex: 1000,
+            padding: "20px",
           }}
           onClick={() => setSelectedEntry(null)}
         >
@@ -384,20 +805,31 @@ const StaffEvaluation = () => {
             className="card"
             style={{
               maxWidth: "600px",
-              width: "90%",
+              width: "100%",
               maxHeight: "90vh",
               overflow: "auto",
+              margin: "0 auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3>Evaluate Entry</h3>
-            <div style={{ marginBottom: "20px" }}>
-              <p>
+            <h3 style={{ marginTop: 0 }}>Evaluate Entry</h3>
+            
+            {/* Student Info */}
+            <div
+              style={{
+                marginBottom: "15px",
+                padding: "15px",
+                background: "#e3f2fd",
+                borderRadius: "6px",
+                border: "1px solid #90caf9",
+              }}
+            >
+              <p style={{ margin: "0 0 5px 0" }}>
                 <strong>Student:</strong>{" "}
                 {getStudentName(selectedEntry.student_id)} (
                 {getStudentRollNumber(selectedEntry.student_id)})
               </p>
-              <p>
+              <p style={{ margin: "0" }}>
                 <strong>Entry:</strong>{" "}
                 {selectedEntry.hackathon_name ||
                   selectedEntry.course_name ||
@@ -411,6 +843,362 @@ const StaffEvaluation = () => {
                   selectedEntry.organization_name ||
                   "Entry"}
               </p>
+            </div>
+
+            {/* Detailed Entry Information */}
+            <div
+              style={{
+                marginBottom: "20px",
+                padding: "15px",
+                background: "#f8f9fa",
+                borderRadius: "6px",
+                border: "1px solid #dee2e6",
+              }}
+            >
+              <h4 style={{ marginTop: 0, marginBottom: "12px", color: "#1976d2" }}>
+                📋 Complete Entry Details
+              </h4>
+              <div
+                style={{
+                  display: "grid",
+                  gap: "10px",
+                  fontSize: "14px",
+                }}
+              >
+                {/* Hackathons */}
+                {activityType === "hackathons" && (
+                  <>
+                    {selectedEntry.organizer && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Organizer:</strong> {selectedEntry.organizer}
+                      </p>
+                    )}
+                    {selectedEntry.hackathon_type && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Type:</strong> {selectedEntry.hackathon_type.replace(/_/g, ' ').toUpperCase()}
+                      </p>
+                    )}
+                    {selectedEntry.nirf_rank && (
+                      <p style={{ margin: 0 }}>
+                        <strong>NIRF Rank:</strong> {selectedEntry.nirf_rank}
+                      </p>
+                    )}
+                    {selectedEntry.result && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Result:</strong> <span style={{ color: selectedEntry.result === 'won' ? '#28a745' : '#666', fontWeight: 'bold' }}>{selectedEntry.result.toUpperCase()}</span>
+                      </p>
+                    )}
+                    {selectedEntry.organized_by_industry !== undefined && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Industry Organized:</strong> {selectedEntry.organized_by_industry ? 'Yes' : 'No'}
+                      </p>
+                    )}
+                    {selectedEntry.date_participated && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Date:</strong> {new Date(selectedEntry.date_participated).toLocaleDateString()}
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {/* Online Courses */}
+                {activityType === "online-courses" && (
+                  <>
+                    {selectedEntry.platform && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Platform:</strong> {selectedEntry.platform}
+                      </p>
+                    )}
+                    {selectedEntry.course_duration && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Duration:</strong> {selectedEntry.course_duration} weeks
+                      </p>
+                    )}
+                    {selectedEntry.completion_date && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Completed:</strong> {new Date(selectedEntry.completion_date).toLocaleDateString()}
+                      </p>
+                    )}
+                    {selectedEntry.certificate_number && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Certificate #:</strong> {selectedEntry.certificate_number}
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {/* Minor Projects */}
+                {activityType === "minor-projects" && (
+                  <>
+                    {selectedEntry.problem_statement && (
+                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                        <strong>Problem Statement:</strong>
+                        <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                          {selectedEntry.problem_statement}
+                        </p>
+                      </div>
+                    )}
+                    {selectedEntry.technologies_used && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Technologies:</strong> {selectedEntry.technologies_used}
+                      </p>
+                    )}
+                    {selectedEntry.project_duration && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Duration:</strong> {selectedEntry.project_duration} months
+                      </p>
+                    )}
+                    {selectedEntry.team_size && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Team Size:</strong> {selectedEntry.team_size}
+                      </p>
+                    )}
+                    {selectedEntry.project_description && (
+                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                        <strong>Description:</strong>
+                        <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                          {selectedEntry.project_description}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Project Competitions */}
+                {activityType === "project-competitions" && (
+                  <>
+                    {selectedEntry.organizer && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Organizer:</strong> {selectedEntry.organizer}
+                      </p>
+                    )}
+                    {selectedEntry.project_theme && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Theme:</strong> {selectedEntry.project_theme}
+                      </p>
+                    )}
+                    {selectedEntry.prize_won && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Prize:</strong> <span style={{ color: '#28a745', fontWeight: 'bold' }}>{selectedEntry.prize_won}</span>
+                      </p>
+                    )}
+                    {selectedEntry.team_size && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Team Size:</strong> {selectedEntry.team_size}
+                      </p>
+                    )}
+                    {selectedEntry.date_participated && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Date:</strong> {new Date(selectedEntry.date_participated).toLocaleDateString()}
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {/* Workshops */}
+                {activityType === "workshops" && (
+                  <>
+                    {selectedEntry.organizer && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Organizer:</strong> {selectedEntry.organizer}
+                      </p>
+                    )}
+                    {selectedEntry.workshop_type && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Type:</strong> {selectedEntry.workshop_type.replace(/_/g, ' ').toUpperCase()}
+                      </p>
+                    )}
+                    {selectedEntry.duration_days && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Duration:</strong> {selectedEntry.duration_days} days
+                      </p>
+                    )}
+                    {selectedEntry.date_attended && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Date:</strong> {new Date(selectedEntry.date_attended).toLocaleDateString()}
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {/* Community Service */}
+                {activityType === "community-service" && (
+                  <>
+                    {selectedEntry.activity_type && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Activity Type:</strong> {selectedEntry.activity_type}
+                      </p>
+                    )}
+                    {selectedEntry.team_size && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Team Size:</strong> {selectedEntry.team_size}
+                      </p>
+                    )}
+                    {selectedEntry.date_conducted && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Date:</strong> {new Date(selectedEntry.date_conducted).toLocaleDateString()}
+                      </p>
+                    )}
+                    {selectedEntry.activity_description && (
+                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                        <strong>Description:</strong>
+                        <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                          {selectedEntry.activity_description}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Patents */}
+                {activityType === "patents" && (
+                  <>
+                    {selectedEntry.patent_type && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Type:</strong> {selectedEntry.patent_type.replace(/_/g, ' ').toUpperCase()}
+                      </p>
+                    )}
+                    {selectedEntry.application_number && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Application #:</strong> {selectedEntry.application_number}
+                      </p>
+                    )}
+                    {selectedEntry.application_status && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Status:</strong> {selectedEntry.application_status.replace(/_/g, ' ').toUpperCase()}
+                      </p>
+                    )}
+                    {selectedEntry.filing_date && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Filed:</strong> {new Date(selectedEntry.filing_date).toLocaleDateString()}
+                      </p>
+                    )}
+                    {selectedEntry.technology_transfer && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Tech Transfer:</strong> <span style={{ color: '#28a745' }}>Yes ✓</span>
+                      </p>
+                    )}
+                    {selectedEntry.technology_description && (
+                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                        <strong>Description:</strong>
+                        <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                          {selectedEntry.technology_description}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Scopus Papers */}
+                {activityType === "scopus" && (
+                  <>
+                    {selectedEntry.journal_name && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Journal:</strong> {selectedEntry.journal_name}
+                      </p>
+                    )}
+                    {selectedEntry.publication_date && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Published:</strong> {new Date(selectedEntry.publication_date).toLocaleDateString()}
+                      </p>
+                    )}
+                    {selectedEntry.scopus_indexed !== undefined && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Scopus Indexed:</strong>{" "}
+                        <span style={{ color: selectedEntry.scopus_indexed ? '#28a745' : '#666', fontWeight: 'bold' }}>
+                          {selectedEntry.scopus_indexed ? 'Yes ✓' : 'No'}
+                        </span>
+                      </p>
+                    )}
+                    {selectedEntry.doi_link && (
+                      <p style={{ margin: 0 }}>
+                        <strong>DOI:</strong>{" "}
+                        <a href={selectedEntry.doi_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                          {selectedEntry.doi_link}
+                        </a>
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {/* Entrepreneurship */}
+                {activityType === "entrepreneurship" && (
+                  <>
+                    {selectedEntry.registration_type && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Registration:</strong> {selectedEntry.registration_type.replace(/_/g, ' ').toUpperCase()}
+                      </p>
+                    )}
+                    {selectedEntry.registration_number && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Registration #:</strong> {selectedEntry.registration_number}
+                      </p>
+                    )}
+                    {selectedEntry.registration_date && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Registered:</strong> {new Date(selectedEntry.registration_date).toLocaleDateString()}
+                      </p>
+                    )}
+                    {selectedEntry.incubation_status && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Incubated:</strong> <span style={{ color: '#28a745' }}>Yes ✓</span>
+                      </p>
+                    )}
+                    {selectedEntry.business_description && (
+                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                        <strong>Description:</strong>
+                        <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                          {selectedEntry.business_description}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Coding Platforms */}
+                {activityType === "coding-platforms" && (
+                  <>
+                    {selectedEntry.contest_name && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Contest:</strong> {selectedEntry.contest_name}
+                      </p>
+                    )}
+                    {selectedEntry.rank_achieved && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Rank:</strong> <span style={{ color: '#1976d2', fontWeight: 'bold' }}>{selectedEntry.rank_achieved}</span>
+                      </p>
+                    )}
+                    {selectedEntry.score && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Score:</strong> {selectedEntry.score}
+                      </p>
+                    )}
+                    {selectedEntry.contest_date && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Date:</strong> {new Date(selectedEntry.contest_date).toLocaleDateString()}
+                      </p>
+                    )}
+                    {selectedEntry.profile_link && (
+                      <p style={{ margin: 0 }}>
+                        <strong>Profile:</strong>{" "}
+                        <a href={selectedEntry.profile_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                          View Profile
+                        </a>
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {/* Proof Document */}
+                {selectedEntry.proof_document && (
+                  <div style={{ marginTop: "10px", paddingTop: "10px", borderTop: "2px solid #dee2e6" }}>
+                    <strong>📎 Proof Document:</strong>{" "}
+                    <a href={selectedEntry.proof_document} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2", textDecoration: "underline", fontWeight: 'bold' }}>
+                      View/Download Document
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
 
             <form onSubmit={handleSubmitEvaluation}>
@@ -428,6 +1216,7 @@ const StaffEvaluation = () => {
                   min="0"
                   max="240"
                   required
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -443,6 +1232,7 @@ const StaffEvaluation = () => {
                   }
                   rows="4"
                   placeholder="Optional: Add comments about the evaluation..."
+                  style={{ width: "100%", resize: "vertical" }}
                 />
               </div>
 
@@ -459,6 +1249,7 @@ const StaffEvaluation = () => {
                   }
                   placeholder="Enter your name"
                   required
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -467,17 +1258,22 @@ const StaffEvaluation = () => {
                   display: "flex",
                   gap: "10px",
                   justifyContent: "flex-end",
+                  marginTop: "25px",
                 }}
               >
                 <button
                   type="button"
                   className="btn"
                   onClick={() => setSelectedEntry(null)}
-                  style={{ background: "#666" }}
+                  style={{ background: "#666", color: "white" }}
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-success">
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  style={{ background: "#28a745", color: "white" }}
+                >
                   Submit Evaluation
                 </button>
               </div>

@@ -1,6 +1,34 @@
 import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Group,
+  Stack,
+  Badge,
+  Table,
+  Loader,
+  Center,
+  Paper,
+  ThemeIcon,
+  SimpleGrid,
+} from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import {
+  IconUsers,
+  IconClipboardList,
+  IconChartBar,
+  IconCheck,
+  IconSparkles,
+  IconTrophy,
+  IconCertificate,
+  IconBriefcase,
+  IconCode,
+  IconBulb,
+} from "@tabler/icons-react";
 import { getStudents, getSummaryReport } from "../services/api";
-import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -10,6 +38,7 @@ const Dashboard = () => {
   });
   const [recentStudents, setRecentStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user, isFaculty } = useAuth();
 
   useEffect(() => {
     fetchDashboardData();
@@ -22,8 +51,14 @@ const Dashboard = () => {
         getSummaryReport(),
       ]);
 
-      const students = studentsRes.data;
-      const report = reportRes.data;
+      let students = studentsRes.data;
+      let report = reportRes.data;
+
+      // Filter data for students (only show their own data)
+      if (!isFaculty() && user?.student_id) {
+        students = students.filter(s => s.id === user.student_id);
+        report = report.filter(r => r.student_id === user.student_id);
+      }
 
       const totalMarks = report.reduce(
         (sum, student) => sum + student.total_marks,
@@ -42,141 +77,241 @@ const Dashboard = () => {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
-      toast.error("Failed to load dashboard data");
+      notifications.show({
+        title: "Error",
+        message: "Failed to load dashboard data",
+        color: "red",
+      });
       setLoading(false);
     }
   };
 
+  const activityComponents = [
+    {
+      icon: IconCheck,
+      title: "Community Service",
+      description:
+        "School/NGO/Industry workshops & coding sessions (Team of max 3)",
+      max: 40,
+      color: "blue",
+    },
+    {
+      icon: IconSparkles,
+      title: "Patent Filing & Prototyping",
+      description:
+        "Prototype + Patent filing + IPM cell publication OR Tech transfer",
+      max: 240,
+      color: "orange",
+      fullFA: true,
+    },
+    {
+      icon: IconCertificate,
+      title: "Scopus-Indexed Papers",
+      description:
+        "Conference/Journal publications with institute students & faculty",
+      max: 240,
+      color: "green",
+      fullFA: true,
+    },
+    {
+      icon: IconTrophy,
+      title: "Project Competitions",
+      description:
+        "Participation/Winning at NIRF institutions or Industry projects",
+      max: 100,
+      color: "pink",
+    },
+    {
+      icon: IconCode,
+      title: "Hackathons & Contests",
+      description:
+        "College/NIRF/Industry/Government hackathons (Participation/Winning)",
+      max: 240,
+      color: "cyan",
+      fullFA: true,
+    },
+    {
+      icon: IconClipboardList,
+      title: "Workshops & Seminars",
+      description: "Attending workshops/seminars at Top 200 NIRF institutions",
+      max: 20,
+      color: "violet",
+    },
+    {
+      icon: IconCertificate,
+      title: "Online Courses & Certifications",
+      description: "MOOC (Coursera, Udemy) & NPTEL courses (4/8 weeks)",
+      max: 80,
+      color: "yellow",
+    },
+    {
+      icon: IconBriefcase,
+      title: "Entrepreneurship Activities",
+      description: "Udyam registration, DPIIT recognition, Funding/Incubation",
+      max: 240,
+      color: "teal",
+      fullFA: true,
+    },
+    {
+      icon: IconCode,
+      title: "Coding Competitions",
+      description: "HackerRank, CodeChef, LeetCode (Semester-wise scoring)",
+      max: 120,
+      color: "red",
+    },
+    {
+      icon: IconBulb,
+      title: "Minor Projects",
+      description: "Unique projects for Industry/NGO/Community",
+      max: 160,
+      color: "indigo",
+    },
+  ];
+
   if (loading) {
     return (
-      <div className="container">
-        <div className="loading">Loading...</div>
-      </div>
+      <Center h={400}>
+        <Loader size="xl" />
+      </Center>
     );
   }
 
   return (
-    <div className="container">
-      <div className="page-header" style={{ marginBottom: "30px" }}>
-        <h2 style={{ fontSize: "32px", marginBottom: "8px", color: "#2c3e50" }}>📊 Internal Marks Dashboard</h2>
-        <p style={{ fontSize: "16px", color: "#7f8c8d" }}>Comprehensive system for calculating internal marks across 9 activity components</p>
-      </div>
+    <Container size="xl" py="xl">
+      <Stack gap="xl">
+        {/* Header */}
+        <div>
+          <Title order={1} mb="xs">
+            {isFaculty() ? "📊 Internal Marks Dashboard" : "🎓 My Academic Performance"}
+          </Title>
+          <Text c="dimmed" size="lg">
+            {isFaculty() 
+              ? "Comprehensive system for calculating internal marks across 10 activity components"
+              : "Track your achievements and internal marks across all activity components"
+            }
+          </Text>
+        </div>
 
-      <div className="stats-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "20px", marginBottom: "30px" }}>
-        <div className="stat-card" style={{ padding: "25px" }}>
-          <h3 style={{ fontSize: "42px", margin: "0 0 10px 0", color: "#667eea" }}>{stats.totalStudents}</h3>
-          <p style={{ margin: 0, fontSize: "16px", color: "#666" }}>Total Students Registered</p>
-        </div>
-        <div
-          className="stat-card"
-          style={{
-            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-            padding: "25px"
-          }}
-        >
-          <h3 style={{ fontSize: "42px", margin: "0 0 10px 0" }}>{stats.totalEntries}</h3>
-          <p style={{ margin: 0, fontSize: "16px" }}>Total Activity Entries</p>
-        </div>
-        <div
-          className="stat-card"
-          style={{
-            background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-            padding: "25px"
-          }}
-        >
-          <h3 style={{ fontSize: "42px", margin: "0 0 10px 0" }}>{stats.avgMarks}</h3>
-          <p style={{ margin: 0, fontSize: "16px" }}>Average Marks Achieved</p>
-        </div>
-      </div>
+        {/* Stats Cards */}
+        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg">
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Group>
+              <ThemeIcon size={60} radius="md" variant="light" color="blue">
+                <IconUsers size={30} />
+              </ThemeIcon>
+              <div>
+                <Text size="xl" fw={700}>
+                  {stats.totalStudents}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  {isFaculty() ? "Total Students" : "My Profile"}
+                </Text>
+              </div>
+            </Group>
+          </Card>
 
-      <div className="card" style={{ marginBottom: "30px" }}>
-        <h3 style={{ fontSize: "24px", marginBottom: "20px", color: "#2c3e50", borderBottom: "3px solid #667eea", paddingBottom: "10px" }}>📋 Activity Components & Marks Allocation</h3>
-        <div className="grid-2" style={{ gap: "15px" }}>
-          <div className="component-item" style={{ padding: "15px", background: "#f8f9fa", borderRadius: "8px", borderLeft: "4px solid #667eea" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>1️⃣ Community Service</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>School/NGO/Industry workshops & coding sessions (Team of max 3)</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#667eea" }}>Max: 40 marks</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#fff8e1", borderRadius: "8px", borderLeft: "4px solid #ffc107" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>2️⃣ Patent Filing & Prototyping</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>Prototype + Patent filing + IPM cell publication OR Tech transfer</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#f57c00" }}>Max: 240 marks (Full FA)</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#e8f5e9", borderRadius: "8px", borderLeft: "4px solid #4caf50" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>3️⃣ Scopus-Indexed Papers</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>Conference/Journal publications with institute students & faculty</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#2e7d32" }}>Max: 240 marks (Full FA)</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#fce4ec", borderRadius: "8px", borderLeft: "4px solid #e91e63" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>4️⃣ Project Competitions</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>Participation/Winning at NIRF institutions or Industry projects</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#c2185b" }}>Max: 100 marks</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#e1f5fe", borderRadius: "8px", borderLeft: "4px solid #03a9f4" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>5️⃣ Hackathons & Contests</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>College/NIRF/Industry/Government hackathons (Participation/Winning)</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#0277bd" }}>Max: 240 marks (Full FA)</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#f3e5f5", borderRadius: "8px", borderLeft: "4px solid #9c27b0" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>6️⃣ Workshops & Seminars</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>Attending workshops/seminars at Top 200 NIRF institutions</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#7b1fa2" }}>Max: 20 marks</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#fff3e0", borderRadius: "8px", borderLeft: "4px solid #ff9800" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>7️⃣ Online Courses & Certifications</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>MOOC (Coursera, Udemy) & NPTEL courses (4/8 weeks)</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#e65100" }}>Max: 80 marks</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#e0f2f1", borderRadius: "8px", borderLeft: "4px solid #009688" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>8️⃣ Entrepreneurship Activities</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>Udyam registration, DPIIT recognition, Funding/Incubation</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#00695c" }}>Max: 240 marks (Full FA)</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#ffebee", borderRadius: "8px", borderLeft: "4px solid #f44336" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>9️⃣ Coding Competitions</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>HackerRank, CodeChef, LeetCode (Semester-wise scoring)</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#c62828" }}>Max: 120 marks</p>
-          </div>
-          <div className="component-item" style={{ padding: "15px", background: "#ede7f6", borderRadius: "8px", borderLeft: "4px solid #673ab7" }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#333" }}>🔟 Minor Projects</h4>
-            <p style={{ margin: "0 0 5px 0", fontSize: "14px", color: "#666" }}>Unique projects for Industry/NGO/Community</p>
-            <p style={{ margin: 0, fontWeight: "600", color: "#4527a0" }}>Max: 160 marks</p>
-          </div>
-        </div>
-        
-        <div style={{ marginTop: "20px", padding: "15px", background: "#e3f2fd", borderRadius: "8px", borderLeft: "4px solid #2196f3" }}>
-          <p style={{ margin: 0, fontSize: "14px", color: "#555" }}>
-            <strong>💡 Note:</strong> Full FA (Formative Assessment) components are worth 240 marks each. Only the <strong>highest scoring</strong> Full FA component counts toward your total marks.
-          </p>
-        </div>
-      </div>
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Group>
+              <ThemeIcon size={60} radius="md" variant="light" color="grape">
+                <IconClipboardList size={30} />
+              </ThemeIcon>
+              <div>
+                <Text size="xl" fw={700}>
+                  {stats.totalEntries}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  {isFaculty() ? "Activity Entries" : "My Activities"}
+                </Text>
+              </div>
+            </Group>
+          </Card>
 
-      {recentStudents.length > 0 && (
-        <div className="card">
-          <h3>Recent Students</h3>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Roll Number</th>
-                <th>Semester</th>
-                <th>Department</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentStudents.map((student) => (
-                <tr key={student.id}>
-                  <td>{student.student_name}</td>
-                  <td>{student.roll_number}</td>
-                  <td>{student.semester}</td>
-                  <td>{student.department}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Group>
+              <ThemeIcon size={60} radius="md" variant="light" color="cyan">
+                <IconChartBar size={30} />
+              </ThemeIcon>
+              <div>
+                <Text size="xl" fw={700}>
+                  {stats.avgMarks}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  {isFaculty() ? "Average Marks" : "My Total Marks"}
+                </Text>
+              </div>
+            </Group>
+          </Card>
+        </SimpleGrid>
+
+        {/* Activity Components */}
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Title order={3} mb="md">
+            {isFaculty() ? "📋 Activity Components & Marks Allocation" : "📋 My Activity Components"}
+          </Title>
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+            {activityComponents.map((component, index) => (
+              <Paper key={index} p="md" withBorder>
+                <Group mb="xs">
+                  <ThemeIcon size="lg" radius="md" color={component.color}>
+                    <component.icon size={20} />
+                  </ThemeIcon>
+                  <Text fw={600}>{component.title}</Text>
+                  {component.fullFA && (
+                    <Badge color="orange" variant="light" size="sm">
+                      Full FA
+                    </Badge>
+                  )}
+                </Group>
+                <Text size="sm" c="dimmed" mb="xs">
+                  {component.description}
+                </Text>
+                <Badge color={component.color} variant="filled">
+                  Max: {component.max} marks
+                </Badge>
+              </Paper>
+            ))}
+          </SimpleGrid>
+
+          <Paper p="md" mt="md" bg="blue.0" radius="md">
+            <Text size="sm">
+              <strong>💡 Note:</strong> Full FA (Formative Assessment)
+              components are worth 240 marks each. Only the{" "}
+              <strong>highest scoring</strong> Full FA component counts toward
+              your total marks.
+            </Text>
+          </Paper>
+        </Card>
+
+        {/* Recent Students - Only for Faculty */}
+        {isFaculty() && recentStudents.length > 0 && (
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Title order={3} mb="md">
+              Recent Students
+            </Title>
+            <Table striped highlightOnHover>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Name</Table.Th>
+                  <Table.Th>Roll Number</Table.Th>
+                  <Table.Th>Semester</Table.Th>
+                  <Table.Th>Department</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {recentStudents.map((student) => (
+                  <Table.Tr key={student.id}>
+                    <Table.Td>{student.student_name}</Table.Td>
+                    <Table.Td>{student.roll_number}</Table.Td>
+                    <Table.Td>{student.semester}</Table.Td>
+                    <Table.Td>{student.department}</Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Card>
+        )}
+      </Stack>
+    </Container>
   );
 };
 

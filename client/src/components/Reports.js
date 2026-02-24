@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Title,
+  Text,
+  Button,
+  Table,
+  Select,
+  Group,
+  Stack,
+  Loader,
+  Center,
+  Paper,
+  Badge,
+  ScrollArea,
+} from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconFileDownload } from "@tabler/icons-react";
 import { getSummaryReport } from "../services/api";
-import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 const Reports = () => {
   const [report, setReport] = useState([]);
   const [filteredReport, setFilteredReport] = useState([]);
   const [loading, setLoading] = useState(true);
   const [semesterFilter, setSemesterFilter] = useState("all");
+  const { user, isFaculty } = useAuth();
 
   useEffect(() => {
     fetchReport();
@@ -25,12 +43,23 @@ const Reports = () => {
   const fetchReport = async () => {
     try {
       const response = await getSummaryReport();
-      setReport(response.data);
-      setFilteredReport(response.data);
+      let reportData = response.data;
+      
+      // Filter data for students (only show their own data)
+      if (!isFaculty() && user?.student_id) {
+        reportData = reportData.filter(r => r.student_id === user.student_id);
+      }
+      
+      setReport(reportData);
+      setFilteredReport(reportData);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching report:", error);
-      toast.error("Failed to load report");
+      notifications.show({
+        title: "Error",
+        message: "Failed to load report",
+        color: "red",
+      });
       setLoading(false);
     }
   };
@@ -90,105 +119,134 @@ const Reports = () => {
 
   if (loading) {
     return (
-      <div className="container">
-        <div className="loading">Loading...</div>
-      </div>
+      <Center h={400}>
+        <Loader size="xl" />
+      </Center>
     );
   }
 
   return (
-    <div className="container">
-      <div className="page-header">
-        <h2>Reports</h2>
-        <p>View and export marks summary</p>
-      </div>
-
-      <div className="action-bar">
+    <Container size="xl" py="xl">
+      <Stack gap="lg">
+        {/* Header */}
         <div>
-          <label style={{ marginRight: "10px" }}>Filter by Semester:</label>
-          <select
-            value={semesterFilter}
-            onChange={(e) => setSemesterFilter(e.target.value)}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "4px",
-              border: "1px solid #ddd",
-            }}
-          >
-            <option value="all">All Semesters</option>
-            <option value="2">Semester 2</option>
-            <option value="3">Semester 3</option>
-            <option value="4">Semester 4</option>
-            <option value="5">Semester 5</option>
-            <option value="6">Semester 6</option>
-            <option value="7">Semester 7</option>
-          </select>
+          <Title order={1} mb="xs">
+            {isFaculty() ? "Reports" : "My Marks Report"}
+          </Title>
+          <Text c="dimmed" size="lg">
+            {isFaculty() 
+              ? "View and export marks summary" 
+              : "View your complete marks breakdown across all activities"
+            }
+          </Text>
         </div>
-        <button className="btn btn-success" onClick={exportToCSV}>
-          Export to CSV
-        </button>
-      </div>
 
-      {filteredReport.length === 0 ? (
-        <div className="empty-state">
-          <h3>No data available</h3>
-          <p>Add students and their entries to generate reports</p>
-        </div>
-      ) : (
-        <div className="card" style={{ overflowX: "auto" }}>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Roll No</th>
-                <th>Sem</th>
-                <th>Dept</th>
-                <th>Community</th>
-                <th>Patent</th>
-                <th>Scopus</th>
-                <th>Competition</th>
-                <th>Hackathon</th>
-                <th>Workshop</th>
-                <th>Course</th>
-                <th>Startup</th>
-                <th>Coding</th>
-                <th>Projects</th>
-                <th>Full FA</th>
-                <th style={{ fontWeight: "bold", color: "#007bff" }}>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredReport.map((student) => (
-                <tr key={student.id}>
-                  <td>{student.student_name}</td>
-                  <td>{student.roll_number}</td>
-                  <td>{student.semester}</td>
-                  <td>{student.department || "-"}</td>
-                  <td>{student.community_service_marks}</td>
-                  <td>{student.patent_marks}</td>
-                  <td>{student.scopus_marks}</td>
-                  <td>{student.competition_marks}</td>
-                  <td>{student.hackathon_marks}</td>
-                  <td>{student.workshop_marks}</td>
-                  <td>{student.course_marks}</td>
-                  <td>{student.entrepreneurship_marks}</td>
-                  <td>{student.coding_marks}</td>
-                  <td>{student.project_marks}</td>
-                  <td>
-                    <strong>{student.full_fa_marks}</strong>
-                  </td>
-                  <td>
-                    <strong style={{ color: "#007bff" }}>
-                      {student.total_marks}
-                    </strong>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+        {/* Filters and Export */}
+        <Group justify="space-between">
+          {isFaculty() && (
+            <Select
+              label="Filter by Semester"
+              value={semesterFilter}
+              onChange={(value) => setSemesterFilter(value || "all")}
+              data={[
+                { value: "all", label: "All Semesters" },
+                { value: "2", label: "Semester 2" },
+                { value: "3", label: "Semester 3" },
+                { value: "4", label: "Semester 4" },
+                { value: "5", label: "Semester 5" },
+                { value: "6", label: "Semester 6" },
+                { value: "7", label: "Semester 7" },
+              ]}
+              style={{ width: 200 }}
+            />
+          )}
+          <Button
+            leftSection={<IconFileDownload size={16} />}
+            color="green"
+            onClick={exportToCSV}
+          >
+            {isFaculty() ? "Export to CSV" : "Download My Report"}
+          </Button>
+        </Group>
+
+        {/* Report Table */}
+        {filteredReport.length === 0 ? (
+          <Paper p="xl" withBorder>
+            <Center>
+              <Stack align="center" gap="md">
+                <Text size="xl" fw={600}>
+                  No data available
+                </Text>
+                <Text c="dimmed">
+                  Add students and their entries to generate reports
+                </Text>
+              </Stack>
+            </Center>
+          </Paper>
+        ) : (
+          <Paper withBorder>
+            <ScrollArea>
+              <Table striped highlightOnHover>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Name</Table.Th>
+                    <Table.Th>Roll No</Table.Th>
+                    <Table.Th>Sem</Table.Th>
+                    <Table.Th>Dept</Table.Th>
+                    <Table.Th>Community</Table.Th>
+                    <Table.Th>Patent</Table.Th>
+                    <Table.Th>Scopus</Table.Th>
+                    <Table.Th>Competition</Table.Th>
+                    <Table.Th>Hackathon</Table.Th>
+                    <Table.Th>Workshop</Table.Th>
+                    <Table.Th>Course</Table.Th>
+                    <Table.Th>Startup</Table.Th>
+                    <Table.Th>Coding</Table.Th>
+                    <Table.Th>Projects</Table.Th>
+                    <Table.Th>Full FA</Table.Th>
+                    <Table.Th>
+                      <Text fw={700} c="blue">
+                        Total
+                      </Text>
+                    </Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {filteredReport.map((student) => (
+                    <Table.Tr key={student.id}>
+                      <Table.Td>{student.student_name}</Table.Td>
+                      <Table.Td>
+                        <Badge variant="light">{student.roll_number}</Badge>
+                      </Table.Td>
+                      <Table.Td>{student.semester}</Table.Td>
+                      <Table.Td>{student.department || "-"}</Table.Td>
+                      <Table.Td>{student.community_service_marks}</Table.Td>
+                      <Table.Td>{student.patent_marks}</Table.Td>
+                      <Table.Td>{student.scopus_marks}</Table.Td>
+                      <Table.Td>{student.competition_marks}</Table.Td>
+                      <Table.Td>{student.hackathon_marks}</Table.Td>
+                      <Table.Td>{student.workshop_marks}</Table.Td>
+                      <Table.Td>{student.course_marks}</Table.Td>
+                      <Table.Td>{student.entrepreneurship_marks}</Table.Td>
+                      <Table.Td>{student.coding_marks}</Table.Td>
+                      <Table.Td>{student.project_marks}</Table.Td>
+                      <Table.Td>
+                        <Text fw={600}>{student.full_fa_marks}</Text>
+                      </Table.Td>
+                      <Table.Td>
+                        <Badge size="lg" variant="filled">
+                          {student.total_marks}
+                        </Badge>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </ScrollArea>
+          </Paper>
+        )}
+      </Stack>
+    </Container>
   );
 };
 

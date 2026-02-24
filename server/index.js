@@ -23,6 +23,7 @@ if (!fs.existsSync(dbDir)) {
 const db = require("./database");
 
 // Routes
+const authRoutes = require("./routes/auth");
 const studentRoutes = require("./routes/students");
 const communityServiceRoutes = require("./routes/communityService");
 const patentRoutes = require("./routes/patents");
@@ -37,6 +38,7 @@ const minorProjectRoutes = require("./routes/minorProjects");
 const calculationRoutes = require("./routes/calculations");
 const staffEvaluationRoutes = require("./routes/staffEvaluation");
 
+app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/community-service", communityServiceRoutes);
 app.use("/api/patents", patentRoutes);

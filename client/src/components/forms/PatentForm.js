@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getPatents, createPatent, deletePatent } from "../../services/api";
 import { toast } from "react-toastify";
 
-const PatentForm = ({ studentId, onSuccess }) => {
+const PatentForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -268,15 +268,21 @@ const PatentForm = ({ studentId, onSuccess }) => {
                       <h4 style={{ margin: 0 }}>{entry.patent_title}</h4>
                       <div
                         style={{
-                          background: "#28a745",
-                          color: "white",
+                          background: entry.staff_evaluated
+                            ? "#28a745"
+                            : "#ffc107",
+                          color: entry.staff_evaluated ? "white" : "#000",
                           padding: "8px 16px",
                           borderRadius: "6px",
                           fontWeight: "bold",
                           fontSize: "16px",
                         }}
                       >
-                        ✅ {entry.marks_awarded} Marks Awarded
+                        {entry.staff_evaluated ? (
+                          <>✅ {entry.marks_awarded} Marks Awarded</>
+                        ) : (
+                          <>⏳ Pending Evaluation</>
+                        )}
                       </div>
                     </div>
                     <div className="entry-details">
@@ -310,13 +316,15 @@ const PatentForm = ({ studentId, onSuccess }) => {
                       )}
                     </div>
                   </div>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(entry.id)}
-                    style={{ marginLeft: "15px" }}
-                  >
-                    Delete
-                  </button>
+                  {canDelete && (
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(entry.id)}
+                      style={{ marginLeft: "15px" }}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               </div>
             ))
