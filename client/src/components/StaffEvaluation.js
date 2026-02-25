@@ -406,13 +406,20 @@ const StaffEvaluation = () => {
                         marginBottom: "10px",
                       }}
                     >
-                      <h5 style={{ marginTop: 0, marginBottom: "12px", color: "#1976d2" }}>
+                      <h5
+                        style={{
+                          marginTop: 0,
+                          marginBottom: "12px",
+                          color: "#1976d2",
+                        }}
+                      >
                         📋 Entry Details
                       </h5>
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                          gridTemplateColumns:
+                            "repeat(auto-fill, minmax(300px, 1fr))",
                           gap: "12px",
                           fontSize: "14px",
                         }}
@@ -427,7 +434,10 @@ const StaffEvaluation = () => {
                             )}
                             {entry.hackathon_type && (
                               <div>
-                                <strong>Type:</strong> {entry.hackathon_type.replace(/_/g, ' ').toUpperCase()}
+                                <strong>Type:</strong>{" "}
+                                {entry.hackathon_type
+                                  .replace(/_/g, " ")
+                                  .toUpperCase()}
                               </div>
                             )}
                             {entry.nirf_rank && (
@@ -437,17 +447,31 @@ const StaffEvaluation = () => {
                             )}
                             {entry.result && (
                               <div>
-                                <strong>Result:</strong> <span style={{ color: entry.result === 'won' ? '#28a745' : '#666' }}>{entry.result.toUpperCase()}</span>
+                                <strong>Result:</strong>{" "}
+                                <span
+                                  style={{
+                                    color:
+                                      entry.result === "won"
+                                        ? "#28a745"
+                                        : "#666",
+                                  }}
+                                >
+                                  {entry.result.toUpperCase()}
+                                </span>
                               </div>
                             )}
                             {entry.organized_by_industry !== undefined && (
                               <div>
-                                <strong>Industry Organized:</strong> {entry.organized_by_industry ? 'Yes' : 'No'}
+                                <strong>Industry Organized:</strong>{" "}
+                                {entry.organized_by_industry ? "Yes" : "No"}
                               </div>
                             )}
                             {entry.date_participated && (
                               <div>
-                                <strong>Date:</strong> {new Date(entry.date_participated).toLocaleDateString()}
+                                <strong>Date:</strong>{" "}
+                                {new Date(
+                                  entry.date_participated,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                           </>
@@ -463,17 +487,22 @@ const StaffEvaluation = () => {
                             )}
                             {entry.course_duration && (
                               <div>
-                                <strong>Duration:</strong> {entry.course_duration} weeks
+                                <strong>Duration:</strong>{" "}
+                                {entry.course_duration} weeks
                               </div>
                             )}
                             {entry.completion_date && (
                               <div>
-                                <strong>Completed:</strong> {new Date(entry.completion_date).toLocaleDateString()}
+                                <strong>Completed:</strong>{" "}
+                                {new Date(
+                                  entry.completion_date,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                             {entry.certificate_number && (
                               <div>
-                                <strong>Certificate #:</strong> {entry.certificate_number}
+                                <strong>Certificate #:</strong>{" "}
+                                {entry.certificate_number}
                               </div>
                             )}
                           </>
@@ -485,19 +514,23 @@ const StaffEvaluation = () => {
                             {entry.problem_statement && (
                               <div style={{ gridColumn: "1 / -1" }}>
                                 <strong>Problem Statement:</strong>
-                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                <p
+                                  style={{ margin: "5px 0 0 0", color: "#666" }}
+                                >
                                   {entry.problem_statement}
                                 </p>
                               </div>
                             )}
                             {entry.technologies_used && (
                               <div>
-                                <strong>Technologies:</strong> {entry.technologies_used}
+                                <strong>Technologies:</strong>{" "}
+                                {entry.technologies_used}
                               </div>
                             )}
                             {entry.project_duration && (
                               <div>
-                                <strong>Duration:</strong> {entry.project_duration} months
+                                <strong>Duration:</strong>{" "}
+                                {entry.project_duration} months
                               </div>
                             )}
                             {entry.team_size && (
@@ -508,7 +541,9 @@ const StaffEvaluation = () => {
                             {entry.project_description && (
                               <div style={{ gridColumn: "1 / -1" }}>
                                 <strong>Description:</strong>
-                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                <p
+                                  style={{ margin: "5px 0 0 0", color: "#666" }}
+                                >
                                   {entry.project_description}
                                 </p>
                               </div>
@@ -531,7 +566,10 @@ const StaffEvaluation = () => {
                             )}
                             {entry.prize_won && (
                               <div>
-                                <strong>Prize:</strong> <span style={{ color: '#28a745' }}>{entry.prize_won}</span>
+                                <strong>Prize:</strong>{" "}
+                                <span style={{ color: "#28a745" }}>
+                                  {entry.prize_won}
+                                </span>
                               </div>
                             )}
                             {entry.team_size && (
@@ -541,7 +579,10 @@ const StaffEvaluation = () => {
                             )}
                             {entry.date_participated && (
                               <div>
-                                <strong>Date:</strong> {new Date(entry.date_participated).toLocaleDateString()}
+                                <strong>Date:</strong>{" "}
+                                {new Date(
+                                  entry.date_participated,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                           </>
@@ -557,17 +598,24 @@ const StaffEvaluation = () => {
                             )}
                             {entry.workshop_type && (
                               <div>
-                                <strong>Type:</strong> {entry.workshop_type.replace(/_/g, ' ').toUpperCase()}
+                                <strong>Type:</strong>{" "}
+                                {entry.workshop_type
+                                  .replace(/_/g, " ")
+                                  .toUpperCase()}
                               </div>
                             )}
                             {entry.duration_days && (
                               <div>
-                                <strong>Duration:</strong> {entry.duration_days} days
+                                <strong>Duration:</strong> {entry.duration_days}{" "}
+                                days
                               </div>
                             )}
                             {entry.date_attended && (
                               <div>
-                                <strong>Date:</strong> {new Date(entry.date_attended).toLocaleDateString()}
+                                <strong>Date:</strong>{" "}
+                                {new Date(
+                                  entry.date_attended,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                           </>
@@ -578,7 +626,8 @@ const StaffEvaluation = () => {
                           <>
                             {entry.activity_type && (
                               <div>
-                                <strong>Activity Type:</strong> {entry.activity_type}
+                                <strong>Activity Type:</strong>{" "}
+                                {entry.activity_type}
                               </div>
                             )}
                             {entry.team_size && (
@@ -588,13 +637,18 @@ const StaffEvaluation = () => {
                             )}
                             {entry.date_conducted && (
                               <div>
-                                <strong>Date:</strong> {new Date(entry.date_conducted).toLocaleDateString()}
+                                <strong>Date:</strong>{" "}
+                                {new Date(
+                                  entry.date_conducted,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                             {entry.activity_description && (
                               <div style={{ gridColumn: "1 / -1" }}>
                                 <strong>Description:</strong>
-                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                <p
+                                  style={{ margin: "5px 0 0 0", color: "#666" }}
+                                >
                                   {entry.activity_description}
                                 </p>
                               </div>
@@ -607,33 +661,46 @@ const StaffEvaluation = () => {
                           <>
                             {entry.patent_type && (
                               <div>
-                                <strong>Type:</strong> {entry.patent_type.replace(/_/g, ' ').toUpperCase()}
+                                <strong>Type:</strong>{" "}
+                                {entry.patent_type
+                                  .replace(/_/g, " ")
+                                  .toUpperCase()}
                               </div>
                             )}
                             {entry.application_number && (
                               <div>
-                                <strong>Application #:</strong> {entry.application_number}
+                                <strong>Application #:</strong>{" "}
+                                {entry.application_number}
                               </div>
                             )}
                             {entry.application_status && (
                               <div>
-                                <strong>Status:</strong> {entry.application_status.replace(/_/g, ' ').toUpperCase()}
+                                <strong>Status:</strong>{" "}
+                                {entry.application_status
+                                  .replace(/_/g, " ")
+                                  .toUpperCase()}
                               </div>
                             )}
                             {entry.filing_date && (
                               <div>
-                                <strong>Filed:</strong> {new Date(entry.filing_date).toLocaleDateString()}
+                                <strong>Filed:</strong>{" "}
+                                {new Date(
+                                  entry.filing_date,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                             {entry.technology_transfer && (
                               <div>
-                                <strong>Tech Transfer:</strong> {entry.technology_transfer ? 'Yes' : 'No'}
+                                <strong>Tech Transfer:</strong>{" "}
+                                {entry.technology_transfer ? "Yes" : "No"}
                               </div>
                             )}
                             {entry.technology_description && (
                               <div style={{ gridColumn: "1 / -1" }}>
                                 <strong>Description:</strong>
-                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                <p
+                                  style={{ margin: "5px 0 0 0", color: "#666" }}
+                                >
                                   {entry.technology_description}
                                 </p>
                               </div>
@@ -651,21 +718,35 @@ const StaffEvaluation = () => {
                             )}
                             {entry.publication_date && (
                               <div>
-                                <strong>Published:</strong> {new Date(entry.publication_date).toLocaleDateString()}
+                                <strong>Published:</strong>{" "}
+                                {new Date(
+                                  entry.publication_date,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                             {entry.scopus_indexed !== undefined && (
                               <div>
                                 <strong>Scopus Indexed:</strong>{" "}
-                                <span style={{ color: entry.scopus_indexed ? '#28a745' : '#666' }}>
-                                  {entry.scopus_indexed ? 'Yes ✓' : 'No'}
+                                <span
+                                  style={{
+                                    color: entry.scopus_indexed
+                                      ? "#28a745"
+                                      : "#666",
+                                  }}
+                                >
+                                  {entry.scopus_indexed ? "Yes ✓" : "No"}
                                 </span>
                               </div>
                             )}
                             {entry.doi_link && (
                               <div style={{ gridColumn: "1 / -1" }}>
                                 <strong>DOI:</strong>{" "}
-                                <a href={entry.doi_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                                <a
+                                  href={entry.doi_link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: "#1976d2" }}
+                                >
                                   {entry.doi_link}
                                 </a>
                               </div>
@@ -678,28 +759,38 @@ const StaffEvaluation = () => {
                           <>
                             {entry.registration_type && (
                               <div>
-                                <strong>Registration:</strong> {entry.registration_type.replace(/_/g, ' ').toUpperCase()}
+                                <strong>Registration:</strong>{" "}
+                                {entry.registration_type
+                                  .replace(/_/g, " ")
+                                  .toUpperCase()}
                               </div>
                             )}
                             {entry.registration_number && (
                               <div>
-                                <strong>Registration #:</strong> {entry.registration_number}
+                                <strong>Registration #:</strong>{" "}
+                                {entry.registration_number}
                               </div>
                             )}
                             {entry.registration_date && (
                               <div>
-                                <strong>Registered:</strong> {new Date(entry.registration_date).toLocaleDateString()}
+                                <strong>Registered:</strong>{" "}
+                                {new Date(
+                                  entry.registration_date,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                             {entry.incubation_status && (
                               <div>
-                                <strong>Incubated:</strong> <span style={{ color: '#28a745' }}>Yes ✓</span>
+                                <strong>Incubated:</strong>{" "}
+                                <span style={{ color: "#28a745" }}>Yes ✓</span>
                               </div>
                             )}
                             {entry.business_description && (
                               <div style={{ gridColumn: "1 / -1" }}>
                                 <strong>Description:</strong>
-                                <p style={{ margin: "5px 0 0 0", color: "#666" }}>
+                                <p
+                                  style={{ margin: "5px 0 0 0", color: "#666" }}
+                                >
                                   {entry.business_description}
                                 </p>
                               </div>
@@ -717,7 +808,15 @@ const StaffEvaluation = () => {
                             )}
                             {entry.rank_achieved && (
                               <div>
-                                <strong>Rank:</strong> <span style={{ color: '#1976d2', fontWeight: 'bold' }}>{entry.rank_achieved}</span>
+                                <strong>Rank:</strong>{" "}
+                                <span
+                                  style={{
+                                    color: "#1976d2",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {entry.rank_achieved}
+                                </span>
                               </div>
                             )}
                             {entry.score && (
@@ -727,13 +826,21 @@ const StaffEvaluation = () => {
                             )}
                             {entry.contest_date && (
                               <div>
-                                <strong>Date:</strong> {new Date(entry.contest_date).toLocaleDateString()}
+                                <strong>Date:</strong>{" "}
+                                {new Date(
+                                  entry.contest_date,
+                                ).toLocaleDateString()}
                               </div>
                             )}
                             {entry.profile_link && (
                               <div style={{ gridColumn: "1 / -1" }}>
                                 <strong>Profile:</strong>{" "}
-                                <a href={entry.profile_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                                <a
+                                  href={entry.profile_link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: "#1976d2" }}
+                                >
                                   {entry.profile_link}
                                 </a>
                               </div>
@@ -743,9 +850,24 @@ const StaffEvaluation = () => {
 
                         {/* Proof Document */}
                         {entry.proof_document && (
-                          <div style={{ gridColumn: "1 / -1", marginTop: "8px", paddingTop: "8px", borderTop: "1px solid #ddd" }}>
+                          <div
+                            style={{
+                              gridColumn: "1 / -1",
+                              marginTop: "8px",
+                              paddingTop: "8px",
+                              borderTop: "1px solid #ddd",
+                            }}
+                          >
                             <strong>📎 Proof Document:</strong>{" "}
-                            <a href={entry.proof_document} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2", textDecoration: "underline" }}>
+                            <a
+                              href={entry.proof_document}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                color: "#1976d2",
+                                textDecoration: "underline",
+                              }}
+                            >
                               View Document
                             </a>
                           </div>
@@ -755,8 +877,17 @@ const StaffEvaluation = () => {
 
                     {/* Staff Evaluation Comments */}
                     {entry.staff_evaluated && entry.staff_comments && (
-                      <div style={{ background: "#e8f5e9", padding: "12px", borderRadius: "6px", marginTop: "10px" }}>
-                        <strong style={{ color: "#2e7d32" }}>✓ Staff Comments:</strong>
+                      <div
+                        style={{
+                          background: "#e8f5e9",
+                          padding: "12px",
+                          borderRadius: "6px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        <strong style={{ color: "#2e7d32" }}>
+                          ✓ Staff Comments:
+                        </strong>
                         <p style={{ margin: "5px 0 0 0", color: "#1b5e20" }}>
                           {entry.staff_comments}
                         </p>
@@ -813,7 +944,7 @@ const StaffEvaluation = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 style={{ marginTop: 0 }}>Evaluate Entry</h3>
-            
+
             {/* Student Info */}
             <div
               style={{
@@ -855,7 +986,9 @@ const StaffEvaluation = () => {
                 border: "1px solid #dee2e6",
               }}
             >
-              <h4 style={{ marginTop: 0, marginBottom: "12px", color: "#1976d2" }}>
+              <h4
+                style={{ marginTop: 0, marginBottom: "12px", color: "#1976d2" }}
+              >
                 📋 Complete Entry Details
               </h4>
               <div
@@ -875,7 +1008,10 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.hackathon_type && (
                       <p style={{ margin: 0 }}>
-                        <strong>Type:</strong> {selectedEntry.hackathon_type.replace(/_/g, ' ').toUpperCase()}
+                        <strong>Type:</strong>{" "}
+                        {selectedEntry.hackathon_type
+                          .replace(/_/g, " ")
+                          .toUpperCase()}
                       </p>
                     )}
                     {selectedEntry.nirf_rank && (
@@ -885,17 +1021,32 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.result && (
                       <p style={{ margin: 0 }}>
-                        <strong>Result:</strong> <span style={{ color: selectedEntry.result === 'won' ? '#28a745' : '#666', fontWeight: 'bold' }}>{selectedEntry.result.toUpperCase()}</span>
+                        <strong>Result:</strong>{" "}
+                        <span
+                          style={{
+                            color:
+                              selectedEntry.result === "won"
+                                ? "#28a745"
+                                : "#666",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {selectedEntry.result.toUpperCase()}
+                        </span>
                       </p>
                     )}
                     {selectedEntry.organized_by_industry !== undefined && (
                       <p style={{ margin: 0 }}>
-                        <strong>Industry Organized:</strong> {selectedEntry.organized_by_industry ? 'Yes' : 'No'}
+                        <strong>Industry Organized:</strong>{" "}
+                        {selectedEntry.organized_by_industry ? "Yes" : "No"}
                       </p>
                     )}
                     {selectedEntry.date_participated && (
                       <p style={{ margin: 0 }}>
-                        <strong>Date:</strong> {new Date(selectedEntry.date_participated).toLocaleDateString()}
+                        <strong>Date:</strong>{" "}
+                        {new Date(
+                          selectedEntry.date_participated,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                   </>
@@ -911,17 +1062,22 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.course_duration && (
                       <p style={{ margin: 0 }}>
-                        <strong>Duration:</strong> {selectedEntry.course_duration} weeks
+                        <strong>Duration:</strong>{" "}
+                        {selectedEntry.course_duration} weeks
                       </p>
                     )}
                     {selectedEntry.completion_date && (
                       <p style={{ margin: 0 }}>
-                        <strong>Completed:</strong> {new Date(selectedEntry.completion_date).toLocaleDateString()}
+                        <strong>Completed:</strong>{" "}
+                        {new Date(
+                          selectedEntry.completion_date,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                     {selectedEntry.certificate_number && (
                       <p style={{ margin: 0 }}>
-                        <strong>Certificate #:</strong> {selectedEntry.certificate_number}
+                        <strong>Certificate #:</strong>{" "}
+                        {selectedEntry.certificate_number}
                       </p>
                     )}
                   </>
@@ -931,7 +1087,14 @@ const StaffEvaluation = () => {
                 {activityType === "minor-projects" && (
                   <>
                     {selectedEntry.problem_statement && (
-                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                      <div
+                        style={{
+                          background: "#fff",
+                          padding: "10px",
+                          borderRadius: "4px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <strong>Problem Statement:</strong>
                         <p style={{ margin: "5px 0 0 0", color: "#666" }}>
                           {selectedEntry.problem_statement}
@@ -940,12 +1103,14 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.technologies_used && (
                       <p style={{ margin: 0 }}>
-                        <strong>Technologies:</strong> {selectedEntry.technologies_used}
+                        <strong>Technologies:</strong>{" "}
+                        {selectedEntry.technologies_used}
                       </p>
                     )}
                     {selectedEntry.project_duration && (
                       <p style={{ margin: 0 }}>
-                        <strong>Duration:</strong> {selectedEntry.project_duration} months
+                        <strong>Duration:</strong>{" "}
+                        {selectedEntry.project_duration} months
                       </p>
                     )}
                     {selectedEntry.team_size && (
@@ -954,7 +1119,14 @@ const StaffEvaluation = () => {
                       </p>
                     )}
                     {selectedEntry.project_description && (
-                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                      <div
+                        style={{
+                          background: "#fff",
+                          padding: "10px",
+                          borderRadius: "4px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <strong>Description:</strong>
                         <p style={{ margin: "5px 0 0 0", color: "#666" }}>
                           {selectedEntry.project_description}
@@ -979,7 +1151,10 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.prize_won && (
                       <p style={{ margin: 0 }}>
-                        <strong>Prize:</strong> <span style={{ color: '#28a745', fontWeight: 'bold' }}>{selectedEntry.prize_won}</span>
+                        <strong>Prize:</strong>{" "}
+                        <span style={{ color: "#28a745", fontWeight: "bold" }}>
+                          {selectedEntry.prize_won}
+                        </span>
                       </p>
                     )}
                     {selectedEntry.team_size && (
@@ -989,7 +1164,10 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.date_participated && (
                       <p style={{ margin: 0 }}>
-                        <strong>Date:</strong> {new Date(selectedEntry.date_participated).toLocaleDateString()}
+                        <strong>Date:</strong>{" "}
+                        {new Date(
+                          selectedEntry.date_participated,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                   </>
@@ -1005,17 +1183,24 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.workshop_type && (
                       <p style={{ margin: 0 }}>
-                        <strong>Type:</strong> {selectedEntry.workshop_type.replace(/_/g, ' ').toUpperCase()}
+                        <strong>Type:</strong>{" "}
+                        {selectedEntry.workshop_type
+                          .replace(/_/g, " ")
+                          .toUpperCase()}
                       </p>
                     )}
                     {selectedEntry.duration_days && (
                       <p style={{ margin: 0 }}>
-                        <strong>Duration:</strong> {selectedEntry.duration_days} days
+                        <strong>Duration:</strong> {selectedEntry.duration_days}{" "}
+                        days
                       </p>
                     )}
                     {selectedEntry.date_attended && (
                       <p style={{ margin: 0 }}>
-                        <strong>Date:</strong> {new Date(selectedEntry.date_attended).toLocaleDateString()}
+                        <strong>Date:</strong>{" "}
+                        {new Date(
+                          selectedEntry.date_attended,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                   </>
@@ -1026,7 +1211,8 @@ const StaffEvaluation = () => {
                   <>
                     {selectedEntry.activity_type && (
                       <p style={{ margin: 0 }}>
-                        <strong>Activity Type:</strong> {selectedEntry.activity_type}
+                        <strong>Activity Type:</strong>{" "}
+                        {selectedEntry.activity_type}
                       </p>
                     )}
                     {selectedEntry.team_size && (
@@ -1036,11 +1222,21 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.date_conducted && (
                       <p style={{ margin: 0 }}>
-                        <strong>Date:</strong> {new Date(selectedEntry.date_conducted).toLocaleDateString()}
+                        <strong>Date:</strong>{" "}
+                        {new Date(
+                          selectedEntry.date_conducted,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                     {selectedEntry.activity_description && (
-                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                      <div
+                        style={{
+                          background: "#fff",
+                          padding: "10px",
+                          borderRadius: "4px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <strong>Description:</strong>
                         <p style={{ margin: "5px 0 0 0", color: "#666" }}>
                           {selectedEntry.activity_description}
@@ -1055,31 +1251,49 @@ const StaffEvaluation = () => {
                   <>
                     {selectedEntry.patent_type && (
                       <p style={{ margin: 0 }}>
-                        <strong>Type:</strong> {selectedEntry.patent_type.replace(/_/g, ' ').toUpperCase()}
+                        <strong>Type:</strong>{" "}
+                        {selectedEntry.patent_type
+                          .replace(/_/g, " ")
+                          .toUpperCase()}
                       </p>
                     )}
                     {selectedEntry.application_number && (
                       <p style={{ margin: 0 }}>
-                        <strong>Application #:</strong> {selectedEntry.application_number}
+                        <strong>Application #:</strong>{" "}
+                        {selectedEntry.application_number}
                       </p>
                     )}
                     {selectedEntry.application_status && (
                       <p style={{ margin: 0 }}>
-                        <strong>Status:</strong> {selectedEntry.application_status.replace(/_/g, ' ').toUpperCase()}
+                        <strong>Status:</strong>{" "}
+                        {selectedEntry.application_status
+                          .replace(/_/g, " ")
+                          .toUpperCase()}
                       </p>
                     )}
                     {selectedEntry.filing_date && (
                       <p style={{ margin: 0 }}>
-                        <strong>Filed:</strong> {new Date(selectedEntry.filing_date).toLocaleDateString()}
+                        <strong>Filed:</strong>{" "}
+                        {new Date(
+                          selectedEntry.filing_date,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                     {selectedEntry.technology_transfer && (
                       <p style={{ margin: 0 }}>
-                        <strong>Tech Transfer:</strong> <span style={{ color: '#28a745' }}>Yes ✓</span>
+                        <strong>Tech Transfer:</strong>{" "}
+                        <span style={{ color: "#28a745" }}>Yes ✓</span>
                       </p>
                     )}
                     {selectedEntry.technology_description && (
-                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                      <div
+                        style={{
+                          background: "#fff",
+                          padding: "10px",
+                          borderRadius: "4px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <strong>Description:</strong>
                         <p style={{ margin: "5px 0 0 0", color: "#666" }}>
                           {selectedEntry.technology_description}
@@ -1099,21 +1313,36 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.publication_date && (
                       <p style={{ margin: 0 }}>
-                        <strong>Published:</strong> {new Date(selectedEntry.publication_date).toLocaleDateString()}
+                        <strong>Published:</strong>{" "}
+                        {new Date(
+                          selectedEntry.publication_date,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                     {selectedEntry.scopus_indexed !== undefined && (
                       <p style={{ margin: 0 }}>
                         <strong>Scopus Indexed:</strong>{" "}
-                        <span style={{ color: selectedEntry.scopus_indexed ? '#28a745' : '#666', fontWeight: 'bold' }}>
-                          {selectedEntry.scopus_indexed ? 'Yes ✓' : 'No'}
+                        <span
+                          style={{
+                            color: selectedEntry.scopus_indexed
+                              ? "#28a745"
+                              : "#666",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {selectedEntry.scopus_indexed ? "Yes ✓" : "No"}
                         </span>
                       </p>
                     )}
                     {selectedEntry.doi_link && (
                       <p style={{ margin: 0 }}>
                         <strong>DOI:</strong>{" "}
-                        <a href={selectedEntry.doi_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                        <a
+                          href={selectedEntry.doi_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: "#1976d2" }}
+                        >
                           {selectedEntry.doi_link}
                         </a>
                       </p>
@@ -1126,26 +1355,41 @@ const StaffEvaluation = () => {
                   <>
                     {selectedEntry.registration_type && (
                       <p style={{ margin: 0 }}>
-                        <strong>Registration:</strong> {selectedEntry.registration_type.replace(/_/g, ' ').toUpperCase()}
+                        <strong>Registration:</strong>{" "}
+                        {selectedEntry.registration_type
+                          .replace(/_/g, " ")
+                          .toUpperCase()}
                       </p>
                     )}
                     {selectedEntry.registration_number && (
                       <p style={{ margin: 0 }}>
-                        <strong>Registration #:</strong> {selectedEntry.registration_number}
+                        <strong>Registration #:</strong>{" "}
+                        {selectedEntry.registration_number}
                       </p>
                     )}
                     {selectedEntry.registration_date && (
                       <p style={{ margin: 0 }}>
-                        <strong>Registered:</strong> {new Date(selectedEntry.registration_date).toLocaleDateString()}
+                        <strong>Registered:</strong>{" "}
+                        {new Date(
+                          selectedEntry.registration_date,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                     {selectedEntry.incubation_status && (
                       <p style={{ margin: 0 }}>
-                        <strong>Incubated:</strong> <span style={{ color: '#28a745' }}>Yes ✓</span>
+                        <strong>Incubated:</strong>{" "}
+                        <span style={{ color: "#28a745" }}>Yes ✓</span>
                       </p>
                     )}
                     {selectedEntry.business_description && (
-                      <div style={{ background: '#fff', padding: '10px', borderRadius: '4px', border: '1px solid #e0e0e0' }}>
+                      <div
+                        style={{
+                          background: "#fff",
+                          padding: "10px",
+                          borderRadius: "4px",
+                          border: "1px solid #e0e0e0",
+                        }}
+                      >
                         <strong>Description:</strong>
                         <p style={{ margin: "5px 0 0 0", color: "#666" }}>
                           {selectedEntry.business_description}
@@ -1165,7 +1409,10 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.rank_achieved && (
                       <p style={{ margin: 0 }}>
-                        <strong>Rank:</strong> <span style={{ color: '#1976d2', fontWeight: 'bold' }}>{selectedEntry.rank_achieved}</span>
+                        <strong>Rank:</strong>{" "}
+                        <span style={{ color: "#1976d2", fontWeight: "bold" }}>
+                          {selectedEntry.rank_achieved}
+                        </span>
                       </p>
                     )}
                     {selectedEntry.score && (
@@ -1175,13 +1422,21 @@ const StaffEvaluation = () => {
                     )}
                     {selectedEntry.contest_date && (
                       <p style={{ margin: 0 }}>
-                        <strong>Date:</strong> {new Date(selectedEntry.contest_date).toLocaleDateString()}
+                        <strong>Date:</strong>{" "}
+                        {new Date(
+                          selectedEntry.contest_date,
+                        ).toLocaleDateString()}
                       </p>
                     )}
                     {selectedEntry.profile_link && (
                       <p style={{ margin: 0 }}>
                         <strong>Profile:</strong>{" "}
-                        <a href={selectedEntry.profile_link} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2" }}>
+                        <a
+                          href={selectedEntry.profile_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: "#1976d2" }}
+                        >
                           View Profile
                         </a>
                       </p>
@@ -1191,9 +1446,24 @@ const StaffEvaluation = () => {
 
                 {/* Proof Document */}
                 {selectedEntry.proof_document && (
-                  <div style={{ marginTop: "10px", paddingTop: "10px", borderTop: "2px solid #dee2e6" }}>
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      paddingTop: "10px",
+                      borderTop: "2px solid #dee2e6",
+                    }}
+                  >
                     <strong>📎 Proof Document:</strong>{" "}
-                    <a href={selectedEntry.proof_document} target="_blank" rel="noopener noreferrer" style={{ color: "#1976d2", textDecoration: "underline", fontWeight: 'bold' }}>
+                    <a
+                      href={selectedEntry.proof_document}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#1976d2",
+                        textDecoration: "underline",
+                        fontWeight: "bold",
+                      }}
+                    >
                       View/Download Document
                     </a>
                   </div>

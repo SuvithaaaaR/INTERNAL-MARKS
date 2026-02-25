@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -11,29 +11,29 @@ import {
   Alert,
   Stack,
   Center,
-  Box
-} from '@mantine/core';
-import { IconAlertCircle, IconLogin } from '@tabler/icons-react';
-import { useAuth } from '../context/AuthContext';
+  Box,
+} from "@mantine/core";
+import { IconAlertCircle, IconLogin } from "@tabler/icons-react";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
@@ -42,12 +42,12 @@ function Login() {
 
       if (response.ok) {
         login(data.user);
-        navigate('/');
+        navigate("/");
       } else {
-        setError(data.message || 'Login failed');
+        setError(data.message || "Login failed");
       }
     } catch (err) {
-      setError('Failed to connect to server');
+      setError("Failed to connect to server");
     } finally {
       setLoading(false);
     }
@@ -56,16 +56,16 @@ function Login() {
   return (
     <Box
       style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-        position: 'relative',
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        position: "relative",
       }}
     >
       <Box
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
           right: 0,
@@ -76,19 +76,33 @@ function Login() {
           `,
         }}
       />
-      <Container size={420} my={40} style={{ position: 'relative', zIndex: 1 }}>
-        <Paper withBorder shadow="xl" p={40} radius="lg" style={{ backgroundColor: 'white' }}>
+      <Container size={420} my={40} style={{ position: "relative", zIndex: 1 }}>
+        <Paper
+          withBorder
+          shadow="xl"
+          p={40}
+          radius="lg"
+          style={{ backgroundColor: "white" }}
+        >
           <Center mb="xl">
             <Stack gap="xs" align="center">
-              <Title order={2} style={{ color: '#1e3a8a', fontWeight: 700 }}>Internal Marks System</Title>
-              <Text size="sm" c="dimmed">Faculty & Student Portal</Text>
+              <Title order={2} style={{ color: "#1e3a8a", fontWeight: 700 }}>
+                Internal Marks System
+              </Title>
+              <Text size="sm" c="dimmed">
+                Faculty & Student Portal
+              </Text>
             </Stack>
           </Center>
 
           <form onSubmit={handleSubmit}>
             <Stack gap="md">
               {error && (
-                <Alert icon={<IconAlertCircle size={16} />} color="red" variant="filled">
+                <Alert
+                  icon={<IconAlertCircle size={16} />}
+                  color="red"
+                  variant="filled"
+                >
                   {error}
                 </Alert>
               )}
@@ -102,9 +116,9 @@ function Login() {
                 size="md"
                 styles={{
                   input: {
-                    borderColor: '#e5e7eb',
-                    '&:focus': {
-                      borderColor: '#2563eb',
+                    borderColor: "#e5e7eb",
+                    "&:focus": {
+                      borderColor: "#2563eb",
                     },
                   },
                 }}
@@ -119,9 +133,9 @@ function Login() {
                 size="md"
                 styles={{
                   input: {
-                    borderColor: '#e5e7eb',
-                    '&:focus': {
-                      borderColor: '#2563eb',
+                    borderColor: "#e5e7eb",
+                    "&:focus": {
+                      borderColor: "#2563eb",
                     },
                   },
                 }}
@@ -134,17 +148,21 @@ function Login() {
                 loading={loading}
                 leftSection={<IconLogin size={18} />}
                 style={{
-                  background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
-                  marginTop: '8px',
+                  background:
+                    "linear-gradient(135deg, #2563eb 0%, #1e40af 100%)",
+                  marginTop: "8px",
                 }}
               >
                 Login
               </Button>
 
-              <Alert color="blue" variant="light" style={{ marginTop: '16px' }}>
-                <div style={{ fontSize: '0.875rem', lineHeight: '1.6' }}>
-                  <strong>Faculty:</strong> username: faculty, password: admin123<br />
-                  <strong>Students:</strong> username: roll_number, password: student123
+              <Alert color="blue" variant="light" style={{ marginTop: "16px" }}>
+                <div style={{ fontSize: "0.875rem", lineHeight: "1.6" }}>
+                  <strong>Faculty:</strong> username: faculty, password:
+                  admin123
+                  <br />
+                  <strong>Students:</strong> username: roll_number, password:
+                  student123
                 </div>
               </Alert>
             </Stack>

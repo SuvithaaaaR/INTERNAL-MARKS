@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import {
   AppShell,
   Burger,
@@ -66,7 +71,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" replace /> : <Login />}
+        />
         <Route
           path="*"
           element={
@@ -105,7 +113,10 @@ function App() {
                       )}
                     </Group>
                     <Group>
-                      <Badge color={user?.role === "faculty" ? "blue" : "green"} variant="light">
+                      <Badge
+                        color={user?.role === "faculty" ? "blue" : "green"}
+                        variant="light"
+                      >
                         {user?.role === "faculty" ? "Faculty" : "Student"}
                       </Badge>
                       <Menu shadow="md" width={200}>
@@ -158,9 +169,15 @@ function App() {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/students" element={<Students />} />
                     <Route path="/students/:id" element={<StudentDetails />} />
-                    <Route 
-                      path="/staff-evaluation" 
-                      element={isFaculty() ? <StaffEvaluation /> : <Navigate to="/" replace />} 
+                    <Route
+                      path="/staff-evaluation"
+                      element={
+                        isFaculty() ? (
+                          <StaffEvaluation />
+                        ) : (
+                          <Navigate to="/" replace />
+                        )
+                      }
                     />
                     <Route path="/reports" element={<Reports />} />
                   </Routes>

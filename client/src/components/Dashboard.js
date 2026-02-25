@@ -56,8 +56,8 @@ const Dashboard = () => {
 
       // Filter data for students (only show their own data)
       if (!isFaculty() && user?.student_id) {
-        students = students.filter(s => s.id === user.student_id);
-        report = report.filter(r => r.student_id === user.student_id);
+        students = students.filter((s) => s.id === user.student_id);
+        report = report.filter((r) => r.student_id === user.student_id);
       }
 
       const totalMarks = report.reduce(
@@ -182,13 +182,14 @@ const Dashboard = () => {
         {/* Header */}
         <div>
           <Title order={1} mb="xs">
-            {isFaculty() ? "📊 Internal Marks Dashboard" : "🎓 My Academic Performance"}
+            {isFaculty()
+              ? "📊 Internal Marks Dashboard"
+              : "🎓 My Academic Performance"}
           </Title>
           <Text c="dimmed" size="lg">
-            {isFaculty() 
+            {isFaculty()
               ? "Comprehensive system for calculating internal marks across 10 activity components"
-              : "Track your achievements and internal marks across all activity components"
-            }
+              : "Track your achievements and internal marks across all activity components"}
           </Text>
         </div>
 
@@ -246,7 +247,9 @@ const Dashboard = () => {
         {/* Activity Components */}
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Title order={3} mb="md">
-            {isFaculty() ? "📋 Activity Components & Marks Allocation" : "📋 My Activity Components"}
+            {isFaculty()
+              ? "📋 Activity Components & Marks Allocation"
+              : "📋 My Activity Components"}
           </Title>
           <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
             {activityComponents.map((component, index) => (

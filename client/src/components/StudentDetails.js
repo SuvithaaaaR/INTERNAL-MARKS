@@ -346,43 +346,83 @@ const StudentDetails = () => {
           </Tabs.Panel>
 
           <Tabs.Panel value="community" pt="md">
-            <CommunityServiceForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <CommunityServiceForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="patent" pt="md">
-            <PatentForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <PatentForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="scopus" pt="md">
-            <ScopusForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <ScopusForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="project" pt="md">
-            <ProjectCompetitionForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <ProjectCompetitionForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="hackathon" pt="md">
-            <HackathonForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <HackathonForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="workshop" pt="md">
-            <WorkshopForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <WorkshopForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="course" pt="md">
-            <OnlineCourseForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <OnlineCourseForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="entrepreneurship" pt="md">
-            <EntrepreneurshipForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <EntrepreneurshipForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="coding" pt="md">
-            <CodingPlatformForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <CodingPlatformForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
 
           <Tabs.Panel value="minor" pt="md">
-            <MinorProjectForm studentId={id} onSuccess={refreshData} canDelete={canDelete} />
+            <MinorProjectForm
+              studentId={id}
+              onSuccess={refreshData}
+              canDelete={canDelete}
+            />
           </Tabs.Panel>
         </Tabs>
       </Stack>

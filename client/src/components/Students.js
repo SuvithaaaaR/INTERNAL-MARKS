@@ -71,12 +71,12 @@ const Students = () => {
     try {
       const response = await getStudents();
       let studentData = response.data;
-      
+
       // If logged in as student, only show their own record
       if (!isFaculty() && user?.student_id) {
-        studentData = studentData.filter(s => s.id === user.student_id);
+        studentData = studentData.filter((s) => s.id === user.student_id);
       }
-      
+
       setStudents(studentData);
       setFilteredStudents(studentData);
       setLoading(false);

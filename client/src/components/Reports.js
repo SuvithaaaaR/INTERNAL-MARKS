@@ -44,12 +44,12 @@ const Reports = () => {
     try {
       const response = await getSummaryReport();
       let reportData = response.data;
-      
+
       // Filter data for students (only show their own data)
       if (!isFaculty() && user?.student_id) {
-        reportData = reportData.filter(r => r.student_id === user.student_id);
+        reportData = reportData.filter((r) => r.student_id === user.student_id);
       }
-      
+
       setReport(reportData);
       setFilteredReport(reportData);
       setLoading(false);
@@ -134,10 +134,9 @@ const Reports = () => {
             {isFaculty() ? "Reports" : "My Marks Report"}
           </Title>
           <Text c="dimmed" size="lg">
-            {isFaculty() 
-              ? "View and export marks summary" 
-              : "View your complete marks breakdown across all activities"
-            }
+            {isFaculty()
+              ? "View and export marks summary"
+              : "View your complete marks breakdown across all activities"}
           </Text>
         </div>
 
