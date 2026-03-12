@@ -1,312 +1,99 @@
 import React, { useState, useEffect } from "react";
-import {
-  getOnlineCourses,
-  createOnlineCourse,
-  deleteOnlineCourse,
-} from "../../services/api";
-import { toast } from "react-toastify";
+import { Card, Title, Text, Button, Group, Stack, TextInput, Select, NumberInput, Paper, Badge, ActionIcon, Alert, Collapse } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconPlus, IconTrash, IconInfoCircle } from "@tabler/icons-react";
+import { getOnlineCourses, createOnlineCourse, deleteOnlineCourse } from "../../services/api";
 
 const OnlineCourseForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    course_type: "mooc",
-    course_name: "",
-    platform: "",
-    duration_weeks: 4,
-    completion_date: "",
-    certificate_number: "",
-    proof_document: "",
+    course_type: "nptel", course_name: "", platform: "",
+    duration_weeks: 4, completion_date: "", certificate_number: "", proof_document: "",
   });
 
-  useEffect(() => {
-    fetchEntries();
-  }, [studentId]);
-
-  const fetchEntries = async () => {
-    try {
-      const response = await getOnlineCourses(studentId);
-      setEntries(response.data);
-    } catch (error) {
-      console.error("Error fetching entries:", error);
-    }
-  };
+  useEffect(() => { fetchEntries(); }, [studentId]);
+  const fetchEntries = async () => { try { const r = await getOnlineCourses(studentId); setEntries(r.data); } catch (e) { console.error(e); } };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createOnlineCourse({ ...formData, student_id: studentId });
-      toast.success("Online course entry added successfully!");
+      notifications.show({ title: "Success", message: "Online course entry added!", color: "green" });
       setShowForm(false);
-      setFormData({
-        course_type: "mooc",
-        course_name: "",
-        platform: "",
-        duration_weeks: 4,
-        completion_date: "",
-        certificate_number: "",
-        proof_document: "",
-      });
-      fetchEntries();
-      onSuccess();
-    } catch (error) {
-      console.error("Error creating entry:", error);
-      toast.error("Failed to add entry");
-    }
+      setFormData({ course_type: "nptel", course_name: "", platform: "", duration_weeks: 4, completion_date: "", certificate_number: "", proof_document: "" });
+      fetchEntries(); onSuccess();
+    } catch (err) { notifications.show({ title: "Error", message: "Failed to add entry", color: "red" }); }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
-      try {
-        await deleteOnlineCourse(id);
-        toast.success("Entry deleted successfully!");
-        fetchEntries();
-        onSuccess();
-      } catch (error) {
-        console.error("Error deleting entry:", error);
-        toast.error("Failed to delete entry");
-      }
+    if (window.confirm("Delete this entry?")) {
+      try { await deleteOnlineCourse(id); notifications.show({ title: "Success", message: "Deleted!", color: "green" }); fetchEntries(); onSuccess(); }
+      catch (e) { notifications.show({ title: "Error", message: "Failed to delete", color: "red" }); }
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   return (
-    <div>
-      <div className="card">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h3>Online Courses & Certifications (Max: 80 marks)</h3>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Cancel" : "+ Add Entry"}
-          </button>
-        </div>
-
-        <div
-          style={{
-            background: "#e3f2fd",
-            padding: "12px",
-            borderRadius: "4px",
-            marginBottom: "20px",
-            fontSize: "14px",
-          }}
-        >
-          <strong>Marks Allocation:</strong>
-          <br />
-          • MOOC (Coursera, Udemy, etc.): 20 marks
-          <br />
-          • NPTEL 4-week Course: 40 marks
-          <br />• NPTEL 8-week or longer Course: 80 marks
-        </div>
-
-        {showForm && (
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              marginBottom: "30px",
-              padding: "20px",
-              background: "#f8f9fa",
-              borderRadius: "8px",
-            }}
-          >
-            <div className="form-row">
-              <div className="form-group">
-                <label>Course Type *</label>
-                <select
-                  name="course_type"
-                  value={formData.course_type}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="mooc">
-                    MOOC (Coursera, Udemy, etc.) - 20 marks
-                  </option>
-                  <option value="nptel_4week">
-                    NPTEL 4-week Course - 40 marks
-                  </option>
-                  <option value="nptel_8week">
-                    NPTEL 8-week+ Course - 80 marks
-                  </option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Platform *</label>
-                <input
-                  type="text"
-                  name="platform"
-                  value={formData.platform}
-                  onChange={handleChange}
-                  placeholder="e.g., NPTEL, Coursera, Udemy"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Course Name *</label>
-              <input
-                type="text"
-                name="course_name"
-                value={formData.course_name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Duration (weeks) *</label>
-                <input
-                  type="number"
-                  name="duration_weeks"
-                  value={formData.duration_weeks}
-                  onChange={handleChange}
-                  min="1"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Completion Date *</label>
-                <input
-                  type="date"
-                  name="completion_date"
-                  value={formData.completion_date}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Certificate Number</label>
-                <input
-                  type="text"
-                  name="certificate_number"
-                  value={formData.certificate_number}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>Proof Document (link)</label>
-                <input
-                  type="text"
-                  name="proof_document"
-                  value={formData.proof_document}
-                  onChange={handleChange}
-                  placeholder="Certificate link or file path"
-                />
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-success">
-              Submit Entry
-            </button>
-          </form>
+    <Stack gap="lg">
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Group justify="space-between" mb="md">
+          <Title order={3}>Online Courses (Max: 100 marks)</Title>
+          <Button leftSection={<IconPlus size={16} />} onClick={() => setShowForm(!showForm)}>{showForm ? "Cancel" : "Add Entry"}</Button>
+        </Group>
+        <Alert icon={<IconInfoCircle size={16} />} color="orange" variant="light" mb="md">
+          <Text size="sm"><strong>Marks:</strong> Based on course type (NPTEL/Coursera/Udemy etc.), duration, and completion.</Text>
+        </Alert>
+        <Collapse in={showForm}>
+          <Paper p="md" withBorder mb="lg">
+            <form onSubmit={handleSubmit}>
+              <Stack gap="md">
+                <Group grow>
+                  <Select label="Course Type" required value={formData.course_type} onChange={(v) => setFormData({ ...formData, course_type: v })}
+                    data={[{ value: "nptel", label: "NPTEL" }, { value: "coursera", label: "Coursera" }, { value: "udemy", label: "Udemy" }, { value: "edx", label: "edX" }, { value: "other", label: "Other" }]} />
+                  <NumberInput label="Duration (Weeks)" required value={formData.duration_weeks} onChange={(v) => setFormData({ ...formData, duration_weeks: v })} min={1} max={52} />
+                </Group>
+                <TextInput label="Course Name" required value={formData.course_name} onChange={(e) => setFormData({ ...formData, course_name: e.target.value })} placeholder="e.g., Machine Learning by Andrew Ng" />
+                <TextInput label="Platform" value={formData.platform} onChange={(e) => setFormData({ ...formData, platform: e.target.value })} placeholder="e.g., Coursera, NPTEL" />
+                <Group grow>
+                  <TextInput label="Completion Date" type="date" required value={formData.completion_date} onChange={(e) => setFormData({ ...formData, completion_date: e.target.value })} />
+                  <TextInput label="Certificate Number" value={formData.certificate_number} onChange={(e) => setFormData({ ...formData, certificate_number: e.target.value })} placeholder="If available" />
+                </Group>
+                <TextInput label="Proof Document" value={formData.proof_document} onChange={(e) => setFormData({ ...formData, proof_document: e.target.value })} placeholder="Certificate URL" />
+                <Group justify="flex-end"><Button type="submit" color="green">Submit Entry</Button></Group>
+              </Stack>
+            </form>
+          </Paper>
+        </Collapse>
+        <Title order={4} mb="sm">Entries ({entries.length})</Title>
+        {entries.length === 0 ? (
+          <Text c="dimmed" fs="italic">No entries yet.</Text>
+        ) : (
+          <Stack gap="sm">
+            {entries.map((entry) => (
+              <Paper key={entry.id} p="md" withBorder>
+                <Group justify="space-between" align="flex-start">
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Group justify="space-between">
+                      <Text fw={600}>{entry.course_name}</Text>
+                      <Badge color={entry.staff_evaluated ? "green" : "yellow"} variant="filled" size="lg">
+                        {entry.staff_evaluated ? `${entry.marks_awarded} Marks` : "Pending"}
+                      </Badge>
+                    </Group>
+                    <Group gap="xl">
+                      <Text size="sm"><strong>Type:</strong> {entry.course_type}</Text>
+                      <Text size="sm"><strong>Platform:</strong> {entry.platform || "N/A"}</Text>
+                      <Text size="sm"><strong>Duration:</strong> {entry.duration_weeks} weeks</Text>
+                      <Text size="sm"><strong>Completed:</strong> {entry.completion_date}</Text>
+                    </Group>
+                  </Stack>
+                  {canDelete && <ActionIcon color="red" variant="light" onClick={() => handleDelete(entry.id)}><IconTrash size={16} /></ActionIcon>}
+                </Group>
+              </Paper>
+            ))}
+          </Stack>
         )}
-
-        <div
-          style={{
-            borderTop: "2px solid #e0e0e0",
-            paddingTop: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
-          {entries.length === 0 ? (
-            <p style={{ color: "#666", fontStyle: "italic" }}>
-              No entries yet. Add your first entry above.
-            </p>
-          ) : (
-            entries.map((entry) => (
-              <div key={entry.id} className="entry-card">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "start",
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "12px",
-                      }}
-                    >
-                      <h4 style={{ margin: 0 }}>{entry.course_name}</h4>
-                      <div
-                        style={{
-                          background: entry.staff_evaluated
-                            ? "#28a745"
-                            : "#ffc107",
-                          color: entry.staff_evaluated ? "white" : "#000",
-                          padding: "8px 16px",
-                          borderRadius: "6px",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {entry.staff_evaluated ? (
-                          <>✅ {entry.marks_awarded} Marks Awarded</>
-                        ) : (
-                          <>⏳ Pending Evaluation</>
-                        )}
-                      </div>
-                    </div>
-                    <div className="entry-details">
-                      <div>
-                        <strong>Platform:</strong> {entry.platform}
-                      </div>
-                      <div>
-                        <strong>Type:</strong> {entry.course_type}
-                      </div>
-                      <div>
-                        <strong>Duration:</strong> {entry.duration_weeks} weeks
-                      </div>
-                      <div>
-                        <strong>Completed:</strong> {entry.completion_date}
-                      </div>
-                      {entry.certificate_number && (
-                        <div>
-                          <strong>Certificate:</strong>{" "}
-                          {entry.certificate_number}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {canDelete && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(entry.id)}
-                      style={{ marginLeft: "15px" }}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
+      </Card>
+    </Stack>
   );
 };
 

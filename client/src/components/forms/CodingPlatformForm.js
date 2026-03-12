@@ -1,352 +1,101 @@
 import React, { useState, useEffect } from "react";
-import {
-  getCodingPlatforms,
-  createCodingPlatform,
-  deleteCodingPlatform,
-} from "../../services/api";
-import { toast } from "react-toastify";
+import { Card, Title, Text, Button, Group, Stack, TextInput, Select, NumberInput, Paper, Badge, ActionIcon, Alert, Collapse } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconPlus, IconTrash, IconInfoCircle } from "@tabler/icons-react";
+import { getCodingPlatforms, createCodingPlatform, deleteCodingPlatform } from "../../services/api";
 
 const CodingPlatformForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    platform: "hackerrank",
-    score_rating: "",
-    problems_solved: "",
-    acceptance_rate: "",
-    date_achieved: "",
-    profile_link: "",
-    screenshot: "",
+    platform: "leetcode", score_rating: "", problems_solved: 0,
+    acceptance_rate: "", date_achieved: "", profile_link: "", screenshot: "",
   });
 
-  useEffect(() => {
-    fetchEntries();
-  }, [studentId]);
-
-  const fetchEntries = async () => {
-    try {
-      const response = await getCodingPlatforms(studentId);
-      setEntries(response.data);
-    } catch (error) {
-      console.error("Error fetching entries:", error);
-    }
-  };
+  useEffect(() => { fetchEntries(); }, [studentId]);
+  const fetchEntries = async () => { try { const r = await getCodingPlatforms(studentId); setEntries(r.data); } catch (e) { console.error(e); } };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createCodingPlatform({ ...formData, student_id: studentId });
-      toast.success("Coding platform entry added successfully!");
+      notifications.show({ title: "Success", message: "Coding platform entry added!", color: "green" });
       setShowForm(false);
-      setFormData({
-        platform: "hackerrank",
-        score_rating: "",
-        problems_solved: "",
-        acceptance_rate: "",
-        date_achieved: "",
-        profile_link: "",
-        screenshot: "",
-      });
-      fetchEntries();
-      onSuccess();
-    } catch (error) {
-      console.error("Error creating entry:", error);
-      toast.error("Failed to add entry");
-    }
+      setFormData({ platform: "leetcode", score_rating: "", problems_solved: 0, acceptance_rate: "", date_achieved: "", profile_link: "", screenshot: "" });
+      fetchEntries(); onSuccess();
+    } catch (err) { notifications.show({ title: "Error", message: "Failed to add entry", color: "red" }); }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
-      try {
-        await deleteCodingPlatform(id);
-        toast.success("Entry deleted successfully!");
-        fetchEntries();
-        onSuccess();
-      } catch (error) {
-        console.error("Error deleting entry:", error);
-        toast.error("Failed to delete entry");
-      }
+    if (window.confirm("Delete this entry?")) {
+      try { await deleteCodingPlatform(id); notifications.show({ title: "Success", message: "Deleted!", color: "green" }); fetchEntries(); onSuccess(); }
+      catch (e) { notifications.show({ title: "Error", message: "Failed to delete", color: "red" }); }
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   return (
-    <div>
-      <div className="card">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h3>Coding Competitions & Platform Scores (Max: 120 marks)</h3>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Cancel" : "+ Add Entry"}
-          </button>
-        </div>
-
-        <div
-          style={{
-            background: "#e3f2fd",
-            padding: "12px",
-            borderRadius: "4px",
-            marginBottom: "20px",
-            fontSize: "14px",
-          }}
-        >
-          <strong>Marks Allocation (Semester-wise):</strong>
-          <br />
-          <strong>HackerRank:</strong>
-          <br />
-          • Sem 2: 200-400 HackOS → 20-40 marks | Sem 3: 500-2000 HackOS → 40-80
-          marks | Sem 4: 2500-5000 HackOS → 80-120 marks
-          <br />
-          <strong>CodeChef (Sem 3+):</strong>
-          <br />
-          • Rating 200-800 → 20 marks | 800-1400 → 40 marks | 1400-2000 → 80
-          marks | 2000-2600 → 120 marks
-          <br />
-          <strong>LeetCode (Sem 3+):</strong>
-          <br />• 2-50 problems → 20 marks | 50-100 → 40 marks | 100-150 → 80
-          marks | 150-250 → 120 marks
-        </div>
-
-        {showForm && (
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              marginBottom: "30px",
-              padding: "20px",
-              background: "#f8f9fa",
-              borderRadius: "8px",
-            }}
-          >
-            <div className="form-row">
-              <div className="form-group">
-                <label>Platform *</label>
-                <select
-                  name="platform"
-                  value={formData.platform}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="hackerrank">HackerRank (HackOS)</option>
-                  <option value="codechef">CodeChef (Rating)</option>
-                  <option value="leetcode">LeetCode (Problems Solved)</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Date Achieved *</label>
-                <input
-                  type="date"
-                  name="date_achieved"
-                  value={formData.date_achieved}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            {formData.platform === "hackerrank" && (
-              <div className="form-group">
-                <label>HackOS Score *</label>
-                <input
-                  type="number"
-                  name="score_rating"
-                  value={formData.score_rating}
-                  onChange={handleChange}
-                  placeholder="e.g., 2500"
-                  required
-                />
-              </div>
-            )}
-
-            {formData.platform === "codechef" && (
-              <div className="form-group">
-                <label>CodeChef Rating *</label>
-                <input
-                  type="number"
-                  name="score_rating"
-                  value={formData.score_rating}
-                  onChange={handleChange}
-                  placeholder="e.g., 1800"
-                  required
-                />
-              </div>
-            )}
-
-            {formData.platform === "leetcode" && (
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Problems Solved *</label>
-                  <input
-                    type="number"
-                    name="problems_solved"
-                    value={formData.problems_solved}
-                    onChange={handleChange}
-                    placeholder="e.g., 100"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Acceptance Rate (%)</label>
-                  <input
-                    type="number"
-                    name="acceptance_rate"
-                    value={formData.acceptance_rate}
-                    onChange={handleChange}
-                    placeholder="e.g., 50"
-                    step="0.1"
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Profile Link</label>
-                <input
-                  type="text"
-                  name="profile_link"
-                  value={formData.profile_link}
-                  onChange={handleChange}
-                  placeholder="Your profile URL"
-                />
-              </div>
-              <div className="form-group">
-                <label>Screenshot/Proof</label>
-                <input
-                  type="text"
-                  name="screenshot"
-                  value={formData.screenshot}
-                  onChange={handleChange}
-                  placeholder="Screenshot link or file path"
-                />
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-success">
-              Submit Entry
-            </button>
-          </form>
+    <Stack gap="lg">
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Group justify="space-between" mb="md">
+          <Title order={3}>Coding Platforms (Max: 100 marks)</Title>
+          <Button leftSection={<IconPlus size={16} />} onClick={() => setShowForm(!showForm)}>{showForm ? "Cancel" : "Add Entry"}</Button>
+        </Group>
+        <Alert icon={<IconInfoCircle size={16} />} color="violet" variant="light" mb="md">
+          <Text size="sm"><strong>Marks:</strong> Based on platform, problems solved, and rating achieved.</Text>
+        </Alert>
+        <Collapse in={showForm}>
+          <Paper p="md" withBorder mb="lg">
+            <form onSubmit={handleSubmit}>
+              <Stack gap="md">
+                <Group grow>
+                  <Select label="Platform" required value={formData.platform} onChange={(v) => setFormData({ ...formData, platform: v })}
+                    data={[{ value: "leetcode", label: "LeetCode" }, { value: "hackerrank", label: "HackerRank" }, { value: "codeforces", label: "Codeforces" }, { value: "codechef", label: "CodeChef" }, { value: "hackerearth", label: "HackerEarth" }, { value: "other", label: "Other" }]} />
+                  <TextInput label="Score / Rating" value={formData.score_rating} onChange={(e) => setFormData({ ...formData, score_rating: e.target.value })} placeholder="e.g., 1500, 5 stars" />
+                </Group>
+                <Group grow>
+                  <NumberInput label="Problems Solved" required value={formData.problems_solved} onChange={(v) => setFormData({ ...formData, problems_solved: v })} min={0} />
+                  <TextInput label="Acceptance Rate" value={formData.acceptance_rate} onChange={(e) => setFormData({ ...formData, acceptance_rate: e.target.value })} placeholder="e.g., 65%" />
+                </Group>
+                <Group grow>
+                  <TextInput label="Date Achieved" type="date" required value={formData.date_achieved} onChange={(e) => setFormData({ ...formData, date_achieved: e.target.value })} />
+                  <TextInput label="Profile Link" value={formData.profile_link} onChange={(e) => setFormData({ ...formData, profile_link: e.target.value })} placeholder="Profile URL" />
+                </Group>
+                <TextInput label="Screenshot" value={formData.screenshot} onChange={(e) => setFormData({ ...formData, screenshot: e.target.value })} placeholder="Screenshot URL" />
+                <Group justify="flex-end"><Button type="submit" color="green">Submit Entry</Button></Group>
+              </Stack>
+            </form>
+          </Paper>
+        </Collapse>
+        <Title order={4} mb="sm">Entries ({entries.length})</Title>
+        {entries.length === 0 ? (
+          <Text c="dimmed" fs="italic">No entries yet.</Text>
+        ) : (
+          <Stack gap="sm">
+            {entries.map((entry) => (
+              <Paper key={entry.id} p="md" withBorder>
+                <Group justify="space-between" align="flex-start">
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Group justify="space-between">
+                      <Text fw={600}>{entry.platform}</Text>
+                      <Badge color={entry.staff_evaluated ? "green" : "yellow"} variant="filled" size="lg">
+                        {entry.staff_evaluated ? `${entry.marks_awarded} Marks` : "Pending"}
+                      </Badge>
+                    </Group>
+                    <Group gap="xl">
+                      <Text size="sm"><strong>Rating:</strong> {entry.score_rating || "N/A"}</Text>
+                      <Text size="sm"><strong>Problems:</strong> {entry.problems_solved}</Text>
+                      <Text size="sm"><strong>Acceptance:</strong> {entry.acceptance_rate || "N/A"}</Text>
+                      <Text size="sm"><strong>Date:</strong> {entry.date_achieved}</Text>
+                    </Group>
+                  </Stack>
+                  {canDelete && <ActionIcon color="red" variant="light" onClick={() => handleDelete(entry.id)}><IconTrash size={16} /></ActionIcon>}
+                </Group>
+              </Paper>
+            ))}
+          </Stack>
         )}
-
-        <div
-          style={{
-            borderTop: "2px solid #e0e0e0",
-            paddingTop: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
-          {entries.length === 0 ? (
-            <p style={{ color: "#666", fontStyle: "italic" }}>
-              No entries yet. Add your first entry above.
-            </p>
-          ) : (
-            entries.map((entry) => (
-              <div key={entry.id} className="entry-card">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "start",
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "12px",
-                      }}
-                    >
-                      <h4 style={{ margin: 0 }}>
-                        {entry.platform.toUpperCase()}
-                      </h4>
-                      <div
-                        style={{
-                          background: entry.staff_evaluated
-                            ? "#28a745"
-                            : "#ffc107",
-                          color: entry.staff_evaluated ? "white" : "#000",
-                          padding: "8px 16px",
-                          borderRadius: "6px",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {entry.staff_evaluated ? (
-                          <>✅ {entry.marks_awarded} Marks Awarded</>
-                        ) : (
-                          <>⏳ Pending Evaluation</>
-                        )}
-                      </div>
-                    </div>
-                    <div className="entry-details">
-                      {entry.platform === "leetcode" ? (
-                        <>
-                          <div>
-                            <strong>Problems Solved:</strong>{" "}
-                            {entry.problems_solved}
-                          </div>
-                          {entry.acceptance_rate && (
-                            <div>
-                              <strong>Acceptance Rate:</strong>{" "}
-                              {entry.acceptance_rate}%
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <div>
-                          <strong>Score/Rating:</strong> {entry.score_rating}
-                        </div>
-                      )}
-                      <div>
-                        <strong>Date:</strong> {entry.date_achieved}
-                      </div>
-                      {entry.profile_link && (
-                        <div>
-                          <strong>Profile:</strong>{" "}
-                          <a
-                            href={entry.profile_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            View
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {canDelete && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(entry.id)}
-                      style={{ marginLeft: "15px" }}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
+      </Card>
+    </Stack>
   );
 };
 

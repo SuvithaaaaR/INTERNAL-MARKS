@@ -66,8 +66,19 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log(`Port ${PORT} is in use, trying port ${PORT + 1}...`);
+    app.listen(PORT + 1, () => {
+      console.log(`Server is running on port ${PORT + 1}`);
+    });
+  } else {
+    console.error('Server error:', err);
+  }
 });
 
 module.exports = app;

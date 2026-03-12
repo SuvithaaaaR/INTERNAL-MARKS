@@ -1,317 +1,99 @@
 import React, { useState, useEffect } from "react";
-import {
-  getScopusPapers,
-  createScopusPaper,
-  deleteScopusPaper,
-} from "../../services/api";
-import { toast } from "react-toastify";
+import { Card, Title, Text, Button, Group, Stack, TextInput, Select, Switch, Paper, Badge, ActionIcon, Alert, Collapse, Textarea } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconPlus, IconTrash, IconInfoCircle } from "@tabler/icons-react";
+import { getScopusPapers, createScopusPaper, deleteScopusPaper } from "../../services/api";
 
 const ScopusForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    paper_title: "",
-    publication_type: "conference",
-    journal_conference_name: "",
-    publication_date: "",
-    scopus_indexed: true,
-    co_authors: "",
-    proof_document: "",
+    paper_title: "", publication_type: "conference", journal_conference_name: "",
+    publication_date: "", scopus_indexed: true, co_authors: "", proof_document: "",
   });
 
-  useEffect(() => {
-    fetchEntries();
-  }, [studentId]);
-
-  const fetchEntries = async () => {
-    try {
-      const response = await getScopusPapers(studentId);
-      setEntries(response.data);
-    } catch (error) {
-      console.error("Error fetching entries:", error);
-    }
-  };
+  useEffect(() => { fetchEntries(); }, [studentId]);
+  const fetchEntries = async () => { try { const r = await getScopusPapers(studentId); setEntries(r.data); } catch (e) { console.error(e); } };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createScopusPaper({ ...formData, student_id: studentId });
-      toast.success("Scopus paper entry added successfully!");
+      notifications.show({ title: "Success", message: "Scopus paper added!", color: "green" });
       setShowForm(false);
-      setFormData({
-        paper_title: "",
-        publication_type: "conference",
-        journal_conference_name: "",
-        publication_date: "",
-        scopus_indexed: true,
-        co_authors: "",
-        proof_document: "",
-      });
-      fetchEntries();
-      onSuccess();
-    } catch (error) {
-      console.error("Error creating entry:", error);
-      toast.error("Failed to add entry");
-    }
+      setFormData({ paper_title: "", publication_type: "conference", journal_conference_name: "", publication_date: "", scopus_indexed: true, co_authors: "", proof_document: "" });
+      fetchEntries(); onSuccess();
+    } catch (err) { notifications.show({ title: "Error", message: "Failed to add entry", color: "red" }); }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
-      try {
-        await deleteScopusPaper(id);
-        toast.success("Entry deleted successfully!");
-        fetchEntries();
-        onSuccess();
-      } catch (error) {
-        console.error("Error deleting entry:", error);
-        toast.error("Failed to delete entry");
-      }
+    if (window.confirm("Delete this entry?")) {
+      try { await deleteScopusPaper(id); notifications.show({ title: "Success", message: "Deleted!", color: "green" }); fetchEntries(); onSuccess(); }
+      catch (e) { notifications.show({ title: "Error", message: "Failed to delete", color: "red" }); }
     }
   };
 
-  const handleChange = (e) => {
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name]: value,
-    });
-  };
-
   return (
-    <div>
-      <div className="card">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h3>Scopus-Indexed Papers (Max: Full FA marks - 240)</h3>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Cancel" : "+ Add Entry"}
-          </button>
-        </div>
-
-        <div
-          style={{
-            background: "#e3f2fd",
-            padding: "12px",
-            borderRadius: "4px",
-            marginBottom: "20px",
-            fontSize: "14px",
-          }}
-        >
-          <strong>Marks Allocation (240 marks - Full FA):</strong>
-          <br />
-          • Scopus-Indexed Conference/Journal Publication: 240 marks (Full FA)
-          <br />• Must be indexed in Scopus database
-        </div>
-
-        {showForm && (
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              marginBottom: "30px",
-              padding: "20px",
-              background: "#f8f9fa",
-              borderRadius: "8px",
-            }}
-          >
-            <div className="form-group">
-              <label>Paper Title *</label>
-              <input
-                type="text"
-                name="paper_title"
-                value={formData.paper_title}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Publication Type *</label>
-                <select
-                  name="publication_type"
-                  value={formData.publication_type}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="conference">Conference</option>
-                  <option value="journal">Journal</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Journal/Conference Name *</label>
-                <input
-                  type="text"
-                  name="journal_conference_name"
-                  value={formData.journal_conference_name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Publication Date *</label>
-                <input
-                  type="date"
-                  name="publication_date"
-                  value={formData.publication_date}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <div className="checkbox-group" style={{ marginTop: "30px" }}>
-                  <input
-                    type="checkbox"
-                    name="scopus_indexed"
-                    checked={formData.scopus_indexed}
-                    onChange={handleChange}
-                    id="scopus_indexed"
-                  />
-                  <label htmlFor="scopus_indexed" style={{ marginBottom: 0 }}>
-                    Scopus Indexed (240 marks)
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Co-Authors (comma-separated)</label>
-              <input
-                type="text"
-                name="co_authors"
-                value={formData.co_authors}
-                onChange={handleChange}
-                placeholder="e.g., Dr. John Doe, Dr. Jane Smith, Student Name"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Proof Document</label>
-              <input
-                type="text"
-                name="proof_document"
-                value={formData.proof_document}
-                onChange={handleChange}
-                placeholder="Publication certificate, DOI, or link"
-              />
-            </div>
-
-            <button type="submit" className="btn btn-success">
-              Submit Entry
-            </button>
-          </form>
+    <Stack gap="lg">
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Group justify="space-between" mb="md">
+          <Title order={3}>Scopus-Indexed Papers (Full FA: 240 marks)</Title>
+          <Button leftSection={<IconPlus size={16} />} onClick={() => setShowForm(!showForm)}>{showForm ? "Cancel" : "Add Entry"}</Button>
+        </Group>
+        <Alert icon={<IconInfoCircle size={16} />} color="green" variant="light" mb="md">
+          <Text size="sm"><strong>Marks:</strong> Conference/Journal publications with institute students & faculty. Full FA component.</Text>
+        </Alert>
+        <Collapse in={showForm}>
+          <Paper p="md" withBorder mb="lg">
+            <form onSubmit={handleSubmit}>
+              <Stack gap="md">
+                <TextInput label="Paper Title" required value={formData.paper_title} onChange={(e) => setFormData({ ...formData, paper_title: e.target.value })} placeholder="Title of the paper" />
+                <Group grow>
+                  <Select label="Publication Type" required value={formData.publication_type} onChange={(v) => setFormData({ ...formData, publication_type: v })}
+                    data={[{ value: "conference", label: "Conference Paper" }, { value: "journal", label: "Journal Paper" }]} />
+                  <TextInput label="Journal/Conference Name" required value={formData.journal_conference_name} onChange={(e) => setFormData({ ...formData, journal_conference_name: e.target.value })} placeholder="e.g., IEEE ICSE 2025" />
+                </Group>
+                <Group grow>
+                  <TextInput label="Publication Date" type="date" required value={formData.publication_date} onChange={(e) => setFormData({ ...formData, publication_date: e.target.value })} />
+                  <TextInput label="Co-Authors" value={formData.co_authors} onChange={(e) => setFormData({ ...formData, co_authors: e.target.value })} placeholder="Comma-separated names" />
+                </Group>
+                <Switch label="Scopus Indexed" checked={formData.scopus_indexed} onChange={(e) => setFormData({ ...formData, scopus_indexed: e.currentTarget.checked })} />
+                <TextInput label="Proof Document" value={formData.proof_document} onChange={(e) => setFormData({ ...formData, proof_document: e.target.value })} placeholder="Paper URL or DOI link" />
+                <Group justify="flex-end"><Button type="submit" color="green">Submit Entry</Button></Group>
+              </Stack>
+            </form>
+          </Paper>
+        </Collapse>
+        <Title order={4} mb="sm">Entries ({entries.length})</Title>
+        {entries.length === 0 ? (
+          <Text c="dimmed" fs="italic">No entries yet.</Text>
+        ) : (
+          <Stack gap="sm">
+            {entries.map((entry) => (
+              <Paper key={entry.id} p="md" withBorder>
+                <Group justify="space-between" align="flex-start">
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Group justify="space-between">
+                      <Text fw={600}>{entry.paper_title}</Text>
+                      <Badge color={entry.staff_evaluated ? "green" : "yellow"} variant="filled" size="lg">
+                        {entry.staff_evaluated ? `${entry.marks_awarded} Marks` : "Pending"}
+                      </Badge>
+                    </Group>
+                    <Group gap="xl">
+                      <Text size="sm"><strong>Type:</strong> {entry.publication_type}</Text>
+                      <Text size="sm"><strong>Venue:</strong> {entry.journal_conference_name}</Text>
+                      <Text size="sm"><strong>Date:</strong> {entry.publication_date}</Text>
+                    </Group>
+                    {entry.co_authors && <Text size="sm" c="dimmed"><strong>Co-authors:</strong> {entry.co_authors}</Text>}
+                  </Stack>
+                  {canDelete && <ActionIcon color="red" variant="light" onClick={() => handleDelete(entry.id)}><IconTrash size={16} /></ActionIcon>}
+                </Group>
+              </Paper>
+            ))}
+          </Stack>
         )}
-
-        <div
-          style={{
-            borderTop: "2px solid #e0e0e0",
-            paddingTop: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
-          {entries.length === 0 ? (
-            <p style={{ color: "#666", fontStyle: "italic" }}>
-              No entries yet. Add your first entry above.
-            </p>
-          ) : (
-            entries.map((entry) => (
-              <div key={entry.id} className="entry-card">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "start",
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "12px",
-                      }}
-                    >
-                      <h4 style={{ margin: 0 }}>{entry.paper_title}</h4>
-                      <div
-                        style={{
-                          background: entry.staff_evaluated
-                            ? "#28a745"
-                            : "#ffc107",
-                          color: entry.staff_evaluated ? "white" : "#000",
-                          padding: "8px 16px",
-                          borderRadius: "6px",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {entry.staff_evaluated ? (
-                          <>✅ {entry.marks_awarded} Marks Awarded</>
-                        ) : (
-                          <>⏳ Pending Evaluation</>
-                        )}
-                      </div>
-                    </div>
-                    <div className="entry-details">
-                      <div>
-                        <strong>Type:</strong> {entry.publication_type}
-                      </div>
-                      <div>
-                        <strong>Venue:</strong> {entry.journal_conference_name}
-                      </div>
-                      <div>
-                        <strong>Date:</strong> {entry.publication_date}
-                      </div>
-                    </div>
-                    {entry.co_authors && (
-                      <p
-                        style={{
-                          marginTop: "10px",
-                          fontSize: "14px",
-                          color: "#666",
-                        }}
-                      >
-                        <strong>Co-authors:</strong> {entry.co_authors}
-                      </p>
-                    )}
-                    {entry.scopus_indexed && (
-                      <span
-                        className="badge badge-primary"
-                        style={{ marginTop: "8px" }}
-                      >
-                        Scopus Indexed
-                      </span>
-                    )}
-                  </div>
-                  {canDelete && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(entry.id)}
-                      style={{ marginLeft: "15px" }}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
+      </Card>
+    </Stack>
   );
 };
 

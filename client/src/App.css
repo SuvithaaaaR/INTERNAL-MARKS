@@ -65,12 +65,12 @@
 
 .page-header h2 {
   font-size: 28px;
-  color: #333;
+  color: var(--mantine-color-text);
   margin-bottom: 8px;
 }
 
 .page-header p {
-  color: #666;
+  color: var(--mantine-color-dimmed);
   font-size: 14px;
 }
 
@@ -91,10 +91,12 @@
 
 .search-box input {
   padding: 10px 15px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--mantine-color-default-border);
   border-radius: 4px;
   width: 300px;
   font-size: 14px;
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
 }
 
 .search-box input:focus {
@@ -105,13 +107,13 @@
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #666;
+  color: var(--mantine-color-dimmed);
 }
 
 .empty-state h3 {
   font-size: 20px;
   margin-bottom: 12px;
-  color: #333;
+  color: var(--mantine-color-text);
 }
 
 .empty-state p {
@@ -121,7 +123,7 @@
 
 .tabs {
   display: flex;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--mantine-color-default-border);
   margin-bottom: 20px;
 }
 
@@ -132,13 +134,13 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #666;
+  color: var(--mantine-color-dimmed);
   border-bottom: 3px solid transparent;
   transition: all 0.3s ease;
 }
 
 .tab:hover {
-  color: #333;
+  color: var(--mantine-color-text);
 }
 
 .tab.active {
@@ -160,14 +162,14 @@
 
 .info-item label {
   font-size: 12px;
-  color: #666;
+  color: var(--mantine-color-dimmed);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .info-item span {
   font-size: 16px;
-  color: #333;
+  color: var(--mantine-color-text);
   font-weight: 500;
 }
 
@@ -182,7 +184,7 @@
   border: none;
   cursor: pointer;
   padding: 6px;
-  color: #666;
+  color: var(--mantine-color-dimmed);
   transition: color 0.3s ease;
 }
 
@@ -191,7 +193,7 @@
 }
 
 .summary-card {
-  background: white;
+  background: var(--mantine-color-body);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -200,8 +202,8 @@
 .summary-card h3 {
   font-size: 18px;
   margin-bottom: 15px;
-  color: #333;
-  border-bottom: 2px solid #f0f0f0;
+  color: var(--mantine-color-text);
+  border-bottom: 2px solid var(--mantine-color-default-border);
   padding-bottom: 10px;
 }
 
@@ -209,7 +211,7 @@
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--mantine-color-default-border);
 }
 
 .summary-item:last-child {
@@ -235,7 +237,7 @@
 }
 
 .entry-card {
-  background: #f8f9fa;
+  background: var(--mantine-color-default-hover);
   border-radius: 6px;
   padding: 15px;
   margin-bottom: 12px;
@@ -245,7 +247,7 @@
 .entry-card h4 {
   font-size: 16px;
   margin-bottom: 8px;
-  color: #333;
+  color: var(--mantine-color-text);
 }
 
 .entry-details {
@@ -253,7 +255,7 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
   font-size: 14px;
-  color: #666;
+  color: var(--mantine-color-dimmed);
 }
 
 .entry-actions {

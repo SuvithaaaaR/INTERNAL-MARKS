@@ -12,9 +12,13 @@ import {
   Stack,
   Center,
   Box,
+  ActionIcon,
+  Tooltip,
+  Group,
 } from "@mantine/core";
-import { IconAlertCircle, IconLogin } from "@tabler/icons-react";
+import { IconAlertCircle, IconLogin, IconSun, IconMoon } from "@tabler/icons-react";
 import { useAuth } from "../context/AuthContext";
+import { useThemeContext } from "../context/ThemeContext";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -23,6 +27,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { colorScheme, toggleColorScheme } = useThemeContext();
+  const isDark = colorScheme === "dark";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,34 +65,36 @@ function Login() {
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
-        background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+        background: isDark
+          ? "linear-gradient(135deg, #1a1b1e 0%, #25262b 100%)"
+          : "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
         position: "relative",
       }}
     >
       <Box
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `
-            radial-gradient(circle at 20% 50%, rgba(33, 150, 243, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(63, 81, 181, 0.08) 0%, transparent 50%)
-          `,
+          top: 16,
+          right: 16,
+          zIndex: 10,
         }}
-      />
+      >
+        <Tooltip label={isDark ? 'Light mode' : 'Dark mode'}>
+          <ActionIcon variant="default" size="lg" onClick={toggleColorScheme}>
+            {isDark ? <IconSun size={18} /> : <IconMoon size={18} />}
+          </ActionIcon>
+        </Tooltip>
+      </Box>
       <Container size={420} my={40} style={{ position: "relative", zIndex: 1 }}>
         <Paper
           withBorder
           shadow="xl"
           p={40}
           radius="lg"
-          style={{ backgroundColor: "white" }}
         >
           <Center mb="xl">
             <Stack gap="xs" align="center">
-              <Title order={2} style={{ color: "#1e3a8a", fontWeight: 700 }}>
+              <Title order={2} c="blue">
                 Internal Marks System
               </Title>
               <Text size="sm" c="dimmed">
@@ -114,14 +122,6 @@ function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 size="md"
-                styles={{
-                  input: {
-                    borderColor: "#e5e7eb",
-                    "&:focus": {
-                      borderColor: "#2563eb",
-                    },
-                  },
-                }}
               />
 
               <PasswordInput
@@ -131,14 +131,6 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 size="md"
-                styles={{
-                  input: {
-                    borderColor: "#e5e7eb",
-                    "&:focus": {
-                      borderColor: "#2563eb",
-                    },
-                  },
-                }}
               />
 
               <Button
@@ -147,11 +139,6 @@ function Login() {
                 size="lg"
                 loading={loading}
                 leftSection={<IconLogin size={18} />}
-                style={{
-                  background:
-                    "linear-gradient(135deg, #2563eb 0%, #1e40af 100%)",
-                  marginTop: "8px",
-                }}
               >
                 Login
               </Button>

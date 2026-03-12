@@ -1,352 +1,99 @@
 import React, { useState, useEffect } from "react";
-import {
-  getMinorProjects,
-  createMinorProject,
-  deleteMinorProject,
-} from "../../services/api";
-import { toast } from "react-toastify";
+import { Card, Title, Text, Button, Group, Stack, TextInput, Textarea, NumberInput, Paper, Badge, ActionIcon, Alert, Collapse } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconPlus, IconTrash, IconInfoCircle } from "@tabler/icons-react";
+import { getMinorProjects, createMinorProject, deleteMinorProject } from "../../services/api";
 
 const MinorProjectForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    project_title: "",
-    problem_statement: "",
-    industry_ngo_community: "",
-    uniqueness_score: 20,
-    project_description: "",
-    github_link: "",
-    demo_link: "",
-    proof_document: "",
+    project_title: "", problem_statement: "", industry_ngo_community: "",
+    uniqueness_score: 5, project_description: "", github_link: "", demo_link: "", proof_document: "",
   });
 
-  useEffect(() => {
-    fetchEntries();
-  }, [studentId]);
-
-  const fetchEntries = async () => {
-    try {
-      const response = await getMinorProjects(studentId);
-      setEntries(response.data);
-    } catch (error) {
-      console.error("Error fetching entries:", error);
-    }
-  };
+  useEffect(() => { fetchEntries(); }, [studentId]);
+  const fetchEntries = async () => { try { const r = await getMinorProjects(studentId); setEntries(r.data); } catch (e) { console.error(e); } };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createMinorProject({ ...formData, student_id: studentId });
-      toast.success("Minor project entry added successfully!");
+      notifications.show({ title: "Success", message: "Minor project entry added!", color: "green" });
       setShowForm(false);
-      setFormData({
-        project_title: "",
-        problem_statement: "",
-        industry_ngo_community: "",
-        uniqueness_score: 20,
-        project_description: "",
-        github_link: "",
-        demo_link: "",
-        proof_document: "",
-      });
-      fetchEntries();
-      onSuccess();
-    } catch (error) {
-      console.error("Error creating entry:", error);
-      toast.error("Failed to add entry");
-    }
+      setFormData({ project_title: "", problem_statement: "", industry_ngo_community: "", uniqueness_score: 5, project_description: "", github_link: "", demo_link: "", proof_document: "" });
+      fetchEntries(); onSuccess();
+    } catch (err) { notifications.show({ title: "Error", message: "Failed to add entry", color: "red" }); }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
-      try {
-        await deleteMinorProject(id);
-        toast.success("Entry deleted successfully!");
-        fetchEntries();
-        onSuccess();
-      } catch (error) {
-        console.error("Error deleting entry:", error);
-        toast.error("Failed to delete entry");
-      }
+    if (window.confirm("Delete this entry?")) {
+      try { await deleteMinorProject(id); notifications.show({ title: "Success", message: "Deleted!", color: "green" }); fetchEntries(); onSuccess(); }
+      catch (e) { notifications.show({ title: "Error", message: "Failed to delete", color: "red" }); }
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   return (
-    <div>
-      <div className="card">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h3>Minor Projects (Max: 160 marks)</h3>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Cancel" : "+ Add Entry"}
-          </button>
-        </div>
-
-        <div
-          style={{
-            background: "#e3f2fd",
-            padding: "12px",
-            borderRadius: "4px",
-            marginBottom: "20px",
-            fontSize: "14px",
-          }}
-        >
-          <strong>Marks Allocation:</strong>
-          <br />
-          • Base Marks (Uniqueness of Problem Statement): 20 marks
-          <br />
-          • Industry/NGO/Community Related Problem: Eligible for base marks
-          <br />• Additional marks awarded for: Innovation, Implementation
-          Quality, and Impact (up to 160 marks total)
-        </div>
-
-        {showForm && (
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              marginBottom: "30px",
-              padding: "20px",
-              background: "#f8f9fa",
-              borderRadius: "8px",
-            }}
-          >
-            <div className="form-group">
-              <label>Project Title *</label>
-              <input
-                type="text"
-                name="project_title"
-                value={formData.project_title}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Problem Statement *</label>
-              <textarea
-                name="problem_statement"
-                value={formData.problem_statement}
-                onChange={handleChange}
-                placeholder="Describe the problem your project addresses"
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Related to (Industry/NGO/Community) *</label>
-                <input
-                  type="text"
-                  name="industry_ngo_community"
-                  value={formData.industry_ngo_community}
-                  onChange={handleChange}
-                  placeholder="e.g., Healthcare Industry, Local NGO, Community Service"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Marks (Based on Uniqueness) *</label>
-                <select
-                  name="uniqueness_score"
-                  value={formData.uniqueness_score}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="20">20 - Unique Problem</option>
-                  <option value="40">40 - Unique + Good Implementation</option>
-                  <option value="60">60 - Unique + Great Implementation</option>
-                  <option value="80">80 - Unique + Excellent + Scalable</option>
-                  <option value="100">100 - Unique + Excellent + Impact</option>
-                  <option value="120">120 - Outstanding Innovation</option>
-                  <option value="140">140 - Exceptional Innovation</option>
-                  <option value="160">160 - Industry-Grade Solution</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Project Description *</label>
-              <textarea
-                name="project_description"
-                value={formData.project_description}
-                onChange={handleChange}
-                placeholder="Describe your project, technologies used, and its impact"
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>GitHub Repository Link</label>
-                <input
-                  type="text"
-                  name="github_link"
-                  value={formData.github_link}
-                  onChange={handleChange}
-                  placeholder="https://github.com/username/project"
-                />
-              </div>
-              <div className="form-group">
-                <label>Demo/Live Link</label>
-                <input
-                  type="text"
-                  name="demo_link"
-                  value={formData.demo_link}
-                  onChange={handleChange}
-                  placeholder="https://demo-link.com"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Proof Document</label>
-              <input
-                type="text"
-                name="proof_document"
-                value={formData.proof_document}
-                onChange={handleChange}
-                placeholder="Project report, presentation, or certificate link"
-              />
-            </div>
-
-            <button type="submit" className="btn btn-success">
-              Submit Entry
-            </button>
-          </form>
+    <Stack gap="lg">
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Group justify="space-between" mb="md">
+          <Title order={3}>Minor Projects (Max: 100 marks)</Title>
+          <Button leftSection={<IconPlus size={16} />} onClick={() => setShowForm(!showForm)}>{showForm ? "Cancel" : "Add Entry"}</Button>
+        </Group>
+        <Alert icon={<IconInfoCircle size={16} />} color="indigo" variant="light" mb="md">
+          <Text size="sm"><strong>Marks:</strong> Based on project uniqueness, industry relevance, and implementation quality.</Text>
+        </Alert>
+        <Collapse in={showForm}>
+          <Paper p="md" withBorder mb="lg">
+            <form onSubmit={handleSubmit}>
+              <Stack gap="md">
+                <TextInput label="Project Title" required value={formData.project_title} onChange={(e) => setFormData({ ...formData, project_title: e.target.value })} placeholder="e.g., Smart Waste Management System" />
+                <Textarea label="Problem Statement" required value={formData.problem_statement} onChange={(e) => setFormData({ ...formData, problem_statement: e.target.value })} placeholder="Describe the problem" minRows={2} />
+                <Textarea label="Project Description" value={formData.project_description} onChange={(e) => setFormData({ ...formData, project_description: e.target.value })} placeholder="Brief description of the project" minRows={3} />
+                <Group grow>
+                  <TextInput label="Industry/NGO/Community" value={formData.industry_ngo_community} onChange={(e) => setFormData({ ...formData, industry_ngo_community: e.target.value })} placeholder="Associated organization" />
+                  <NumberInput label="Uniqueness Score (1-10)" required value={formData.uniqueness_score} onChange={(v) => setFormData({ ...formData, uniqueness_score: v })} min={1} max={10} />
+                </Group>
+                <Group grow>
+                  <TextInput label="GitHub Link" value={formData.github_link} onChange={(e) => setFormData({ ...formData, github_link: e.target.value })} placeholder="Repository URL" />
+                  <TextInput label="Demo Link" value={formData.demo_link} onChange={(e) => setFormData({ ...formData, demo_link: e.target.value })} placeholder="Live demo URL" />
+                </Group>
+                <TextInput label="Proof Document" value={formData.proof_document} onChange={(e) => setFormData({ ...formData, proof_document: e.target.value })} placeholder="Document URL" />
+                <Group justify="flex-end"><Button type="submit" color="green">Submit Entry</Button></Group>
+              </Stack>
+            </form>
+          </Paper>
+        </Collapse>
+        <Title order={4} mb="sm">Entries ({entries.length})</Title>
+        {entries.length === 0 ? (
+          <Text c="dimmed" fs="italic">No entries yet.</Text>
+        ) : (
+          <Stack gap="sm">
+            {entries.map((entry) => (
+              <Paper key={entry.id} p="md" withBorder>
+                <Group justify="space-between" align="flex-start">
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Group justify="space-between">
+                      <Text fw={600}>{entry.project_title}</Text>
+                      <Badge color={entry.staff_evaluated ? "green" : "yellow"} variant="filled" size="lg">
+                        {entry.staff_evaluated ? `${entry.marks_awarded} Marks` : "Pending"}
+                      </Badge>
+                    </Group>
+                    <Text size="sm" c="dimmed">{entry.problem_statement}</Text>
+                    <Group gap="xl">
+                      <Text size="sm"><strong>Uniqueness:</strong> {entry.uniqueness_score}/10</Text>
+                      {entry.industry_ngo_community && <Text size="sm"><strong>Organization:</strong> {entry.industry_ngo_community}</Text>}
+                      {entry.github_link && <Text size="sm"><strong>GitHub:</strong> {entry.github_link}</Text>}
+                    </Group>
+                  </Stack>
+                  {canDelete && <ActionIcon color="red" variant="light" onClick={() => handleDelete(entry.id)}><IconTrash size={16} /></ActionIcon>}
+                </Group>
+              </Paper>
+            ))}
+          </Stack>
         )}
-
-        <div
-          style={{
-            borderTop: "2px solid #e0e0e0",
-            paddingTop: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
-          {entries.length === 0 ? (
-            <p style={{ color: "#666", fontStyle: "italic" }}>
-              No entries yet. Add your first entry above.
-            </p>
-          ) : (
-            entries.map((entry) => (
-              <div key={entry.id} className="entry-card">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "start",
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "12px",
-                      }}
-                    >
-                      <h4 style={{ margin: 0 }}>{entry.project_title}</h4>
-                      <div
-                        style={{
-                          background: entry.staff_evaluated
-                            ? "#28a745"
-                            : "#ffc107",
-                          color: entry.staff_evaluated ? "white" : "#000",
-                          padding: "8px 16px",
-                          borderRadius: "6px",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {entry.staff_evaluated ? (
-                          <>✅ {entry.marks_awarded} Marks Awarded</>
-                        ) : (
-                          <>⏳ Pending Evaluation</>
-                        )}
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-                      <strong>Problem Statement:</strong>
-                      <p style={{ color: "#666", marginTop: "4px" }}>
-                        {entry.problem_statement}
-                      </p>
-                    </div>
-                    <div className="entry-details">
-                      <div>
-                        <strong>Context:</strong> {entry.industry_ngo_community}
-                      </div>
-                      <div>
-                        <strong>Uniqueness Score:</strong>{" "}
-                        {entry.uniqueness_score}
-                      </div>
-                      {entry.github_link && (
-                        <div>
-                          <strong>GitHub:</strong>{" "}
-                          <a
-                            href={entry.github_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            View Code
-                          </a>
-                        </div>
-                      )}
-                      {entry.demo_link && (
-                        <div>
-                          <strong>Demo:</strong>{" "}
-                          <a
-                            href={entry.demo_link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            View Live
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                    <p
-                      style={{
-                        marginTop: "10px",
-                        color: "#666",
-                        fontSize: "14px",
-                      }}
-                    >
-                      {entry.project_description}
-                    </p>
-                  </div>
-                  {canDelete && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(entry.id)}
-                      style={{ marginLeft: "15px" }}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
+      </Card>
+    </Stack>
   );
 };
 

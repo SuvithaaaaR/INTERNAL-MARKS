@@ -275,7 +275,7 @@ const Dashboard = () => {
             ))}
           </SimpleGrid>
 
-          <Paper p="md" mt="md" bg="blue.0" radius="md">
+          <Paper p="md" mt="md" bg="var(--mantine-primary-color-light)" radius="md">
             <Text size="sm">
               <strong>💡 Note:</strong> Full FA (Formative Assessment)
               components are worth 240 marks each. Only the{" "}

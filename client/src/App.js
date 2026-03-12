@@ -11,12 +11,12 @@ import {
   Group,
   NavLink,
   Title,
-  Container,
   Text,
   Button,
   Menu,
-  Avatar,
   Badge,
+  ActionIcon,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
@@ -26,7 +26,10 @@ import {
   IconReportAnalytics,
   IconLogout,
   IconUser,
+  IconSun,
+  IconMoon,
 } from "@tabler/icons-react";
+import { useThemeContext } from "./context/ThemeContext";
 import "./App.css";
 
 import Dashboard from "./components/Dashboard";
@@ -41,6 +44,7 @@ import { useAuth } from "./context/AuthContext";
 function App() {
   const [opened, { toggle }] = useDisclosure();
   const { user, logout, isFaculty } = useAuth();
+  const { colorScheme, toggleColorScheme } = useThemeContext();
 
   // Different navigation items based on role
   const facultyNavItems = [
@@ -113,6 +117,15 @@ function App() {
                       )}
                     </Group>
                     <Group>
+                      <Tooltip label={colorScheme === 'dark' ? 'Light mode' : 'Dark mode'}>
+                        <ActionIcon
+                          variant="default"
+                          size="lg"
+                          onClick={toggleColorScheme}
+                        >
+                          {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
+                        </ActionIcon>
+                      </Tooltip>
                       <Badge
                         color={user?.role === "faculty" ? "blue" : "green"}
                         variant="light"

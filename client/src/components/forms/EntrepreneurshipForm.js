@@ -1,338 +1,105 @@
 import React, { useState, useEffect } from "react";
-import {
-  getEntrepreneurship,
-  createEntrepreneurship,
-  deleteEntrepreneurship,
-} from "../../services/api";
-import { toast } from "react-toastify";
+import { Card, Title, Text, Button, Group, Stack, TextInput, Select, NumberInput, Switch, Paper, Badge, ActionIcon, Alert, Collapse } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { IconPlus, IconTrash, IconInfoCircle } from "@tabler/icons-react";
+import { getEntrepreneurship, createEntrepreneurship, deleteEntrepreneurship } from "../../services/api";
 
 const EntrepreneurshipForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    startup_name: "",
-    registration_type: "udyam",
-    registration_number: "",
-    registration_date: "",
-    funding_secured: false,
-    funding_amount: "",
-    incubation_status: false,
-    proof_document: "",
+    startup_name: "", registration_type: "sole_proprietorship", registration_number: "",
+    registration_date: "", funding_secured: false, funding_amount: 0, incubation_status: "none", proof_document: "",
   });
 
-  useEffect(() => {
-    fetchEntries();
-  }, [studentId]);
-
-  const fetchEntries = async () => {
-    try {
-      const response = await getEntrepreneurship(studentId);
-      setEntries(response.data);
-    } catch (error) {
-      console.error("Error fetching entries:", error);
-    }
-  };
+  useEffect(() => { fetchEntries(); }, [studentId]);
+  const fetchEntries = async () => { try { const r = await getEntrepreneurship(studentId); setEntries(r.data); } catch (e) { console.error(e); } };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createEntrepreneurship({ ...formData, student_id: studentId });
-      toast.success("Entrepreneurship entry added successfully!");
+      notifications.show({ title: "Success", message: "Entrepreneurship entry added!", color: "green" });
       setShowForm(false);
-      setFormData({
-        startup_name: "",
-        registration_type: "udyam",
-        registration_number: "",
-        registration_date: "",
-        funding_secured: false,
-        funding_amount: "",
-        incubation_status: false,
-        proof_document: "",
-      });
-      fetchEntries();
-      onSuccess();
-    } catch (error) {
-      console.error("Error creating entry:", error);
-      toast.error("Failed to add entry");
-    }
+      setFormData({ startup_name: "", registration_type: "sole_proprietorship", registration_number: "", registration_date: "", funding_secured: false, funding_amount: 0, incubation_status: "none", proof_document: "" });
+      fetchEntries(); onSuccess();
+    } catch (err) { notifications.show({ title: "Error", message: "Failed to add entry", color: "red" }); }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
-      try {
-        await deleteEntrepreneurship(id);
-        toast.success("Entry deleted successfully!");
-        fetchEntries();
-        onSuccess();
-      } catch (error) {
-        console.error("Error deleting entry:", error);
-        toast.error("Failed to delete entry");
-      }
+    if (window.confirm("Delete this entry?")) {
+      try { await deleteEntrepreneurship(id); notifications.show({ title: "Success", message: "Deleted!", color: "green" }); fetchEntries(); onSuccess(); }
+      catch (e) { notifications.show({ title: "Error", message: "Failed to delete", color: "red" }); }
     }
   };
 
-  const handleChange = (e) => {
-    const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setFormData({
-      ...formData,
-      [e.target.name]: value,
-    });
-  };
-
   return (
-    <div>
-      <div className="card">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h3>Entrepreneurship Activities (Max: Full FA marks - 240)</h3>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? "Cancel" : "+ Add Entry"}
-          </button>
-        </div>
-
-        <div
-          style={{
-            background: "#e3f2fd",
-            padding: "12px",
-            borderRadius: "4px",
-            marginBottom: "20px",
-            fontSize: "14px",
-          }}
-        >
-          <strong>Marks Allocation (240 marks - Full FA):</strong>
-          <br />
-          • Udyam Registration: 240 marks
-          <br />
-          • DPIIT Recognition: 240 marks
-          <br />• Secured Funding/Incubation: 240 marks
-        </div>
-
-        {showForm && (
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              marginBottom: "30px",
-              padding: "20px",
-              background: "#f8f9fa",
-              borderRadius: "8px",
-            }}
-          >
-            <div className="form-row">
-              <div className="form-group">
-                <label>Start-up Name *</label>
-                <input
-                  type="text"
-                  name="startup_name"
-                  value={formData.startup_name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Registration Type *</label>
-                <select
-                  name="registration_type"
-                  value={formData.registration_type}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="udyam">Udyam Registration</option>
-                  <option value="dpiit">DPIIT Recognition (240 marks)</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Registration Number *</label>
-                <input
-                  type="text"
-                  name="registration_number"
-                  value={formData.registration_number}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Registration Date *</label>
-                <input
-                  type="date"
-                  name="registration_date"
-                  value={formData.registration_date}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <div className="checkbox-group">
-                  <input
-                    type="checkbox"
-                    name="funding_secured"
-                    checked={formData.funding_secured}
-                    onChange={handleChange}
-                    id="funding"
-                  />
-                  <label htmlFor="funding" style={{ marginBottom: 0 }}>
-                    Funding Secured (240 marks)
-                  </label>
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Funding Amount (if applicable)</label>
-                <input
-                  type="number"
-                  name="funding_amount"
-                  value={formData.funding_amount}
-                  onChange={handleChange}
-                  placeholder="Amount in INR"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="checkbox-group">
-                <input
-                  type="checkbox"
-                  name="incubation_status"
-                  checked={formData.incubation_status}
-                  onChange={handleChange}
-                  id="incubation"
-                />
-                <label htmlFor="incubation" style={{ marginBottom: 0 }}>
-                  Secured Incubation (240 marks)
-                </label>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Proof Document</label>
-              <input
-                type="text"
-                name="proof_document"
-                value={formData.proof_document}
-                onChange={handleChange}
-                placeholder="Registration certificate or proof link"
-              />
-            </div>
-
-            <button type="submit" className="btn btn-success">
-              Submit Entry
-            </button>
-          </form>
-        )}
-
-        <div
-          style={{
-            borderTop: "2px solid #e0e0e0",
-            paddingTop: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <h4 style={{ marginBottom: "15px" }}>Entries ({entries.length})</h4>
-          {entries.length === 0 ? (
-            <p style={{ color: "#666", fontStyle: "italic" }}>
-              No entries yet. Add your first entry above.
-            </p>
-          ) : (
-            entries.map((entry) => (
-              <div key={entry.id} className="entry-card">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "start",
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "12px",
-                      }}
-                    >
-                      <h4 style={{ margin: 0 }}>{entry.startup_name}</h4>
-                      <div
-                        style={{
-                          background: entry.staff_evaluated
-                            ? "#28a745"
-                            : "#ffc107",
-                          color: entry.staff_evaluated ? "white" : "#000",
-                          padding: "8px 16px",
-                          borderRadius: "6px",
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        }}
-                      >
-                        {entry.staff_evaluated ? (
-                          <>✅ {entry.marks_awarded} Marks Awarded</>
-                        ) : (
-                          <>⏳ Pending Evaluation</>
-                        )}
-                      </div>
-                    </div>
-                    <div className="entry-details">
-                      <div>
-                        <strong>Type:</strong> {entry.registration_type}
-                      </div>
-                      <div>
-                        <strong>Registration:</strong>{" "}
-                        {entry.registration_number}
-                      </div>
-                      <div>
-                        <strong>Date:</strong> {entry.registration_date}
-                      </div>
-                      {entry.funding_secured && entry.funding_amount && (
-                        <div>
-                          <strong>Funding:</strong> ₹{entry.funding_amount}
-                        </div>
-                      )}
-                    </div>
-                    <div style={{ marginTop: "10px" }}>
-                      {entry.funding_secured && (
-                        <span
-                          className="badge badge-primary"
-                          style={{ marginRight: "8px" }}
-                        >
-                          Funding Secured
-                        </span>
-                      )}
-                      {entry.incubation_status && (
-                        <span className="badge badge-primary">Incubated</span>
-                      )}
-                    </div>
-                  </div>
-                  {canDelete && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(entry.id)}
-                      style={{ marginLeft: "15px" }}
-                    >
-                      Delete
-                    </button>
+    <Stack gap="lg">
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Group justify="space-between" mb="md">
+          <Title order={3}>Entrepreneurship (Max: 100 marks)</Title>
+          <Button leftSection={<IconPlus size={16} />} onClick={() => setShowForm(!showForm)}>{showForm ? "Cancel" : "Add Entry"}</Button>
+        </Group>
+        <Alert icon={<IconInfoCircle size={16} />} color="teal" variant="light" mb="md">
+          <Text size="sm"><strong>Marks:</strong> Based on startup registration, funding, and incubation status.</Text>
+        </Alert>
+        <Collapse in={showForm}>
+          <Paper p="md" withBorder mb="lg">
+            <form onSubmit={handleSubmit}>
+              <Stack gap="md">
+                <TextInput label="Startup Name" required value={formData.startup_name} onChange={(e) => setFormData({ ...formData, startup_name: e.target.value })} placeholder="e.g., TechStart Innovations" />
+                <Group grow>
+                  <Select label="Registration Type" required value={formData.registration_type} onChange={(v) => setFormData({ ...formData, registration_type: v })}
+                    data={[{ value: "sole_proprietorship", label: "Sole Proprietorship" }, { value: "partnership", label: "Partnership" }, { value: "llp", label: "LLP" }, { value: "pvt_ltd", label: "Pvt Ltd" }]} />
+                  <TextInput label="Registration Number" value={formData.registration_number} onChange={(e) => setFormData({ ...formData, registration_number: e.target.value })} placeholder="If registered" />
+                </Group>
+                <Group grow>
+                  <TextInput label="Registration Date" type="date" value={formData.registration_date} onChange={(e) => setFormData({ ...formData, registration_date: e.target.value })} />
+                  <Select label="Incubation Status" value={formData.incubation_status} onChange={(v) => setFormData({ ...formData, incubation_status: v })}
+                    data={[{ value: "none", label: "None" }, { value: "applied", label: "Applied" }, { value: "incubated", label: "Incubated" }, { value: "graduated", label: "Graduated" }]} />
+                </Group>
+                <Group grow>
+                  <Switch label="Funding Secured" checked={formData.funding_secured} onChange={(e) => setFormData({ ...formData, funding_secured: e.currentTarget.checked })} mt="xl" />
+                  {formData.funding_secured && (
+                    <NumberInput label="Funding Amount (INR)" value={formData.funding_amount} onChange={(v) => setFormData({ ...formData, funding_amount: v })} min={0} />
                   )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
+                </Group>
+                <TextInput label="Proof Document" value={formData.proof_document} onChange={(e) => setFormData({ ...formData, proof_document: e.target.value })} placeholder="Registration/Funding proof URL" />
+                <Group justify="flex-end"><Button type="submit" color="green">Submit Entry</Button></Group>
+              </Stack>
+            </form>
+          </Paper>
+        </Collapse>
+        <Title order={4} mb="sm">Entries ({entries.length})</Title>
+        {entries.length === 0 ? (
+          <Text c="dimmed" fs="italic">No entries yet.</Text>
+        ) : (
+          <Stack gap="sm">
+            {entries.map((entry) => (
+              <Paper key={entry.id} p="md" withBorder>
+                <Group justify="space-between" align="flex-start">
+                  <Stack gap="xs" style={{ flex: 1 }}>
+                    <Group justify="space-between">
+                      <Text fw={600}>{entry.startup_name}</Text>
+                      <Badge color={entry.staff_evaluated ? "green" : "yellow"} variant="filled" size="lg">
+                        {entry.staff_evaluated ? `${entry.marks_awarded} Marks` : "Pending"}
+                      </Badge>
+                    </Group>
+                    <Group gap="xl">
+                      <Text size="sm"><strong>Type:</strong> {entry.registration_type}</Text>
+                      <Text size="sm"><strong>Incubation:</strong> {entry.incubation_status}</Text>
+                      <Text size="sm"><strong>Funding:</strong> {entry.funding_secured ? `Yes - ₹${entry.funding_amount}` : "No"}</Text>
+                      {entry.registration_date && <Text size="sm"><strong>Date:</strong> {entry.registration_date}</Text>}
+                    </Group>
+                  </Stack>
+                  {canDelete && <ActionIcon color="red" variant="light" onClick={() => handleDelete(entry.id)}><IconTrash size={16} /></ActionIcon>}
+                </Group>
+              </Paper>
+            ))}
+          </Stack>
+        )}
+      </Card>
+    </Stack>
   );
 };
 
