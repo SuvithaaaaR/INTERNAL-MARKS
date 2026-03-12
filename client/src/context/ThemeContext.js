@@ -9,7 +9,10 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("color-scheme", colorScheme);
-    document.documentElement.setAttribute("data-mantine-color-scheme", colorScheme);
+    document.documentElement.setAttribute(
+      "data-mantine-color-scheme",
+      colorScheme,
+    );
   }, [colorScheme]);
 
   const toggleColorScheme = () => {

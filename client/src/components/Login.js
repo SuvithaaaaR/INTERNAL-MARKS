@@ -16,7 +16,12 @@ import {
   Tooltip,
   Group,
 } from "@mantine/core";
-import { IconAlertCircle, IconLogin, IconSun, IconMoon } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconLogin,
+  IconSun,
+  IconMoon,
+} from "@tabler/icons-react";
 import { useAuth } from "../context/AuthContext";
 import { useThemeContext } from "../context/ThemeContext";
 
@@ -79,19 +84,14 @@ function Login() {
           zIndex: 10,
         }}
       >
-        <Tooltip label={isDark ? 'Light mode' : 'Dark mode'}>
+        <Tooltip label={isDark ? "Light mode" : "Dark mode"}>
           <ActionIcon variant="default" size="lg" onClick={toggleColorScheme}>
             {isDark ? <IconSun size={18} /> : <IconMoon size={18} />}
           </ActionIcon>
         </Tooltip>
       </Box>
       <Container size={420} my={40} style={{ position: "relative", zIndex: 1 }}>
-        <Paper
-          withBorder
-          shadow="xl"
-          p={40}
-          radius="lg"
-        >
+        <Paper withBorder shadow="xl" p={40} radius="lg">
           <Center mb="xl">
             <Stack gap="xs" align="center">
               <Title order={2} c="blue">

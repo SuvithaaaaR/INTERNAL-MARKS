@@ -33,7 +33,11 @@ const theme = createTheme({
 function Root() {
   const { colorScheme } = useThemeContext();
   return (
-    <MantineProvider theme={theme} defaultColorScheme={colorScheme} forceColorScheme={colorScheme}>
+    <MantineProvider
+      theme={theme}
+      defaultColorScheme={colorScheme}
+      forceColorScheme={colorScheme}
+    >
       <Notifications position="top-right" />
       <AuthProvider>
         <App />

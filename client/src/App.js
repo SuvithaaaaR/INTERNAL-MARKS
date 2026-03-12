@@ -117,13 +117,21 @@ function App() {
                       )}
                     </Group>
                     <Group>
-                      <Tooltip label={colorScheme === 'dark' ? 'Light mode' : 'Dark mode'}>
+                      <Tooltip
+                        label={
+                          colorScheme === "dark" ? "Light mode" : "Dark mode"
+                        }
+                      >
                         <ActionIcon
                           variant="default"
                           size="lg"
                           onClick={toggleColorScheme}
                         >
-                          {colorScheme === 'dark' ? <IconSun size={18} /> : <IconMoon size={18} />}
+                          {colorScheme === "dark" ? (
+                            <IconSun size={18} />
+                          ) : (
+                            <IconMoon size={18} />
+                          )}
                         </ActionIcon>
                       </Tooltip>
                       <Badge

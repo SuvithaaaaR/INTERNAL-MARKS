@@ -263,7 +263,11 @@ const StudentDetails = () => {
                       </Group>
                     </Paper>
 
-                    <Paper p="md" withBorder bg="var(--mantine-primary-color-light)">
+                    <Paper
+                      p="md"
+                      withBorder
+                      bg="var(--mantine-primary-color-light)"
+                    >
                       <Group justify="space-between">
                         <Text fw={700} size="lg">
                           TOTAL MARKS
