@@ -37,6 +37,7 @@ const codingPlatformRoutes = require("./routes/codingPlatforms");
 const minorProjectRoutes = require("./routes/minorProjects");
 const calculationRoutes = require("./routes/calculations");
 const staffEvaluationRoutes = require("./routes/staffEvaluation");
+const internalCourseMappingsRoutes = require("./routes/internalCourseMappings");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
@@ -52,6 +53,7 @@ app.use("/api/coding-platforms", codingPlatformRoutes);
 app.use("/api/minor-projects", minorProjectRoutes);
 app.use("/api/calculations", calculationRoutes);
 app.use("/api/staff-evaluation", staffEvaluationRoutes);
+app.use("/api/internal-course-mappings", internalCourseMappingsRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

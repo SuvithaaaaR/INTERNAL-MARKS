@@ -28,6 +28,19 @@ function initializeDatabase() {
       )
     `);
 
+    db.run(`
+      CREATE TABLE IF NOT EXISTS internal_course_mappings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        student_id INTEGER NOT NULL,
+        component_key TEXT NOT NULL,
+        course_code TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (student_id, component_key),
+        FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+      )
+    `);
+
     // Community Service
     db.run(`
       CREATE TABLE IF NOT EXISTS community_service (

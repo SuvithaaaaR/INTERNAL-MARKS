@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import {
   Container,
@@ -8,6 +8,8 @@ import {
   Group,
   Stack,
   Badge,
+  Select,
+  Table,
   Tabs,
   Loader,
   Center,
@@ -25,7 +27,12 @@ import {
   IconChartBar,
   IconInfoCircle,
 } from "@tabler/icons-react";
-import { getStudent, getCalculations } from "../services/api";
+import {
+  getStudent,
+  getCalculations,
+  getInternalCourseMappings,
+  upsertInternalCourseMapping,
+} from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
 // Import all component forms
@@ -40,27 +47,132 @@ import EntrepreneurshipForm from "./forms/EntrepreneurshipForm";
 import CodingPlatformForm from "./forms/CodingPlatformForm";
 import MinorProjectForm from "./forms/MinorProjectForm";
 
+const COURSE_ALLOCATION_TEMPLATE = [
+  {
+    code: "CSB1321",
+    name: "WEB TECHNOLOGY",
+    category: "Theory",
+    credits: 3,
+  },
+  {
+    code: "CSB1322",
+    name: "COMPILER DESIGN",
+    category: "Theory",
+    credits: 3,
+  },
+  {
+    code: "CSB1323",
+    name: "CRYPTOGRAPHY AND NETWORK SECURITY",
+    category: "Theory",
+    credits: 4,
+  },
+  {
+    code: "CSB1332",
+    name: "DESIGN PROJECT",
+    category: "Theory",
+    credits: 2,
+  },
+  {
+    code: "CSB1333",
+    name: "COMPREHENSION",
+    category: "Theory",
+    credits: 1,
+  },
+  {
+    code: "CSC1371",
+    name: "APPLICATION DEVELOPMENT",
+    category: "Theory",
+    credits: 3,
+  },
+  {
+    code: "CSC1394",
+    name: "UI AND UX DESIGN",
+    category: "Theory",
+    credits: 3,
+  },
+];
+
+const INTERNAL_COMPONENTS = [
+  {
+    key: "communityService",
+    label: "1. Community Service",
+    shortLabel: "Community Service",
+    color: "blue",
+    getEarned: (breakdown) => Number(breakdown.communityService?.capped || 0),
+    getMax: (breakdown) => Number(breakdown.communityService?.cap || 40),
+  },
+  {
+    key: "fullFAMarks",
+    label:
+      "2-4, 7. Full FA Marks (Best of Patent/Scopus/Competition/Hackathon/Entrepreneurship)",
+    shortLabel: "Full FA",
+    color: "orange",
+    getEarned: (breakdown) => Number(breakdown.fullFAMarks?.total || 0),
+    getMax: () => 240,
+  },
+  {
+    key: "workshops",
+    label: "5. Workshops & Seminars",
+    shortLabel: "Workshops",
+    color: "cyan",
+    getEarned: (breakdown) => Number(breakdown.workshops?.capped || 0),
+    getMax: (breakdown) => Number(breakdown.workshops?.cap || 20),
+  },
+  {
+    key: "onlineCourses",
+    label: "6. Online Courses",
+    shortLabel: "Online Courses",
+    color: "green",
+    getEarned: (breakdown) => Number(breakdown.onlineCourses?.capped || 0),
+    getMax: (breakdown) => Number(breakdown.onlineCourses?.cap || 80),
+  },
+  {
+    key: "codingPlatforms",
+    label: "8. Coding Platforms",
+    shortLabel: "Coding Platforms",
+    color: "red",
+    getEarned: (breakdown) => Number(breakdown.codingPlatforms?.capped || 0),
+    getMax: (breakdown) => Number(breakdown.codingPlatforms?.cap || 120),
+  },
+  {
+    key: "minorProjects",
+    label: "9. Minor Projects",
+    shortLabel: "Minor Projects",
+    color: "violet",
+    getEarned: (breakdown) => Number(breakdown.minorProjects?.capped || 0),
+    getMax: (breakdown) => Number(breakdown.minorProjects?.cap || 160),
+  },
+];
+
 const StudentDetails = () => {
   const { id } = useParams();
   const [student, setStudent] = useState(null);
   const [calculations, setCalculations] = useState(null);
   const [activeTab, setActiveTab] = useState("summary");
   const [loading, setLoading] = useState(true);
+  const [componentCourseMap, setComponentCourseMap] = useState({});
+  const [savingComponentKey, setSavingComponentKey] = useState(null);
   const { isFaculty } = useAuth();
   const canDelete = isFaculty();
 
-  useEffect(() => {
-    fetchStudentData();
-  }, [id]);
-
-  const fetchStudentData = async () => {
+  const fetchStudentData = useCallback(async () => {
     try {
-      const [studentRes, calcRes] = await Promise.all([
+      const [studentRes, calcRes, mappingsRes] = await Promise.all([
         getStudent(id),
         getCalculations(id),
+        getInternalCourseMappings(id),
       ]);
+
+      const mappingData = Array.isArray(mappingsRes.data)
+        ? mappingsRes.data.reduce((acc, mapping) => {
+            acc[mapping.component_key] = mapping.course_code;
+            return acc;
+          }, {})
+        : {};
+
       setStudent(studentRes.data);
       setCalculations(calcRes.data);
+      setComponentCourseMap(mappingData);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching student data:", error);
@@ -70,6 +182,52 @@ const StudentDetails = () => {
         color: "red",
       });
       setLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchStudentData();
+  }, [fetchStudentData]);
+
+  const handleCourseSelection = async (componentKey, courseCode) => {
+    const selectedComponent = INTERNAL_COMPONENTS.find(
+      (component) => component.key === componentKey,
+    );
+    const componentName = selectedComponent?.shortLabel || "Internal component";
+
+    setSavingComponentKey(componentKey);
+    try {
+      await upsertInternalCourseMapping(id, {
+        componentKey,
+        courseCode,
+      });
+
+      setComponentCourseMap((prev) => {
+        const next = { ...prev };
+        if (courseCode) {
+          next[componentKey] = courseCode;
+        } else {
+          delete next[componentKey];
+        }
+        return next;
+      });
+
+      notifications.show({
+        title: "Saved",
+        message: courseCode
+          ? `${componentName} mapped to ${courseCode}`
+          : `${componentName} mapping cleared`,
+        color: "green",
+      });
+    } catch (error) {
+      console.error("Error saving course mapping:", error);
+      notifications.show({
+        title: "Error",
+        message: "Failed to save course selection",
+        color: "red",
+      });
+    } finally {
+      setSavingComponentKey(null);
     }
   };
 
@@ -94,6 +252,51 @@ const StudentDetails = () => {
       </Container>
     );
   }
+
+  const componentBreakdown = calculations?.breakdown || {};
+  const marksByComponent = INTERNAL_COMPONENTS.reduce((acc, component) => {
+    acc[component.key] = component.getEarned(componentBreakdown);
+    return acc;
+  }, {});
+
+  const courseOptions = COURSE_ALLOCATION_TEMPLATE.map((course) => ({
+    value: course.code,
+    label: `${course.code} - ${course.name}`,
+  }));
+
+  const courseWiseAllocation = COURSE_ALLOCATION_TEMPLATE.map((course) => {
+    const mappedComponents = INTERNAL_COMPONENTS.filter(
+      (component) => componentCourseMap[component.key] === course.code,
+    );
+
+    const allocatedMarks = mappedComponents.reduce(
+      (sum, component) => sum + Number(marksByComponent[component.key] || 0),
+      0,
+    );
+
+    return {
+      ...course,
+      mappedComponents,
+      allocatedMarks,
+    };
+  });
+
+  const totalCredits = COURSE_ALLOCATION_TEMPLATE.reduce(
+    (sum, course) => sum + course.credits,
+    0,
+  );
+
+  const allocatedTotal = courseWiseAllocation.reduce(
+    (sum, course) => sum + course.allocatedMarks,
+    0,
+  );
+
+  const unassignedTotal = INTERNAL_COMPONENTS.reduce((sum, component) => {
+    if (componentCourseMap[component.key]) {
+      return sum;
+    }
+    return sum + Number(marksByComponent[component.key] || 0);
+  }, 0);
 
   return (
     <Container size="xl" py="xl">
@@ -201,67 +404,45 @@ const StudentDetails = () => {
                     Marks Breakdown
                   </Title>
                   <Stack gap="sm">
-                    <Paper p="sm" withBorder>
-                      <Group justify="space-between">
-                        <Text>1. Community Service</Text>
-                        <Badge size="lg" variant="filled">
-                          {calculations.breakdown.communityService.capped} /{" "}
-                          {calculations.breakdown.communityService.cap}
-                        </Badge>
-                      </Group>
-                    </Paper>
+                    {INTERNAL_COMPONENTS.map((component) => (
+                      <Paper p="sm" withBorder key={component.key}>
+                        <Stack gap="xs">
+                          <Group justify="space-between" wrap="wrap">
+                            <Text>{component.label}</Text>
+                            <Badge
+                              size="lg"
+                              variant="filled"
+                              color={component.color}
+                            >
+                              {marksByComponent[component.key]} /{" "}
+                              {component.getMax(componentBreakdown)}
+                            </Badge>
+                          </Group>
 
-                    <Paper p="sm" withBorder>
-                      <Group justify="space-between">
-                        <Text>
-                          2-4, 7. Full FA Marks (Best of
-                          Patent/Scopus/Competition/Hackathon/Entrepreneurship)
-                        </Text>
-                        <Badge size="lg" variant="filled" color="orange">
-                          {calculations.breakdown.fullFAMarks.total} / 240
-                        </Badge>
-                      </Group>
-                    </Paper>
-
-                    <Paper p="sm" withBorder>
-                      <Group justify="space-between">
-                        <Text>5. Workshops & Seminars</Text>
-                        <Badge size="lg" variant="filled" color="cyan">
-                          {calculations.breakdown.workshops.capped} /{" "}
-                          {calculations.breakdown.workshops.cap}
-                        </Badge>
-                      </Group>
-                    </Paper>
-
-                    <Paper p="sm" withBorder>
-                      <Group justify="space-between">
-                        <Text>6. Online Courses</Text>
-                        <Badge size="lg" variant="filled" color="green">
-                          {calculations.breakdown.onlineCourses.capped} /{" "}
-                          {calculations.breakdown.onlineCourses.cap}
-                        </Badge>
-                      </Group>
-                    </Paper>
-
-                    <Paper p="sm" withBorder>
-                      <Group justify="space-between">
-                        <Text>8. Coding Platforms</Text>
-                        <Badge size="lg" variant="filled" color="red">
-                          {calculations.breakdown.codingPlatforms.capped} /{" "}
-                          {calculations.breakdown.codingPlatforms.cap}
-                        </Badge>
-                      </Group>
-                    </Paper>
-
-                    <Paper p="sm" withBorder>
-                      <Group justify="space-between">
-                        <Text>9. Minor Projects</Text>
-                        <Badge size="lg" variant="filled" color="violet">
-                          {calculations.breakdown.minorProjects.capped} /{" "}
-                          {calculations.breakdown.minorProjects.cap}
-                        </Badge>
-                      </Group>
-                    </Paper>
+                          <Group
+                            justify="space-between"
+                            align="flex-end"
+                            wrap="wrap"
+                          >
+                            <Text size="sm" c="dimmed">
+                              Select subject for this internal component
+                            </Text>
+                            <Select
+                              placeholder="Select course"
+                              searchable
+                              clearable
+                              data={courseOptions}
+                              value={componentCourseMap[component.key] || null}
+                              onChange={(value) =>
+                                handleCourseSelection(component.key, value)
+                              }
+                              disabled={savingComponentKey === component.key}
+                              style={{ width: "100%", maxWidth: 360 }}
+                            />
+                          </Group>
+                        </Stack>
+                      </Paper>
+                    ))}
 
                     <Paper
                       p="md"
@@ -281,6 +462,107 @@ const StudentDetails = () => {
                 </Card>
 
                 {/* Detailed Breakdown */}
+                <Card shadow="sm" padding="lg" radius="md" withBorder>
+                  <Title order={3} mb="md">
+                    Course-wise Internal Allocation
+                  </Title>
+                  <Text size="sm" c="dimmed" mb="md">
+                    Course-wise internals are calculated from the subject
+                    selected for each internal component above.
+                  </Text>
+
+                  <Table striped highlightOnHover>
+                    <Table.Thead>
+                      <Table.Tr>
+                        <Table.Th>Course Details</Table.Th>
+                        <Table.Th>Credits</Table.Th>
+                        <Table.Th>Mapped Components</Table.Th>
+                        <Table.Th>Allocated Internal</Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                      {courseWiseAllocation.map((course) => (
+                        <Table.Tr key={course.code}>
+                          <Table.Td>
+                            <Text fw={600}>{course.name}</Text>
+                            <Badge mt={6} variant="light" color="blue">
+                              {course.code} ({course.category})
+                            </Badge>
+                          </Table.Td>
+                          <Table.Td>
+                            <Badge variant="light" color="gray" size="lg">
+                              {course.credits}
+                            </Badge>
+                          </Table.Td>
+                          <Table.Td>
+                            {course.mappedComponents.length === 0 ? (
+                              <Text size="sm" c="dimmed">
+                                Not mapped
+                              </Text>
+                            ) : (
+                              <Group gap={6} wrap="wrap">
+                                {course.mappedComponents.map((component) => (
+                                  <Badge
+                                    key={`${course.code}-${component.key}`}
+                                    variant="light"
+                                    color={component.color}
+                                  >
+                                    {component.shortLabel}
+                                  </Badge>
+                                ))}
+                              </Group>
+                            )}
+                          </Table.Td>
+                          <Table.Td>
+                            <Badge variant="filled" color="grape" size="lg">
+                              {course.allocatedMarks}
+                            </Badge>
+                          </Table.Td>
+                        </Table.Tr>
+                      ))}
+                      <Table.Tr>
+                        <Table.Td>
+                          <Text fw={700}>TOTAL</Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Badge variant="filled" color="dark" size="lg">
+                            {totalCredits}
+                          </Badge>
+                        </Table.Td>
+                        <Table.Td>
+                          <Badge variant="filled" color="dark" size="lg">
+                            {
+                              Object.keys(componentCourseMap).filter(
+                                (componentKey) =>
+                                  componentCourseMap[componentKey],
+                              ).length
+                            }
+                            /{INTERNAL_COMPONENTS.length}
+                          </Badge>
+                        </Table.Td>
+                        <Table.Td>
+                          <Badge variant="filled" color="blue" size="lg">
+                            {allocatedTotal}
+                          </Badge>
+                        </Table.Td>
+                      </Table.Tr>
+                    </Table.Tbody>
+                  </Table>
+
+                  {unassignedTotal > 0 && (
+                    <Alert
+                      mt="md"
+                      icon={<IconInfoCircle size={16} />}
+                      title="Pending Subject Mapping"
+                      color="yellow"
+                    >
+                      {unassignedTotal} marks are not assigned to a course yet.
+                      Select subjects in Marks Breakdown to include them in
+                      course-wise internals.
+                    </Alert>
+                  )}
+                </Card>
+
                 <Card shadow="sm" padding="lg" radius="md" withBorder>
                   <Title order={3} mb="md">
                     Detailed Breakdown

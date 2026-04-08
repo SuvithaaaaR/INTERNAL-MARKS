@@ -107,4 +107,10 @@ export const getCalculations = (studentId) =>
   api.get(`/calculations/${studentId}`);
 export const getSummaryReport = () => api.get("/calculations/report/summary");
 
+// Internal Course Mapping
+export const getInternalCourseMappings = (studentId) =>
+  api.get(`/internal-course-mappings/${studentId}`);
+export const upsertInternalCourseMapping = (studentId, data) =>
+  api.put(`/internal-course-mappings/${studentId}`, data);
+
 export default api;
