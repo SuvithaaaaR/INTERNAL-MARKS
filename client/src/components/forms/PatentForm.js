@@ -17,11 +17,17 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconPlus, IconTrash, IconInfoCircle } from "@tabler/icons-react";
-import { getPatents, createPatent, deletePatent } from "../../services/api";
+import {
+  getPatents,
+  createPatent,
+  deletePatent,
+  uploadProofDocument,
+} from "../../services/api";
 
 const PatentForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [proofFile, setProofFile] = useState(null);
   const [formData, setFormData] = useState({
     patent_type: "filed",
     patent_title: "",
@@ -49,7 +55,14 @@ const PatentForm = ({ studentId, onSuccess, canDelete = true }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createPatent({ ...formData, student_id: studentId });
+      const payload = { ...formData, student_id: studentId };
+
+      if (proofFile) {
+        const uploadResponse = await uploadProofDocument(proofFile);
+        payload.proof_document = uploadResponse.data.downloadUrl;
+      }
+
+      await createPatent(payload);
       notifications.show({
         title: "Success",
         message: "Patent entry added!",
@@ -66,6 +79,7 @@ const PatentForm = ({ studentId, onSuccess, canDelete = true }) => {
         technology_transfer: false,
         proof_document: "",
       });
+      setProofFile(null);
       fetchEntries();
       onSuccess();
     } catch (err) {
@@ -207,14 +221,21 @@ const PatentForm = ({ studentId, onSuccess, canDelete = true }) => {
                     }
                   />
                 </Group>
-                <TextInput
-                  label="Proof Document"
-                  value={formData.proof_document}
-                  onChange={(e) =>
-                    setFormData({ ...formData, proof_document: e.target.value })
-                  }
-                  placeholder="Certificate URL or file link"
-                />
+                <div>
+                  <Text size="sm" fw={500} mb={6}>
+                    Proof Document (PDF)
+                  </Text>
+                  <input
+                    type="file"
+                    accept="application/pdf,.pdf"
+                    onChange={(e) => setProofFile(e.target.files?.[0] || null)}
+                  />
+                  <Text size="xs" c="dimmed" mt={4}>
+                    {proofFile
+                      ? `Selected: ${proofFile.name}`
+                      : "Upload a PDF patent proof document (max 10MB)"}
+                  </Text>
+                </div>
                 <Group justify="flex-end">
                   <Button type="submit" color="green">
                     Submit Entry

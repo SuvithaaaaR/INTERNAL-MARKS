@@ -143,6 +143,11 @@ const INTERNAL_COMPONENTS = [
     getMax: (breakdown) => Number(breakdown.minorProjects?.cap || 160),
   },
 ];
+const getRubricReferenceByCredits = (credits) => {
+  return 30;
+};
+
+const FORMULA_FINAL_MAX = 30;
 
 const StudentDetails = () => {
   const { id } = useParams();
@@ -268,16 +273,40 @@ const StudentDetails = () => {
     const mappedComponents = INTERNAL_COMPONENTS.filter(
       (component) => componentCourseMap[component.key] === course.code,
     );
+    const mappedCount = mappedComponents.length;
 
     const allocatedMarks = mappedComponents.reduce(
       (sum, component) => sum + Number(marksByComponent[component.key] || 0),
       0,
     );
 
+    const mappedTotalForFormula = mappedComponents.reduce(
+      (sum, component) =>
+        sum + Number(component.getMax(componentBreakdown) || 0),
+      0,
+    );
+
+    const mappedScoreForFormula = Math.min(
+      allocatedMarks,
+      mappedTotalForFormula || 0,
+    );
+
+    const finalInternalMark =
+      mappedTotalForFormula > 0
+        ? (mappedScoreForFormula / mappedTotalForFormula) * FORMULA_FINAL_MAX
+        : 0;
+
+    const rubricReference = getRubricReferenceByCredits(course.credits);
+
     return {
       ...course,
       mappedComponents,
+      mappedCount,
       allocatedMarks,
+      mappedTotalForFormula,
+      mappedScoreForFormula,
+      finalInternalMark,
+      rubricReference,
     };
   });
 
@@ -286,10 +315,22 @@ const StudentDetails = () => {
     0,
   );
 
-  const allocatedTotal = courseWiseAllocation.reduce(
-    (sum, course) => sum + course.allocatedMarks,
+  const rubricTotal = courseWiseAllocation.reduce(
+    (sum, course) => sum + course.rubricReference,
     0,
   );
+
+  const finalInternalTotal = courseWiseAllocation.reduce(
+    (sum, course) => sum + course.finalInternalMark,
+    0,
+  );
+
+  const mappedSubjectCount = courseWiseAllocation.filter(
+    (course) => course.mappedCount > 0,
+  ).length;
+
+  const averageFinalAcrossMappedSubjects =
+    mappedSubjectCount > 0 ? finalInternalTotal / mappedSubjectCount : 0;
 
   const unassignedTotal = INTERNAL_COMPONENTS.reduce((sum, component) => {
     if (componentCourseMap[component.key]) {
@@ -467,8 +508,11 @@ const StudentDetails = () => {
                     Course-wise Internal Allocation
                   </Title>
                   <Text size="sm" c="dimmed" mb="md">
-                    Course-wise internals are calculated from the subject
-                    selected for each internal component above.
+                    Actual internal marks allotted to each subject are
+                    calculated from the component-to-subject mapping selected
+                    above using the formula:
+                    {` (Student Score / Mapped Total Score) x ${FORMULA_FINAL_MAX}`}
+                    .
                   </Text>
 
                   <Table striped highlightOnHover>
@@ -477,7 +521,8 @@ const StudentDetails = () => {
                         <Table.Th>Course Details</Table.Th>
                         <Table.Th>Credits</Table.Th>
                         <Table.Th>Mapped Components</Table.Th>
-                        <Table.Th>Allocated Internal</Table.Th>
+                        <Table.Th>Rubric Reference (Total Internal)</Table.Th>
+                        <Table.Th>Final Internal Mark</Table.Th>
                       </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
@@ -514,9 +559,21 @@ const StudentDetails = () => {
                             )}
                           </Table.Td>
                           <Table.Td>
-                            <Badge variant="filled" color="grape" size="lg">
-                              {course.allocatedMarks}
+                            <Badge variant="light" color="blue" size="lg">
+                              {course.rubricReference} marks
                             </Badge>
+                          </Table.Td>
+                          <Table.Td>
+                            <Stack gap={2}>
+                              <Badge variant="filled" color="grape" size="lg">
+                                {course.finalInternalMark.toFixed(2)} marks
+                              </Badge>
+                              <Text size="xs" c="dimmed">
+                                ({course.mappedScoreForFormula.toFixed(2)} /
+                                {` ${course.mappedTotalForFormula.toFixed(2)}`}) x
+                                {` ${FORMULA_FINAL_MAX}`}
+                              </Text>
+                            </Stack>
                           </Table.Td>
                         </Table.Tr>
                       ))}
@@ -542,8 +599,20 @@ const StudentDetails = () => {
                         </Table.Td>
                         <Table.Td>
                           <Badge variant="filled" color="blue" size="lg">
-                            {allocatedTotal}
+                            {rubricTotal} marks
                           </Badge>
+                        </Table.Td>
+                        <Table.Td>
+                          <Stack gap={2}>
+                            <Badge variant="filled" color="blue" size="lg">
+                              {finalInternalTotal.toFixed(2)} marks
+                            </Badge>
+                            <Text size="xs" c="dimmed">
+                              {averageFinalAcrossMappedSubjects.toFixed(2)} avg
+                              across {mappedSubjectCount} mapped subject
+                              {mappedSubjectCount === 1 ? "" : "s"}
+                            </Text>
+                          </Stack>
                         </Table.Td>
                       </Table.Tr>
                     </Table.Tbody>

@@ -7,6 +7,7 @@ const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isVercel = Boolean(process.env.VERCEL);
 
 // Middleware
 app.use(cors());
@@ -15,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Create database directory if it doesn't exist
 const dbDir = path.join(__dirname, "../database");
-if (!fs.existsSync(dbDir)) {
+if (!isVercel && !fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
@@ -38,6 +39,7 @@ const minorProjectRoutes = require("./routes/minorProjects");
 const calculationRoutes = require("./routes/calculations");
 const staffEvaluationRoutes = require("./routes/staffEvaluation");
 const internalCourseMappingsRoutes = require("./routes/internalCourseMappings");
+const proofDocumentsRoutes = require("./routes/proofDocuments");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
@@ -54,6 +56,7 @@ app.use("/api/minor-projects", minorProjectRoutes);
 app.use("/api/calculations", calculationRoutes);
 app.use("/api/staff-evaluation", staffEvaluationRoutes);
 app.use("/api/internal-course-mappings", internalCourseMappingsRoutes);
+app.use("/api/proof-documents", proofDocumentsRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
@@ -68,19 +71,21 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (!isVercel) {
+  const server = app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 
-server.on("error", (err) => {
-  if (err.code === "EADDRINUSE") {
-    console.log(`Port ${PORT} is in use, trying port ${PORT + 1}...`);
-    app.listen(PORT + 1, () => {
-      console.log(`Server is running on port ${PORT + 1}`);
-    });
-  } else {
-    console.error("Server error:", err);
-  }
-});
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.log(`Port ${PORT} is in use, trying port ${PORT + 1}...`);
+      app.listen(PORT + 1, () => {
+        console.log(`Server is running on port ${PORT + 1}`);
+      });
+    } else {
+      console.error("Server error:", err);
+    }
+  });
+}
 
 module.exports = app;

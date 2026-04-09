@@ -21,11 +21,13 @@ import {
   getMinorProjects,
   createMinorProject,
   deleteMinorProject,
+  uploadProofDocument,
 } from "../../services/api";
 
 const MinorProjectForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [proofFile, setProofFile] = useState(null);
   const [formData, setFormData] = useState({
     project_title: "",
     problem_statement: "",
@@ -52,7 +54,14 @@ const MinorProjectForm = ({ studentId, onSuccess, canDelete = true }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createMinorProject({ ...formData, student_id: studentId });
+      const payload = { ...formData, student_id: studentId };
+
+      if (proofFile) {
+        const uploadResponse = await uploadProofDocument(proofFile);
+        payload.proof_document = uploadResponse.data.downloadUrl;
+      }
+
+      await createMinorProject(payload);
       notifications.show({
         title: "Success",
         message: "Minor project entry added!",
@@ -69,6 +78,7 @@ const MinorProjectForm = ({ studentId, onSuccess, canDelete = true }) => {
         demo_link: "",
         proof_document: "",
       });
+      setProofFile(null);
       fetchEntries();
       onSuccess();
     } catch (err) {
@@ -203,14 +213,21 @@ const MinorProjectForm = ({ studentId, onSuccess, canDelete = true }) => {
                     placeholder="Live demo URL"
                   />
                 </Group>
-                <TextInput
-                  label="Proof Document"
-                  value={formData.proof_document}
-                  onChange={(e) =>
-                    setFormData({ ...formData, proof_document: e.target.value })
-                  }
-                  placeholder="Document URL"
-                />
+                <div>
+                  <Text size="sm" fw={500} mb={6}>
+                    Proof Document (PDF)
+                  </Text>
+                  <input
+                    type="file"
+                    accept="application/pdf,.pdf"
+                    onChange={(e) => setProofFile(e.target.files?.[0] || null)}
+                  />
+                  <Text size="xs" c="dimmed" mt={4}>
+                    {proofFile
+                      ? `Selected: ${proofFile.name}`
+                      : "Upload a PDF supporting document (max 10MB)"}
+                  </Text>
+                </div>
                 <Group justify="flex-end">
                   <Button type="submit" color="green">
                     Submit Entry

@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "env": {
+    "CI": "false"
+  },
+  "builds": [
+    {
+      "src": "api/[...path].js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": "database/**"
+      }
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/[...path].js"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/client/static/$1"
+    },
+    {
+      "src": "/asset-manifest.json",
+      "dest": "/client/asset-manifest.json"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/client/manifest.json"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/client/favicon.ico"
+    },
+    {
+      "src": "/logo(\\d+)?.*\\.(png|svg)",
+      "dest": "/client/$0"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/client/robots.txt"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/index.html"
+    },
+    {
+      "handle": "filesystem"
+    }
+  ]
+}

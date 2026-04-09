@@ -870,6 +870,17 @@ const StaffEvaluation = () => {
                             >
                               View Document
                             </a>
+                            {" | "}
+                            <a
+                              href={entry.proof_document}
+                              download
+                              style={{
+                                color: "#1976d2",
+                                textDecoration: "underline",
+                              }}
+                            >
+                              Download PDF
+                            </a>
                           </div>
                         )}
                       </div>
@@ -1464,7 +1475,19 @@ const StaffEvaluation = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      View/Download Document
+                      View Document
+                    </a>
+                    {" | "}
+                    <a
+                      href={selectedEntry.proof_document}
+                      download
+                      style={{
+                        color: "#1976d2",
+                        textDecoration: "underline",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Download PDF
                     </a>
                   </div>
                 )}

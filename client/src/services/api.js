@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_BASE_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  process.env.REACT_APP_API_URL || "/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -112,5 +112,17 @@ export const getInternalCourseMappings = (studentId) =>
   api.get(`/internal-course-mappings/${studentId}`);
 export const upsertInternalCourseMapping = (studentId, data) =>
   api.put(`/internal-course-mappings/${studentId}`, data);
+
+// Proof Documents
+export const uploadProofDocument = (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return api.post("/proof-documents/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
 
 export default api;

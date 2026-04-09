@@ -21,11 +21,13 @@ import {
   getOnlineCourses,
   createOnlineCourse,
   deleteOnlineCourse,
+  uploadProofDocument,
 } from "../../services/api";
 
 const OnlineCourseForm = ({ studentId, onSuccess, canDelete = true }) => {
   const [entries, setEntries] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [proofFile, setProofFile] = useState(null);
   const [formData, setFormData] = useState({
     course_type: "nptel",
     course_name: "",
@@ -51,7 +53,14 @@ const OnlineCourseForm = ({ studentId, onSuccess, canDelete = true }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createOnlineCourse({ ...formData, student_id: studentId });
+      const payload = { ...formData, student_id: studentId };
+
+      if (proofFile) {
+        const uploadResponse = await uploadProofDocument(proofFile);
+        payload.proof_document = uploadResponse.data.downloadUrl;
+      }
+
+      await createOnlineCourse(payload);
       notifications.show({
         title: "Success",
         message: "Online course entry added!",
@@ -67,6 +76,7 @@ const OnlineCourseForm = ({ studentId, onSuccess, canDelete = true }) => {
         certificate_number: "",
         proof_document: "",
       });
+      setProofFile(null);
       fetchEntries();
       onSuccess();
     } catch (err) {
@@ -195,14 +205,21 @@ const OnlineCourseForm = ({ studentId, onSuccess, canDelete = true }) => {
                     placeholder="If available"
                   />
                 </Group>
-                <TextInput
-                  label="Proof Document"
-                  value={formData.proof_document}
-                  onChange={(e) =>
-                    setFormData({ ...formData, proof_document: e.target.value })
-                  }
-                  placeholder="Certificate URL"
-                />
+                <div>
+                  <Text size="sm" fw={500} mb={6}>
+                    Proof Document (PDF)
+                  </Text>
+                  <input
+                    type="file"
+                    accept="application/pdf,.pdf"
+                    onChange={(e) => setProofFile(e.target.files?.[0] || null)}
+                  />
+                  <Text size="xs" c="dimmed" mt={4}>
+                    {proofFile
+                      ? `Selected: ${proofFile.name}`
+                      : "Upload a PDF certificate/document (max 10MB)"}
+                  </Text>
+                </div>
                 <Group justify="flex-end">
                   <Button type="submit" color="green">
                     Submit Entry

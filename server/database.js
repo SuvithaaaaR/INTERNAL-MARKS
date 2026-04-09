@@ -1,7 +1,14 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
+const fs = require("fs");
 
-const dbPath = path.resolve(__dirname, "../database/internal_marks.db");
+const isVercel = Boolean(process.env.VERCEL);
+const bundledDbPath = path.resolve(__dirname, "../database/internal_marks.db");
+const dbPath = isVercel ? "/tmp/internal_marks.db" : bundledDbPath;
+
+if (isVercel && !fs.existsSync(dbPath) && fs.existsSync(bundledDbPath)) {
+  fs.copyFileSync(bundledDbPath, dbPath);
+}
 
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
@@ -38,6 +45,16 @@ function initializeDatabase() {
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         UNIQUE (student_id, component_key),
         FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+      )
+    `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS proof_documents (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        file_name TEXT NOT NULL,
+        mime_type TEXT NOT NULL,
+        file_data BLOB NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
